@@ -1,0 +1,91 @@
+salesperson,stock_group_name,backordered_lines,salesperson_total_lines,is_top_salesperson
+Amy Trefl,Clothing,238,661,false
+Amy Trefl,Computing Novelties,255,661,false
+Amy Trefl,Furry Footwear,89,661,false
+Amy Trefl,Mugs,142,661,false
+Amy Trefl,Novelty Items,260,661,false
+Amy Trefl,Packaging Materials,181,661,false
+Amy Trefl,T-Shirts,67,661,false
+Amy Trefl,Toys,54,661,false
+Amy Trefl,USB Novelties,45,661,false
+Anthony Grosse,Clothing,230,692,false
+Anthony Grosse,Computing Novelties,238,692,false
+Anthony Grosse,Furry Footwear,86,692,false
+Anthony Grosse,Mugs,126,692,false
+Anthony Grosse,Novelty Items,244,692,false
+Anthony Grosse,Packaging Materials,229,692,false
+Anthony Grosse,T-Shirts,66,692,false
+Anthony Grosse,Toys,61,692,false
+Anthony Grosse,USB Novelties,43,692,false
+Archer Lamble,Clothing,224,714,false
+Archer Lamble,Computing Novelties,262,714,false
+Archer Lamble,Furry Footwear,76,714,false
+Archer Lamble,Mugs,148,714,false
+Archer Lamble,Novelty Items,284,714,false
+Archer Lamble,Packaging Materials,228,714,false
+Archer Lamble,T-Shirts,70,714,false
+Archer Lamble,Toys,70,714,false
+Archer Lamble,USB Novelties,40,714,false
+Hudson Hollinworth,Clothing,197,629,false
+Hudson Hollinworth,Computing Novelties,239,629,false
+Hudson Hollinworth,Furry Footwear,67,629,false
+Hudson Hollinworth,Mugs,133,629,false
+Hudson Hollinworth,Novelty Items,255,629,false
+Hudson Hollinworth,Packaging Materials,203,629,false
+Hudson Hollinworth,T-Shirts,61,629,false
+Hudson Hollinworth,Toys,51,629,false
+Hudson Hollinworth,USB Novelties,44,629,false
+Hudson Onslow,Clothing,213,624,false
+Hudson Onslow,Computing Novelties,214,624,false
+Hudson Onslow,Furry Footwear,67,624,false
+Hudson Onslow,Mugs,109,624,false
+Hudson Onslow,Novelty Items,224,624,false
+Hudson Onslow,Packaging Materials,200,624,false
+Hudson Onslow,T-Shirts,63,624,false
+Hudson Onslow,Toys,60,624,false
+Hudson Onslow,USB Novelties,42,624,false
+Jack Potter,Clothing,245,732,true
+Jack Potter,Computing Novelties,272,732,true
+Jack Potter,Furry Footwear,95,732,true
+Jack Potter,Mugs,143,732,true
+Jack Potter,Novelty Items,301,732,true
+Jack Potter,Packaging Materials,216,732,true
+Jack Potter,T-Shirts,72,732,true
+Jack Potter,Toys,71,732,true
+Jack Potter,USB Novelties,56,732,true
+Kayla Woodcock,Clothing,240,715,false
+Kayla Woodcock,Computing Novelties,285,715,false
+Kayla Woodcock,Furry Footwear,67,715,false
+Kayla Woodcock,Mugs,146,715,false
+Kayla Woodcock,Novelty Items,287,715,false
+Kayla Woodcock,Packaging Materials,206,715,false
+Kayla Woodcock,T-Shirts,84,715,false
+Kayla Woodcock,Toys,68,715,false
+Kayla Woodcock,USB Novelties,54,715,false
+Lily Code,Clothing,209,649,false
+Lily Code,Computing Novelties,243,649,false
+Lily Code,Furry Footwear,79,649,false
+Lily Code,Mugs,129,649,false
+Lily Code,Novelty Items,258,649,false
+Lily Code,Packaging Materials,195,649,false
+Lily Code,T-Shirts,65,649,false
+Lily Code,Toys,67,649,false
+Lily Code,USB Novelties,46,649,false
+Sophia Hinton,Clothing,233,682,false
+Sophia Hinton,Computing Novelties,265,682,false
+Sophia Hinton,Furry Footwear,66,682,false
+Sophia Hinton,Mugs,143,682,false
+Sophia Hinton,Novelty Items,287,682,false
+Sophia Hinton,Packaging Materials,191,682,false
+Sophia Hinton,T-Shirts,76,682,false
+Sophia Hinton,Toys,69,682,false
+Sophia Hinton,USB Novelties,43,682,false
+Taj Shand,Clothing,221,673,false
+Taj Shand,Computing Novelties,255,673,false
+Taj Shand,Furry Footwear,79,673,false
+Taj Shand,Mugs,145,673,false
+Taj Shand,Novelty Items,267,673,false
+Taj Shand,Packaging Materials,202,673,false
+Taj Shand,T-Shirts,72,673,false
+Taj Shand,Toys,67,673,false
+Taj Shand,USB Novelties,35,673,false

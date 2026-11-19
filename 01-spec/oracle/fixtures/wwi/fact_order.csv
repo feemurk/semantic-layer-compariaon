@@ -1,0 +1,3 @@
+order_key,order_date,city_key,customer_key,stock_item_key,salesperson_key,picker_key,wwi_order_id,wwi_backorder_id,quantity,total_excluding_tax
+1,2015-02-01,2,1,10,1,2,1,,7,70.00
+2,2015-02-15,1,2,20,1,,2,501,3,60.00

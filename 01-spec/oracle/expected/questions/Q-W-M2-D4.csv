@@ -1,0 +1,11 @@
+rank_no,wwi_stock_item_id,stock_item,min_closing_units,month_end_date,balance_basis
+1,108,Superhero action jacket (Blue) XXS,7196,2015-12-31,holding_backcast
+2,114,Superhero action jacket (Blue) XXL,7517,2015-12-31,holding_backcast
+3,102,Alien officer hoodie (Black) XL,7591,2015-12-31,holding_backcast
+4,113,Superhero action jacket (Blue) XL,7702,2015-12-31,holding_backcast
+5,111,Superhero action jacket (Blue) M,9247,2015-12-31,holding_backcast
+6,174,Bubblewrap dispenser (Black) 1.5m,9642,2015-12-31,holding_backcast
+7,107,Superhero action jacket (Blue) 3XS,11510,2015-12-31,holding_backcast
+8,106,Alien officer hoodie (Black) 5XL,11592,2015-12-31,holding_backcast
+9,116,Superhero action jacket (Blue) 4XL,11604,2015-12-31,holding_backcast
+10,112,Superhero action jacket (Blue) L,11691,2015-12-31,holding_backcast

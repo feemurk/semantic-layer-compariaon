@@ -1,0 +1,37 @@
+stock_group_name,calendar_quarter,backordered_lines
+Clothing,1,488
+Clothing,2,590
+Clothing,3,593
+Clothing,4,579
+Computing Novelties,1,569
+Computing Novelties,2,617
+Computing Novelties,3,685
+Computing Novelties,4,657
+Furry Footwear,1,163
+Furry Footwear,2,213
+Furry Footwear,3,181
+Furry Footwear,4,214
+Mugs,1,295
+Mugs,2,340
+Mugs,3,365
+Mugs,4,364
+Novelty Items,1,597
+Novelty Items,2,673
+Novelty Items,3,713
+Novelty Items,4,684
+Packaging Materials,1,483
+Packaging Materials,2,509
+Packaging Materials,3,552
+Packaging Materials,4,507
+T-Shirts,1,159
+T-Shirts,2,161
+T-Shirts,3,197
+T-Shirts,4,179
+Toys,1,153
+Toys,2,165
+Toys,3,169
+Toys,4,151
+USB Novelties,1,110
+USB Novelties,2,108
+USB Novelties,3,120
+USB Novelties,4,110

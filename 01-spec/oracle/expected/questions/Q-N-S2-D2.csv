@@ -1,0 +1,65 @@
+pickup_borough,dropoff_borough,card_tips
+Bronx,Bronx,5985.17
+Bronx,Brooklyn,1125.94
+Bronx,EWR,123.22
+Bronx,Manhattan,13756.28
+Bronx,N/A,3718.92
+Bronx,Queens,3610.04
+Bronx,Staten Island,10
+Bronx,Unknown,22.69
+Brooklyn,Bronx,1706.16
+Brooklyn,Brooklyn,158334.90
+Brooklyn,EWR,5052.47
+Brooklyn,Manhattan,219116.06
+Brooklyn,N/A,6530.97
+Brooklyn,Queens,58772.23
+Brooklyn,Staten Island,1027.87
+Brooklyn,Unknown,990.44
+EWR,Bronx,5
+EWR,Brooklyn,116.27
+EWR,EWR,9712.10
+EWR,Manhattan,1132.86
+EWR,N/A,1018.57
+EWR,Queens,372.79
+EWR,Staten Island,84.70
+EWR,Unknown,242.80
+Manhattan,Bronx,355629.47
+Manhattan,Brooklyn,4022575.73
+Manhattan,EWR,1455691.42
+Manhattan,Manhattan,83600656.06
+Manhattan,N/A,500479.60
+Manhattan,Queens,8824120.65
+Manhattan,Staten Island,37013.36
+Manhattan,Unknown,254404.91
+N/A,Bronx,353.46
+N/A,Brooklyn,1291.44
+N/A,EWR,8810.17
+N/A,Manhattan,7897.77
+N/A,N/A,38947.42
+N/A,Queens,3442.36
+N/A,Staten Island,189.14
+N/A,Unknown,476.97
+Queens,Bronx,357885.33
+Queens,Brooklyn,4385110.36
+Queens,EWR,69824.50
+Queens,Manhattan,22301106.60
+Queens,N/A,1326597.23
+Queens,Queens,2834727.72
+Queens,Staten Island,42081.41
+Queens,Unknown,47610.78
+Staten Island,Bronx,0
+Staten Island,Brooklyn,185.99
+Staten Island,EWR,213.42
+Staten Island,Manhattan,630.74
+Staten Island,N/A,196.81
+Staten Island,Queens,301.15
+Staten Island,Staten Island,327.58
+Staten Island,Unknown,50.20
+Unknown,Bronx,1871.85
+Unknown,Brooklyn,16102.47
+Unknown,EWR,3585.24
+Unknown,Manhattan,156729.97
+Unknown,N/A,4140.13
+Unknown,Queens,22073.46
+Unknown,Staten Island,158.53
+Unknown,Unknown,221203.99

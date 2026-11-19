@@ -1,0 +1,41 @@
+dropoff_borough,payment_type_name,trips,fare_per_mile,is_highest
+Bronx,Cash,14934,3.95034644416986,false
+Bronx,Credit card,18042,3.92925291655373,false
+Bronx,Dispute,1789,3.98063393890507,false
+Bronx,Flex Fare trip,26,3.76172085503862,false
+Bronx,No charge,542,4.02308988521562,false
+Brooklyn,Cash,69440,4.15007549123591,false
+Brooklyn,Credit card,253058,4.13770057757064,false
+Brooklyn,Dispute,7501,4.16808439800549,false
+Brooklyn,Flex Fare trip,1081,3.9945570536739,false
+Brooklyn,No charge,2214,4.14428364502566,false
+EWR,Cash,390,4.3971260815173,false
+EWR,Credit card,1740,4.35991166848436,false
+EWR,Dispute,58,4.45307133633125,false
+EWR,Flex Fare trip,3,4.13326848249027,false
+EWR,No charge,22,4.48828190861575,false
+Manhattan,Cash,141752,3.81782912441026,false
+Manhattan,Credit card,842413,3.78304231980128,false
+Manhattan,Dispute,13699,3.9052448245691,false
+Manhattan,Flex Fare trip,3308,3.74074418810591,false
+Manhattan,No charge,4104,3.9265117658959,false
+N/A,Cash,19810,5.03350444281726,false
+N/A,Credit card,58265,5.14106813582747,false
+N/A,Dispute,2218,5.17399577400698,false
+N/A,Flex Fare trip,103,5.04850546279118,false
+N/A,No charge,761,4.845327048855,false
+Queens,Cash,160391,4.47068402963091,false
+Queens,Credit card,217696,4.66418218024958,false
+Queens,Dispute,20736,5.19168605614453,false
+Queens,Flex Fare trip,811,4.63235201160419,false
+Queens,No charge,8981,5.4896388060735,true
+Staten Island,Cash,1329,3.81305617684529,false
+Staten Island,Credit card,2154,3.8127690753622,false
+Staten Island,Dispute,181,3.97406791089556,false
+Staten Island,Flex Fare trip,3,3.74047619047619,false
+Staten Island,No charge,29,4.11017165627874,false
+Unknown,Cash,647,4.50918078338969,false
+Unknown,Credit card,1820,4.87906257598334,false
+Unknown,Dispute,27,4.03851217906517,false
+Unknown,Flex Fare trip,18,3.88335179032853,false
+Unknown,No charge,21,5.34930181475864,false

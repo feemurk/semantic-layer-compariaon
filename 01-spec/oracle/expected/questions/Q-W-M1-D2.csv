@@ -1,0 +1,84 @@
+wwi_stock_item_id,stock_item,sales_territory,revenue,profit,gross_margin_pct
+107,Superhero action jacket (Blue) 3XS,External,275,66,0.24
+107,Superhero action jacket (Blue) 3XS,Far West,2000,480,0.24
+107,Superhero action jacket (Blue) 3XS,Great Lakes,1675,402,0.24
+107,Superhero action jacket (Blue) 3XS,Mideast,2100,504,0.24
+107,Superhero action jacket (Blue) 3XS,New England,550,132,0.24
+107,Superhero action jacket (Blue) 3XS,Plains,1375,330,0.24
+107,Superhero action jacket (Blue) 3XS,Rocky Mountain,500,120,0.24
+107,Superhero action jacket (Blue) 3XS,Southeast,4300,1032,0.24
+107,Superhero action jacket (Blue) 3XS,Southwest,4050,972,0.24
+108,Superhero action jacket (Blue) XXS,Far West,1325,318,0.24
+108,Superhero action jacket (Blue) XXS,Great Lakes,2450,588,0.24
+108,Superhero action jacket (Blue) XXS,Mideast,1800,432,0.24
+108,Superhero action jacket (Blue) XXS,New England,950,228,0.24
+108,Superhero action jacket (Blue) XXS,Plains,3075,738,0.24
+108,Superhero action jacket (Blue) XXS,Rocky Mountain,1825,438,0.24
+108,Superhero action jacket (Blue) XXS,Southeast,2825,678,0.24
+108,Superhero action jacket (Blue) XXS,Southwest,2375,570,0.24
+142,Halloween zombie mask (Light Brown) S,Far West,13824,-768,-0.0555555555555556
+142,Halloween zombie mask (Light Brown) S,Great Lakes,4968,-276,-0.0555555555555556
+142,Halloween zombie mask (Light Brown) S,Mideast,15120,-840,-0.0555555555555556
+142,Halloween zombie mask (Light Brown) S,New England,9288,-516,-0.0555555555555556
+142,Halloween zombie mask (Light Brown) S,Plains,31320,-1740,-0.0555555555555556
+142,Halloween zombie mask (Light Brown) S,Rocky Mountain,15984,-888,-0.0555555555555556
+142,Halloween zombie mask (Light Brown) S,Southeast,38232,-2124,-0.0555555555555556
+142,Halloween zombie mask (Light Brown) S,Southwest,31104,-1728,-0.0555555555555556
+143,Halloween zombie mask (Light Brown) M,Far West,15552,-864,-0.0555555555555556
+143,Halloween zombie mask (Light Brown) M,Great Lakes,16200,-900,-0.0555555555555556
+143,Halloween zombie mask (Light Brown) M,Mideast,16200,-900,-0.0555555555555556
+143,Halloween zombie mask (Light Brown) M,New England,11664,-648,-0.0555555555555556
+143,Halloween zombie mask (Light Brown) M,Plains,16200,-900,-0.0555555555555556
+143,Halloween zombie mask (Light Brown) M,Rocky Mountain,10368,-576,-0.0555555555555556
+143,Halloween zombie mask (Light Brown) M,Southeast,36504,-2028,-0.0555555555555556
+143,Halloween zombie mask (Light Brown) M,Southwest,21600,-1200,-0.0555555555555556
+144,Halloween zombie mask (Light Brown) L,Far West,11232,-624,-0.0555555555555556
+144,Halloween zombie mask (Light Brown) L,Great Lakes,12960,-720,-0.0555555555555556
+144,Halloween zombie mask (Light Brown) L,Mideast,15120,-840,-0.0555555555555556
+144,Halloween zombie mask (Light Brown) L,New England,10368,-576,-0.0555555555555556
+144,Halloween zombie mask (Light Brown) L,Plains,15552,-864,-0.0555555555555556
+144,Halloween zombie mask (Light Brown) L,Rocky Mountain,15552,-864,-0.0555555555555556
+144,Halloween zombie mask (Light Brown) L,Southeast,32184,-1788,-0.0555555555555556
+144,Halloween zombie mask (Light Brown) L,Southwest,23112,-1284,-0.0555555555555556
+145,Halloween zombie mask (Light Brown) XL,External,1728,-96,-0.0555555555555556
+145,Halloween zombie mask (Light Brown) XL,Far West,9720,-540,-0.0555555555555556
+145,Halloween zombie mask (Light Brown) XL,Great Lakes,11016,-612,-0.0555555555555556
+145,Halloween zombie mask (Light Brown) XL,Mideast,30456,-1692,-0.0555555555555556
+145,Halloween zombie mask (Light Brown) XL,New England,10152,-564,-0.0555555555555556
+145,Halloween zombie mask (Light Brown) XL,Plains,16632,-924,-0.0555555555555556
+145,Halloween zombie mask (Light Brown) XL,Rocky Mountain,6480,-360,-0.0555555555555556
+145,Halloween zombie mask (Light Brown) XL,Southeast,35208,-1956,-0.0555555555555556
+145,Halloween zombie mask (Light Brown) XL,Southwest,34992,-1944,-0.0555555555555556
+146,Halloween skull mask (Gray) S,Far West,14688,2448,0.166666666666667
+146,Halloween skull mask (Gray) S,Great Lakes,19224,3204,0.166666666666667
+146,Halloween skull mask (Gray) S,Mideast,27000,4500,0.166666666666667
+146,Halloween skull mask (Gray) S,New England,5400,900,0.166666666666667
+146,Halloween skull mask (Gray) S,Plains,17280,2880,0.166666666666667
+146,Halloween skull mask (Gray) S,Rocky Mountain,12528,2088,0.166666666666667
+146,Halloween skull mask (Gray) S,Southeast,33048,5508,0.166666666666667
+146,Halloween skull mask (Gray) S,Southwest,18792,3132,0.166666666666667
+147,Halloween skull mask (Gray) M,Far West,15552,2592,0.166666666666667
+147,Halloween skull mask (Gray) M,Great Lakes,10152,1692,0.166666666666667
+147,Halloween skull mask (Gray) M,Mideast,22032,3672,0.166666666666667
+147,Halloween skull mask (Gray) M,New England,3456,576,0.166666666666667
+147,Halloween skull mask (Gray) M,Plains,9288,1548,0.166666666666667
+147,Halloween skull mask (Gray) M,Rocky Mountain,10368,1728,0.166666666666667
+147,Halloween skull mask (Gray) M,Southeast,42120,7020,0.166666666666667
+147,Halloween skull mask (Gray) M,Southwest,11880,1980,0.166666666666667
+148,Halloween skull mask (Gray) L,Far West,16632,2772,0.166666666666667
+148,Halloween skull mask (Gray) L,Great Lakes,17064,2844,0.166666666666667
+148,Halloween skull mask (Gray) L,Mideast,19872,3312,0.166666666666667
+148,Halloween skull mask (Gray) L,New England,1296,216,0.166666666666667
+148,Halloween skull mask (Gray) L,Plains,14040,2340,0.166666666666667
+148,Halloween skull mask (Gray) L,Rocky Mountain,5400,900,0.166666666666667
+148,Halloween skull mask (Gray) L,Southeast,50976,8496,0.166666666666667
+148,Halloween skull mask (Gray) L,Southwest,24624,4104,0.166666666666667
+149,Halloween skull mask (Gray) XL,External,1728,288,0.166666666666667
+149,Halloween skull mask (Gray) XL,Far West,12528,2088,0.166666666666667
+149,Halloween skull mask (Gray) XL,Great Lakes,11448,1908,0.166666666666667
+149,Halloween skull mask (Gray) XL,Mideast,23976,3996,0.166666666666667
+149,Halloween skull mask (Gray) XL,New England,9288,1548,0.166666666666667
+149,Halloween skull mask (Gray) XL,Plains,23328,3888,0.166666666666667
+149,Halloween skull mask (Gray) XL,Rocky Mountain,7344,1224,0.166666666666667
+149,Halloween skull mask (Gray) XL,Southeast,46224,7704,0.166666666666667
+149,Halloween skull mask (Gray) XL,Southwest,16200,2700,0.166666666666667

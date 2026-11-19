@@ -2,9 +2,9 @@
 
 | Field | Value |
 |---|---|
-| Version | 1.1 |
+| Version | 1.2 |
 | State | LOCKED |
-| Locked on | 2026-11-19 (v1.0); amended 2026-11-19 (v1.1, § 16) |
+| Locked on | 2026-11-19 (v1.0); amended 2026-11-19 (v1.1, v1.2, § 16) |
 | Governs | Phases 1–3 and `04-deliverables/` |
 | Change control | § 16. No scope change without a version bump and a changelog entry. |
 
@@ -337,18 +337,18 @@ All stacks answer every question on B0 without model changes between questions. 
 | Q-W-S2-P | P | W-S2, W-S1 | Ordered quantity and revenue (excl. tax) by calendar month for 2015 on one shared date axis. |
 | Q-W-S2-D1 | D1 | W-S2, B-W3 | For the 2015 month with the largest gap between ordered quantity and units sold, break ordered quantity down by stock item. |
 | Q-W-S2-D2 | D2 | W-S2 | For that month, ordered quantity by picker. |
-| Q-W-S2-D3 | D3 | W-S2 | Compare ordered quantity for chiller and non-chiller stock items by calendar quarter, 2014 vs 2015. |
+| Q-W-S2-D3 | D3 | W-S2 | Compare ordered quantity by selling package by calendar quarter, 2014 vs 2015. |
 | Q-W-S2-D4 | D4 | B-W5 | Backordered order lines in 2015 by salesperson and stock group; identify the salesperson with the most. |
 | Q-W-M1-P | P | W-M1 | Gross margin % by Customer Category by fiscal quarter for FY2015. |
 | Q-W-M1-D1 | D1 | W-M1, W-S1 | For the category with the lowest FY2015 gross margin %, list the 10 lowest-margin stock items with FY2015 revenue above 10,000. |
 | Q-W-M1-D2 | D2 | W-M1 | For those 10 items, gross margin % by Sales Territory. |
-| Q-W-M1-D3 | D3 | W-M1 | Gross margin % for chiller vs non-chiller items, FY2014 vs FY2015. |
+| Q-W-M1-D3 | D3 | W-M1 | Gross margin % by selling package, FY2014 vs FY2015. |
 | Q-W-M1-D4 | D4 | W-M1 | Which salesperson's gross margin % fell the most from FY2014 to FY2015, and which stock groups drove the change? |
 | Q-W-M2-P | P | W-M2 | Closing stock on hand (units) at each fiscal month end of FY2015. |
 | Q-W-M2-D1 | D1 | W-M2 | Closing stock on hand at the end of FY2015 by stock group, with a deduplicated total. |
 | Q-W-M2-D2 | D2 | W-M2 | For the stock group with the most units at FY2015 end, the 10 stock items with the highest closing stock. |
 | Q-W-M2-D3 | D3 | W-M2 | Compare closing stock on hand at 2015-12-31 and 2014-12-31 by selling package and chiller flag. |
-| Q-W-M2-D4 | D4 | W-M2 | Which stock items had zero closing stock at any calendar month end in 2015? |
+| Q-W-M2-D4 | D4 | W-M2 | Which 10 stock items had the lowest closing stock at any calendar month end in 2015, and at which month end? |
 | Q-W-C1-P | P | W-C1 | Revenue share by stock group for FY2015, with a grand total equal to total revenue. |
 | Q-W-C1-D1 | D1 | W-C1 | For the stock group with the highest FY2015 share, each stock item's share of that group's revenue. |
 | Q-W-C1-D2 | D2 | W-C1 | Stock group revenue share within each Sales Territory for FY2015. |
@@ -370,7 +370,7 @@ All stacks answer every question on B0 without model changes between questions. 
 | Q-N-S2-D3 | D3 | N-S2, B-N1 | Card tips per card trip (card tips ÷ trip count for payment type 1) by month, 2023 vs 2024. |
 | Q-N-S2-D4 | D4 | N-S2 | Card tips by payment type for 2024. Expected: a value only for payment type 1; NULL for all others. |
 | Q-N-M1-P | P | N-M1 | Distinct OD pairs by month for 2024. |
-| Q-N-M1-D1 | D1 | N-M1 | Distinct OD pairs by pickup borough for 2024, alongside the overall total (which is less than the sum of boroughs). |
+| Q-N-M1-D1 | D1 | N-M1 | Distinct OD pairs by payment type for 2024, alongside the overall total (which is less than the sum of payment types). |
 | Q-N-M1-D2 | D2 | N-M1 | Distinct OD pairs by pickup hour for Q4 2024. |
 | Q-N-M1-D3 | D3 | N-M1 | Distinct OD pairs served by each vendor, 2023 vs 2024. |
 | Q-N-M1-D4 | D4 | N-M1 | Among Manhattan pickup zones, the 10 with the most distinct OD pairs in 2024. |
@@ -608,3 +608,4 @@ Amendments require: a version bump in the header, a changelog row, an updated `s
 |---|---|---|
 | 1.0 | 2026-11-19 | Initial locked specification. |
 | 1.1 | 2026-11-19 | Phase 2 platform build corrections from profiling the real sources (restored WideWorldImporters on SQL Server 2025; 24 TLC months). § 4: clustered columnstore index removal before change tracking, landing normalization for TLC type drift, dimensions-before-facts pipelines, bundle rename. § 5.1 and § 5.3 rule 6: back-cast snapshot with flow fallback and `balance_basis`, because 9 items' movement history cannot be reconciled with current holdings. § 5.3 rule 4 and `Q-W-S1-D4`: SCD2 probe moved from customer category (no history in source) to stock item color; single current row per durable key despite 4,612 duplicated open-ended city rows. § 5.4: NYC calendar extended to 2025 for dropoff dates. § 5.2: `passenger_count` marked NULL (5,400,588 source rows, all payment type 0). § 14: V-18 to V-26. |
+| 1.2 | 2026-11-19 | Question bank corrections found by running the correctness oracle on the real-data B0. Q-N-M1-D1: distinct OD pairs are exactly additive across pickup borough, because the pair determines its pickup zone and borough, so the non-additivity probe moves to payment type. Q-W-M1-D3 and Q-W-S2-D3: chiller items sell only from 2016-01-02, so the FY2014/FY2015 and 2014/2015 comparisons move from the chiller flag to selling package. Q-W-M2-D4: no stock item is at zero on any 2015 month end (minimum 7,196 units), so the question asks for the 10 lowest month-end balances. |

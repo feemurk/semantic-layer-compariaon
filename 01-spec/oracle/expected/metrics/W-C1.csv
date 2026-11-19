@@ -1,0 +1,483 @@
+grain,measure,member_1,member_2,member_3,value
+fiscal_year_stock_group,W-C1,2013,Clothing,,0.276956426430467
+fiscal_year_stock_group,W-C1,2013,Computing Novelties,,0.223319743051121
+fiscal_year_stock_group,W-C1,2013,Furry Footwear,,0.0302720726412163
+fiscal_year_stock_group,W-C1,2013,Mugs,,0.0185495444307825
+fiscal_year_stock_group,W-C1,2013,Novelty Items,,0.19658073951535
+fiscal_year_stock_group,W-C1,2013,Packaging Materials,,0.582919390087675
+fiscal_year_stock_group,W-C1,2013,T-Shirts,,0.171449216361718
+fiscal_year_stock_group,W-C1,2013,Toys,,0.0882536567924547
+fiscal_year_stock_group,W-C1,2013,USB Novelties,,0.0277671811879936
+fiscal_year_stock_group,W-C1,2014,Clothing,,0.270926844125756
+fiscal_year_stock_group,W-C1,2014,Computing Novelties,,0.220272890116521
+fiscal_year_stock_group,W-C1,2014,Furry Footwear,,0.029499066382786
+fiscal_year_stock_group,W-C1,2014,Mugs,,0.018523211029457
+fiscal_year_stock_group,W-C1,2014,Novelty Items,,0.199360723785738
+fiscal_year_stock_group,W-C1,2014,Packaging Materials,,0.58729580903497
+fiscal_year_stock_group,W-C1,2014,T-Shirts,,0.165953607222513
+fiscal_year_stock_group,W-C1,2014,Toys,,0.087458063945267
+fiscal_year_stock_group,W-C1,2014,USB Novelties,,0.0289303571298422
+fiscal_year_stock_group,W-C1,2015,Clothing,,0.269090579734677
+fiscal_year_stock_group,W-C1,2015,Computing Novelties,,0.215873273923361
+fiscal_year_stock_group,W-C1,2015,Furry Footwear,,0.03022093560092
+fiscal_year_stock_group,W-C1,2015,Mugs,,0.0184358980251273
+fiscal_year_stock_group,W-C1,2015,Novelty Items,,0.198592142639416
+fiscal_year_stock_group,W-C1,2015,Packaging Materials,,0.590010358856621
+fiscal_year_stock_group,W-C1,2015,T-Shirts,,0.163181816315159
+fiscal_year_stock_group,W-C1,2015,Toys,,0.0882076038005009
+fiscal_year_stock_group,W-C1,2015,USB Novelties,,0.0289042808102081
+fiscal_year_stock_group,W-C1,2016,Clothing,,0.259332874259634
+fiscal_year_stock_group,W-C1,2016,Computing Novelties,,0.20674962547058
+fiscal_year_stock_group,W-C1,2016,Furry Footwear,,0.0289995297261744
+fiscal_year_stock_group,W-C1,2016,Mugs,,0.0180417073363445
+fiscal_year_stock_group,W-C1,2016,Novelty Items,,0.221367993869048
+fiscal_year_stock_group,W-C1,2016,Packaging Materials,,0.571825918745328
+fiscal_year_stock_group,W-C1,2016,T-Shirts,,0.160109577325921
+fiscal_year_stock_group,W-C1,2016,Toys,,0.0855599977592905
+fiscal_year_stock_group,W-C1,2016,USB Novelties,,0.0221135028136654
+total_all_groups,W-C1,,,,1
+total_stock_group,W-C1,Clothing,,,0.269597599069431
+total_stock_group,W-C1,Computing Novelties,,,0.217128992433504
+total_stock_group,W-C1,Furry Footwear,,,0.0298064090540124
+total_stock_group,W-C1,Mugs,,,0.0184146366091338
+total_stock_group,W-C1,Novelty Items,,,0.202484837323442
+total_stock_group,W-C1,Packaging Materials,,,0.584368906272048
+total_stock_group,W-C1,T-Shirts,,,0.165253885762733
+total_stock_group,W-C1,Toys,,,0.0875259352735145
+total_stock_group,W-C1,USB Novelties,,,0.0274291690583911
+year_all_groups,W-C1,2013,,,1
+year_all_groups,W-C1,2014,,,1
+year_all_groups,W-C1,2015,,,1
+year_all_groups,W-C1,2016,,,1
+year_customer_category_stock_group,W-C1,2013,N/A,Clothing,0.277917267575074
+year_customer_category_stock_group,W-C1,2013,N/A,Computing Novelties,0.228347703988501
+year_customer_category_stock_group,W-C1,2013,N/A,Furry Footwear,0.0306954327589845
+year_customer_category_stock_group,W-C1,2013,N/A,Mugs,0.0192371109658075
+year_customer_category_stock_group,W-C1,2013,N/A,Novelty Items,0.196365628233375
+year_customer_category_stock_group,W-C1,2013,N/A,Packaging Materials,0.579048549667887
+year_customer_category_stock_group,W-C1,2013,N/A,T-Shirts,0.174275243759949
+year_customer_category_stock_group,W-C1,2013,N/A,Toys,0.0889617225284865
+year_customer_category_stock_group,W-C1,2013,N/A,USB Novelties,0.0288010135548055
+year_customer_category_stock_group,W-C1,2013,Novelty Shop,Clothing,0.273320481258398
+year_customer_category_stock_group,W-C1,2013,Novelty Shop,Computing Novelties,0.218579338596885
+year_customer_category_stock_group,W-C1,2013,Novelty Shop,Furry Footwear,0.0300349714449893
+year_customer_category_stock_group,W-C1,2013,Novelty Shop,Mugs,0.0184081245001556
+year_customer_category_stock_group,W-C1,2013,Novelty Shop,Novelty Items,0.197380735025269
+year_customer_category_stock_group,W-C1,2013,Novelty Shop,Packaging Materials,0.587282771310826
+year_customer_category_stock_group,W-C1,2013,Novelty Shop,T-Shirts,0.166957315738621
+year_customer_category_stock_group,W-C1,2013,Novelty Shop,Toys,0.0877747245725116
+year_customer_category_stock_group,W-C1,2013,Novelty Shop,USB Novelties,0.0273750800707466
+year_customer_category_stock_group,W-C1,2014,N/A,Clothing,0.276121111294006
+year_customer_category_stock_group,W-C1,2014,N/A,Computing Novelties,0.226042702689344
+year_customer_category_stock_group,W-C1,2014,N/A,Furry Footwear,0.0300202997011631
+year_customer_category_stock_group,W-C1,2014,N/A,Mugs,0.0182352378483475
+year_customer_category_stock_group,W-C1,2014,N/A,Novelty Items,0.195828832983859
+year_customer_category_stock_group,W-C1,2014,N/A,Packaging Materials,0.583939074935422
+year_customer_category_stock_group,W-C1,2014,N/A,T-Shirts,0.17243384926797
+year_customer_category_stock_group,W-C1,2014,N/A,Toys,0.0863309603491977
+year_customer_category_stock_group,W-C1,2014,N/A,USB Novelties,0.0295185206137341
+year_customer_category_stock_group,W-C1,2014,Novelty Shop,Clothing,0.272147419755442
+year_customer_category_stock_group,W-C1,2014,Novelty Shop,Computing Novelties,0.219510148582071
+year_customer_category_stock_group,W-C1,2014,Novelty Shop,Furry Footwear,0.0290386030815304
+year_customer_category_stock_group,W-C1,2014,Novelty Shop,Mugs,0.0183777034435705
+year_customer_category_stock_group,W-C1,2014,Novelty Shop,Novelty Items,0.198601178277167
+year_customer_category_stock_group,W-C1,2014,Novelty Shop,Packaging Materials,0.587986560218141
+year_customer_category_stock_group,W-C1,2014,Novelty Shop,T-Shirts,0.166512606367205
+year_customer_category_stock_group,W-C1,2014,Novelty Shop,Toys,0.0868684778115509
+year_customer_category_stock_group,W-C1,2014,Novelty Shop,USB Novelties,0.0279781695623701
+year_customer_category_stock_group,W-C1,2015,N/A,Clothing,0.261918583551763
+year_customer_category_stock_group,W-C1,2015,N/A,Computing Novelties,0.211902507416753
+year_customer_category_stock_group,W-C1,2015,N/A,Furry Footwear,0.0301118010570155
+year_customer_category_stock_group,W-C1,2015,N/A,Mugs,0.0182071065154422
+year_customer_category_stock_group,W-C1,2015,N/A,Novelty Items,0.197879818277896
+year_customer_category_stock_group,W-C1,2015,N/A,Packaging Materials,0.595694985165295
+year_customer_category_stock_group,W-C1,2015,N/A,T-Shirts,0.158367602186721
+year_customer_category_stock_group,W-C1,2015,N/A,Toys,0.0888515260529107
+year_customer_category_stock_group,W-C1,2015,N/A,USB Novelties,0.0301802116732407
+year_customer_category_stock_group,W-C1,2015,Novelty Shop,Clothing,0.271682318391632
+year_customer_category_stock_group,W-C1,2015,Novelty Shop,Computing Novelties,0.217926043930823
+year_customer_category_stock_group,W-C1,2015,Novelty Shop,Furry Footwear,0.0306112457856945
+year_customer_category_stock_group,W-C1,2015,Novelty Shop,Mugs,0.0188543846916016
+year_customer_category_stock_group,W-C1,2015,Novelty Shop,Novelty Items,0.201470052627296
+year_customer_category_stock_group,W-C1,2015,Novelty Shop,Packaging Materials,0.585145190229305
+year_customer_category_stock_group,W-C1,2015,Novelty Shop,T-Shirts,0.164521357245264
+year_customer_category_stock_group,W-C1,2015,Novelty Shop,Toys,0.0897678046935037
+year_customer_category_stock_group,W-C1,2015,Novelty Shop,USB Novelties,0.0288462775674464
+year_customer_category_stock_group,W-C1,2016,N/A,Clothing,0.246456704199482
+year_customer_category_stock_group,W-C1,2016,N/A,Computing Novelties,0.198355939886661
+year_customer_category_stock_group,W-C1,2016,N/A,Furry Footwear,0.0280937987801529
+year_customer_category_stock_group,W-C1,2016,N/A,Mugs,0.0171873267084112
+year_customer_category_stock_group,W-C1,2016,N/A,Novelty Items,0.230973799268631
+year_customer_category_stock_group,W-C1,2016,N/A,Packaging Materials,0.574214423716996
+year_customer_category_stock_group,W-C1,2016,N/A,T-Shirts,0.14961180270888
+year_customer_category_stock_group,W-C1,2016,N/A,Toys,0.0835223016639551
+year_customer_category_stock_group,W-C1,2016,N/A,USB Novelties,0.0254104221083838
+year_customer_category_stock_group,W-C1,2016,Novelty Shop,Clothing,0.259087838248815
+year_customer_category_stock_group,W-C1,2016,Novelty Shop,Computing Novelties,0.202094434172142
+year_customer_category_stock_group,W-C1,2016,Novelty Shop,Furry Footwear,0.0284904884158312
+year_customer_category_stock_group,W-C1,2016,Novelty Shop,Mugs,0.0178708956723527
+year_customer_category_stock_group,W-C1,2016,Novelty Shop,Novelty Items,0.229396701629924
+year_customer_category_stock_group,W-C1,2016,Novelty Shop,Packaging Materials,0.563719944634164
+year_customer_category_stock_group,W-C1,2016,Novelty Shop,T-Shirts,0.161230224244663
+year_customer_category_stock_group,W-C1,2016,Novelty Shop,Toys,0.0836299304297613
+year_customer_category_stock_group,W-C1,2016,Novelty Shop,USB Novelties,0.0156601102802685
+year_sales_territory_stock_group,W-C1,2013,External,Clothing,0.254002934208862
+year_sales_territory_stock_group,W-C1,2013,External,Computing Novelties,0.222019794899001
+year_sales_territory_stock_group,W-C1,2013,External,Furry Footwear,0.0240337158169188
+year_sales_territory_stock_group,W-C1,2013,External,Mugs,0.0156500411572747
+year_sales_territory_stock_group,W-C1,2013,External,Novelty Items,0.20733561487763
+year_sales_territory_stock_group,W-C1,2013,External,Packaging Materials,0.591995530149201
+year_sales_territory_stock_group,W-C1,2013,External,T-Shirts,0.158221962461382
+year_sales_territory_stock_group,W-C1,2013,External,Toys,0.0902037032043177
+year_sales_territory_stock_group,W-C1,2013,External,USB Novelties,0.0347107311576526
+year_sales_territory_stock_group,W-C1,2013,Far West,Clothing,0.279614817134545
+year_sales_territory_stock_group,W-C1,2013,Far West,Computing Novelties,0.229440743263937
+year_sales_territory_stock_group,W-C1,2013,Far West,Furry Footwear,0.0305860384434095
+year_sales_territory_stock_group,W-C1,2013,Far West,Mugs,0.0190056796896428
+year_sales_territory_stock_group,W-C1,2013,Far West,Novelty Items,0.188809734005784
+year_sales_territory_stock_group,W-C1,2013,Far West,Packaging Materials,0.584925472587054
+year_sales_territory_stock_group,W-C1,2013,Far West,T-Shirts,0.176564477910902
+year_sales_territory_stock_group,W-C1,2013,Far West,Toys,0.0825834449253655
+year_sales_territory_stock_group,W-C1,2013,Far West,USB Novelties,0.0289447157735511
+year_sales_territory_stock_group,W-C1,2013,Great Lakes,Clothing,0.272285416286783
+year_sales_territory_stock_group,W-C1,2013,Great Lakes,Computing Novelties,0.214118967689282
+year_sales_territory_stock_group,W-C1,2013,Great Lakes,Furry Footwear,0.0298751810601472
+year_sales_territory_stock_group,W-C1,2013,Great Lakes,Mugs,0.0183452307583242
+year_sales_territory_stock_group,W-C1,2013,Great Lakes,Novelty Items,0.201474984833727
+year_sales_territory_stock_group,W-C1,2013,Great Lakes,Packaging Materials,0.58743457268181
+year_sales_territory_stock_group,W-C1,2013,Great Lakes,T-Shirts,0.162209254581805
+year_sales_territory_stock_group,W-C1,2013,Great Lakes,Toys,0.0883702979239296
+year_sales_territory_stock_group,W-C1,2013,Great Lakes,USB Novelties,0.0280497345788778
+year_sales_territory_stock_group,W-C1,2013,Mideast,Clothing,0.270661162815321
+year_sales_territory_stock_group,W-C1,2013,Mideast,Computing Novelties,0.21740317154878
+year_sales_territory_stock_group,W-C1,2013,Mideast,Furry Footwear,0.030582721613992
+year_sales_territory_stock_group,W-C1,2013,Mideast,Mugs,0.0190573479534738
+year_sales_territory_stock_group,W-C1,2013,Mideast,Novelty Items,0.18767288178783
+year_sales_territory_stock_group,W-C1,2013,Mideast,Packaging Materials,0.596009614353933
+year_sales_territory_stock_group,W-C1,2013,Mideast,T-Shirts,0.166954929613042
+year_sales_territory_stock_group,W-C1,2013,Mideast,Toys,0.0828809808950076
+year_sales_territory_stock_group,W-C1,2013,Mideast,USB Novelties,0.0264888648632358
+year_sales_territory_stock_group,W-C1,2013,New England,Clothing,0.281242174829966
+year_sales_territory_stock_group,W-C1,2013,New England,Computing Novelties,0.236026106610458
+year_sales_territory_stock_group,W-C1,2013,New England,Furry Footwear,0.0304112902543131
+year_sales_territory_stock_group,W-C1,2013,New England,Mugs,0.0193115297642502
+year_sales_territory_stock_group,W-C1,2013,New England,Novelty Items,0.193371437559342
+year_sales_territory_stock_group,W-C1,2013,New England,Packaging Materials,0.57786830967589
+year_sales_territory_stock_group,W-C1,2013,New England,T-Shirts,0.176713604716033
+year_sales_territory_stock_group,W-C1,2013,New England,Toys,0.0815770135997188
+year_sales_territory_stock_group,W-C1,2013,New England,USB Novelties,0.0341408840540887
+year_sales_territory_stock_group,W-C1,2013,Plains,Clothing,0.281488628540386
+year_sales_territory_stock_group,W-C1,2013,Plains,Computing Novelties,0.22807336162191
+year_sales_territory_stock_group,W-C1,2013,Plains,Furry Footwear,0.0306023424359959
+year_sales_territory_stock_group,W-C1,2013,Plains,Mugs,0.0192652167613117
+year_sales_territory_stock_group,W-C1,2013,Plains,Novelty Items,0.201890886979629
+year_sales_territory_stock_group,W-C1,2013,Plains,Packaging Materials,0.575267597353913
+year_sales_territory_stock_group,W-C1,2013,Plains,T-Shirts,0.17287683751255
+year_sales_territory_stock_group,W-C1,2013,Plains,Toys,0.0880472499963421
+year_sales_territory_stock_group,W-C1,2013,Plains,USB Novelties,0.0294219490847979
+year_sales_territory_stock_group,W-C1,2013,Rocky Mountain,Clothing,0.288518617980653
+year_sales_territory_stock_group,W-C1,2013,Rocky Mountain,Computing Novelties,0.230644685696273
+year_sales_territory_stock_group,W-C1,2013,Rocky Mountain,Furry Footwear,0.0318854631039814
+year_sales_territory_stock_group,W-C1,2013,Rocky Mountain,Mugs,0.0187780538829257
+year_sales_territory_stock_group,W-C1,2013,Rocky Mountain,Novelty Items,0.198920794269239
+year_sales_territory_stock_group,W-C1,2013,Rocky Mountain,Packaging Materials,0.571459048271716
+year_sales_territory_stock_group,W-C1,2013,Rocky Mountain,T-Shirts,0.17996553274063
+year_sales_territory_stock_group,W-C1,2013,Rocky Mountain,Toys,0.0893431807919868
+year_sales_territory_stock_group,W-C1,2013,Rocky Mountain,USB Novelties,0.0218456820350928
+year_sales_territory_stock_group,W-C1,2013,Southeast,Clothing,0.268125149442601
+year_sales_territory_stock_group,W-C1,2013,Southeast,Computing Novelties,0.215322482212239
+year_sales_territory_stock_group,W-C1,2013,Southeast,Furry Footwear,0.0305838975092322
+year_sales_territory_stock_group,W-C1,2013,Southeast,Mugs,0.0184940151727797
+year_sales_territory_stock_group,W-C1,2013,Southeast,Novelty Items,0.19928202095296
+year_sales_territory_stock_group,W-C1,2013,Southeast,Packaging Materials,0.587170326253653
+year_sales_territory_stock_group,W-C1,2013,Southeast,T-Shirts,0.164901463180231
+year_sales_territory_stock_group,W-C1,2013,Southeast,Toys,0.0942835052717381
+year_sales_territory_stock_group,W-C1,2013,Southeast,USB Novelties,0.0264243395936547
+year_sales_territory_stock_group,W-C1,2013,Southwest,Clothing,0.276679204436193
+year_sales_territory_stock_group,W-C1,2013,Southwest,Computing Novelties,0.223763710336418
+year_sales_territory_stock_group,W-C1,2013,Southwest,Furry Footwear,0.0290216854410296
+year_sales_territory_stock_group,W-C1,2013,Southwest,Mugs,0.0181739408321071
+year_sales_territory_stock_group,W-C1,2013,Southwest,Novelty Items,0.200946109463182
+year_sales_territory_stock_group,W-C1,2013,Southwest,Packaging Materials,0.5806808911808
+year_sales_territory_stock_group,W-C1,2013,Southwest,T-Shirts,0.170813980240042
+year_sales_territory_stock_group,W-C1,2013,Southwest,Toys,0.089690174286631
+year_sales_territory_stock_group,W-C1,2013,Southwest,USB Novelties,0.0290953772722771
+year_sales_territory_stock_group,W-C1,2014,External,Clothing,0.280948115722934
+year_sales_territory_stock_group,W-C1,2014,External,Computing Novelties,0.216985869543093
+year_sales_territory_stock_group,W-C1,2014,External,Furry Footwear,0.0244807565742435
+year_sales_territory_stock_group,W-C1,2014,External,Mugs,0.0178418199927496
+year_sales_territory_stock_group,W-C1,2014,External,Novelty Items,0.176111319764767
+year_sales_territory_stock_group,W-C1,2014,External,Packaging Materials,0.608405804096748
+year_sales_territory_stock_group,W-C1,2014,External,T-Shirts,0.171784416466246
+year_sales_territory_stock_group,W-C1,2014,External,Toys,0.0654446271034715
+year_sales_territory_stock_group,W-C1,2014,External,USB Novelties,0.022275221109654
+year_sales_territory_stock_group,W-C1,2014,Far West,Clothing,0.275395591103212
+year_sales_territory_stock_group,W-C1,2014,Far West,Computing Novelties,0.222095327426436
+year_sales_territory_stock_group,W-C1,2014,Far West,Furry Footwear,0.0288413131805915
+year_sales_territory_stock_group,W-C1,2014,Far West,Mugs,0.0182338323687232
+year_sales_territory_stock_group,W-C1,2014,Far West,Novelty Items,0.200268738020988
+year_sales_territory_stock_group,W-C1,2014,Far West,Packaging Materials,0.584854990608459
+year_sales_territory_stock_group,W-C1,2014,Far West,T-Shirts,0.167893366272929
+year_sales_territory_stock_group,W-C1,2014,Far West,Toys,0.0855474571348225
+year_sales_territory_stock_group,W-C1,2014,Far West,USB Novelties,0.029541245365035
+year_sales_territory_stock_group,W-C1,2014,Great Lakes,Clothing,0.265708729749977
+year_sales_territory_stock_group,W-C1,2014,Great Lakes,Computing Novelties,0.217592920792834
+year_sales_territory_stock_group,W-C1,2014,Great Lakes,Furry Footwear,0.030131672326363
+year_sales_territory_stock_group,W-C1,2014,Great Lakes,Mugs,0.0185102347875651
+year_sales_territory_stock_group,W-C1,2014,Great Lakes,Novelty Items,0.188468064716009
+year_sales_territory_stock_group,W-C1,2014,Great Lakes,Packaging Materials,0.598197666051542
+year_sales_territory_stock_group,W-C1,2014,Great Lakes,T-Shirts,0.164250294726692
+year_sales_territory_stock_group,W-C1,2014,Great Lakes,Toys,0.0827509781323393
+year_sales_territory_stock_group,W-C1,2014,Great Lakes,USB Novelties,0.0279054609722002
+year_sales_territory_stock_group,W-C1,2014,Mideast,Clothing,0.275913760653177
+year_sales_territory_stock_group,W-C1,2014,Mideast,Computing Novelties,0.224497723627996
+year_sales_territory_stock_group,W-C1,2014,Mideast,Furry Footwear,0.0286639140115695
+year_sales_territory_stock_group,W-C1,2014,Mideast,Mugs,0.0182314498831358
+year_sales_territory_stock_group,W-C1,2014,Mideast,Novelty Items,0.192912015296988
+year_sales_territory_stock_group,W-C1,2014,Mideast,Packaging Materials,0.588632411880696
+year_sales_territory_stock_group,W-C1,2014,Mideast,T-Shirts,0.173828495864187
+year_sales_territory_stock_group,W-C1,2014,Mideast,Toys,0.0847845997023184
+year_sales_territory_stock_group,W-C1,2014,Mideast,USB Novelties,0.0254118836066425
+year_sales_territory_stock_group,W-C1,2014,New England,Clothing,0.29470648642789
+year_sales_territory_stock_group,W-C1,2014,New England,Computing Novelties,0.233997708354946
+year_sales_territory_stock_group,W-C1,2014,New England,Furry Footwear,0.030765393129028
+year_sales_territory_stock_group,W-C1,2014,New England,Mugs,0.0175960107192105
+year_sales_territory_stock_group,W-C1,2014,New England,Novelty Items,0.191098485952309
+year_sales_territory_stock_group,W-C1,2014,New England,Packaging Materials,0.572249413975305
+year_sales_territory_stock_group,W-C1,2014,New England,T-Shirts,0.188229150517718
+year_sales_territory_stock_group,W-C1,2014,New England,Toys,0.0872755417595778
+year_sales_territory_stock_group,W-C1,2014,New England,USB Novelties,0.0250672864754476
+year_sales_territory_stock_group,W-C1,2014,Plains,Clothing,0.268783732986237
+year_sales_territory_stock_group,W-C1,2014,Plains,Computing Novelties,0.219377809860634
+year_sales_territory_stock_group,W-C1,2014,Plains,Furry Footwear,0.0299146828376732
+year_sales_territory_stock_group,W-C1,2014,Plains,Mugs,0.0186018057692656
+year_sales_territory_stock_group,W-C1,2014,Plains,Novelty Items,0.200753681502126
+year_sales_territory_stock_group,W-C1,2014,Plains,Packaging Materials,0.585714010452628
+year_sales_territory_stock_group,W-C1,2014,Plains,T-Shirts,0.165468304355382
+year_sales_territory_stock_group,W-C1,2014,Plains,Toys,0.091592751055883
+year_sales_territory_stock_group,W-C1,2014,Plains,USB Novelties,0.02942011682331
+year_sales_territory_stock_group,W-C1,2014,Rocky Mountain,Clothing,0.285582252162965
+year_sales_territory_stock_group,W-C1,2014,Rocky Mountain,Computing Novelties,0.224585725261368
+year_sales_territory_stock_group,W-C1,2014,Rocky Mountain,Furry Footwear,0.0320390679118085
+year_sales_territory_stock_group,W-C1,2014,Rocky Mountain,Mugs,0.0184156180946079
+year_sales_territory_stock_group,W-C1,2014,Rocky Mountain,Novelty Items,0.208945042100763
+year_sales_territory_stock_group,W-C1,2014,Rocky Mountain,Packaging Materials,0.571768806968178
+year_sales_territory_stock_group,W-C1,2014,Rocky Mountain,T-Shirts,0.167878916931558
+year_sales_territory_stock_group,W-C1,2014,Rocky Mountain,Toys,0.0859421325390456
+year_sales_territory_stock_group,W-C1,2014,Rocky Mountain,USB Novelties,0.0323884903951256
+year_sales_territory_stock_group,W-C1,2014,Southeast,Clothing,0.277549433804233
+year_sales_territory_stock_group,W-C1,2014,Southeast,Computing Novelties,0.226980925598143
+year_sales_territory_stock_group,W-C1,2014,Southeast,Furry Footwear,0.0292729303373706
+year_sales_territory_stock_group,W-C1,2014,Southeast,Mugs,0.0189952999869186
+year_sales_territory_stock_group,W-C1,2014,Southeast,Novelty Items,0.201087598323549
+year_sales_territory_stock_group,W-C1,2014,Southeast,Packaging Materials,0.579987406563255
+year_sales_territory_stock_group,W-C1,2014,Southeast,T-Shirts,0.17146621190201
+year_sales_territory_stock_group,W-C1,2014,Southeast,Toys,0.086948445936379
+year_sales_territory_stock_group,W-C1,2014,Southeast,USB Novelties,0.0294413118008615
+year_sales_territory_stock_group,W-C1,2014,Southwest,Clothing,0.262667654636841
+year_sales_territory_stock_group,W-C1,2014,Southwest,Computing Novelties,0.213052150588848
+year_sales_territory_stock_group,W-C1,2014,Southwest,Furry Footwear,0.0285683068401541
+year_sales_territory_stock_group,W-C1,2014,Southwest,Mugs,0.0173469338771801
+year_sales_territory_stock_group,W-C1,2014,Southwest,Novelty Items,0.198151984275494
+year_sales_territory_stock_group,W-C1,2014,Southwest,Packaging Materials,0.595441971798128
+year_sales_territory_stock_group,W-C1,2014,Southwest,T-Shirts,0.160738045560554
+year_sales_territory_stock_group,W-C1,2014,Southwest,Toys,0.0895762685367371
+year_sales_territory_stock_group,W-C1,2014,Southwest,USB Novelties,0.029196607583779
+year_sales_territory_stock_group,W-C1,2015,External,Clothing,0.304854412171029
+year_sales_territory_stock_group,W-C1,2015,External,Computing Novelties,0.25866133092213
+year_sales_territory_stock_group,W-C1,2015,External,Furry Footwear,0.0301439484880706
+year_sales_territory_stock_group,W-C1,2015,External,Mugs,0.0201687275872506
+year_sales_territory_stock_group,W-C1,2015,External,Novelty Items,0.213137757082788
+year_sales_territory_stock_group,W-C1,2015,External,Packaging Materials,0.548073708517277
+year_sales_territory_stock_group,W-C1,2015,External,T-Shirts,0.19081400673961
+year_sales_territory_stock_group,W-C1,2015,External,Toys,0.0792245551291739
+year_sales_territory_stock_group,W-C1,2015,External,USB Novelties,0.0441552589147768
+year_sales_territory_stock_group,W-C1,2015,Far West,Clothing,0.26323000155903
+year_sales_territory_stock_group,W-C1,2015,Far West,Computing Novelties,0.214542534991089
+year_sales_territory_stock_group,W-C1,2015,Far West,Furry Footwear,0.0278865833342188
+year_sales_territory_stock_group,W-C1,2015,Far West,Mugs,0.0185461059923789
+year_sales_territory_stock_group,W-C1,2015,Far West,Novelty Items,0.19806169341805
+year_sales_territory_stock_group,W-C1,2015,Far West,Packaging Materials,0.594907442323691
+year_sales_territory_stock_group,W-C1,2015,Far West,T-Shirts,0.161697443819393
+year_sales_territory_stock_group,W-C1,2015,Far West,Toys,0.0890174649455825
+year_sales_territory_stock_group,W-C1,2015,Far West,USB Novelties,0.028761682026014
+year_sales_territory_stock_group,W-C1,2015,Great Lakes,Clothing,0.279402123975385
+year_sales_territory_stock_group,W-C1,2015,Great Lakes,Computing Novelties,0.230003375989936
+year_sales_territory_stock_group,W-C1,2015,Great Lakes,Furry Footwear,0.0310982840816578
+year_sales_territory_stock_group,W-C1,2015,Great Lakes,Mugs,0.0190144388031366
+year_sales_territory_stock_group,W-C1,2015,Great Lakes,Novelty Items,0.199396159526618
+year_sales_territory_stock_group,W-C1,2015,Great Lakes,Packaging Materials,0.577046866295807
+year_sales_territory_stock_group,W-C1,2015,Great Lakes,T-Shirts,0.17407875351016
+year_sales_territory_stock_group,W-C1,2015,Great Lakes,Toys,0.0876263872490319
+year_sales_territory_stock_group,W-C1,2015,Great Lakes,USB Novelties,0.0310232887338878
+year_sales_territory_stock_group,W-C1,2015,Mideast,Clothing,0.268786958675175
+year_sales_territory_stock_group,W-C1,2015,Mideast,Computing Novelties,0.214602806058219
+year_sales_territory_stock_group,W-C1,2015,Mideast,Furry Footwear,0.0306851235074888
+year_sales_territory_stock_group,W-C1,2015,Mideast,Mugs,0.0190262956401632
+year_sales_territory_stock_group,W-C1,2015,Mideast,Novelty Items,0.200353946076565
+year_sales_territory_stock_group,W-C1,2015,Mideast,Packaging Materials,0.589257257549856
+year_sales_territory_stock_group,W-C1,2015,Mideast,T-Shirts,0.161480221135042
+year_sales_territory_stock_group,W-C1,2015,Mideast,Toys,0.0888331988517922
+year_sales_territory_stock_group,W-C1,2015,Mideast,USB Novelties,0.0279635067879017
+year_sales_territory_stock_group,W-C1,2015,New England,Clothing,0.28449336875497
+year_sales_territory_stock_group,W-C1,2015,New England,Computing Novelties,0.229606468900945
+year_sales_territory_stock_group,W-C1,2015,New England,Furry Footwear,0.0335203445903139
+year_sales_territory_stock_group,W-C1,2015,New England,Mugs,0.0201319762890057
+year_sales_territory_stock_group,W-C1,2015,New England,Novelty Items,0.212921957788423
+year_sales_territory_stock_group,W-C1,2015,New England,Packaging Materials,0.559546967685902
+year_sales_territory_stock_group,W-C1,2015,New England,T-Shirts,0.174586958587035
+year_sales_territory_stock_group,W-C1,2015,New England,Toys,0.100940153245217
+year_sales_territory_stock_group,W-C1,2015,New England,USB Novelties,0.0269105674041578
+year_sales_territory_stock_group,W-C1,2015,Plains,Clothing,0.248414202221608
+year_sales_territory_stock_group,W-C1,2015,Plains,Computing Novelties,0.199952372741901
+year_sales_territory_stock_group,W-C1,2015,Plains,Furry Footwear,0.0300445697006923
+year_sales_territory_stock_group,W-C1,2015,Plains,Mugs,0.0183586671311845
+year_sales_territory_stock_group,W-C1,2015,Plains,Novelty Items,0.193737337751554
+year_sales_territory_stock_group,W-C1,2015,Plains,Packaging Materials,0.612592209839658
+year_sales_territory_stock_group,W-C1,2015,Plains,T-Shirts,0.145000897718213
+year_sales_territory_stock_group,W-C1,2015,Plains,Toys,0.0840421129150472
+year_sales_territory_stock_group,W-C1,2015,Plains,USB Novelties,0.0306071134981868
+year_sales_territory_stock_group,W-C1,2015,Rocky Mountain,Clothing,0.273623172345053
+year_sales_territory_stock_group,W-C1,2015,Rocky Mountain,Computing Novelties,0.226521570469412
+year_sales_territory_stock_group,W-C1,2015,Rocky Mountain,Furry Footwear,0.0277090540780828
+year_sales_territory_stock_group,W-C1,2015,Rocky Mountain,Mugs,0.0190663893626015
+year_sales_territory_stock_group,W-C1,2015,Rocky Mountain,Novelty Items,0.194806265893217
+year_sales_territory_stock_group,W-C1,2015,Rocky Mountain,Packaging Materials,0.588026398228132
+year_sales_territory_stock_group,W-C1,2015,Rocky Mountain,T-Shirts,0.174511310838223
+year_sales_territory_stock_group,W-C1,2015,Rocky Mountain,Toys,0.0863401697956257
+year_sales_territory_stock_group,W-C1,2015,Rocky Mountain,USB Novelties,0.0266235496959493
+year_sales_territory_stock_group,W-C1,2015,Southeast,Clothing,0.262110956898486
+year_sales_territory_stock_group,W-C1,2015,Southeast,Computing Novelties,0.210514056603951
+year_sales_territory_stock_group,W-C1,2015,Southeast,Furry Footwear,0.0307425973384999
+year_sales_territory_stock_group,W-C1,2015,Southeast,Mugs,0.0175534363036472
+year_sales_territory_stock_group,W-C1,2015,Southeast,Novelty Items,0.195865313493811
+year_sales_territory_stock_group,W-C1,2015,Southeast,Packaging Materials,0.596878414448161
+year_sales_territory_stock_group,W-C1,2015,Southeast,T-Shirts,0.158751195104662
+year_sales_territory_stock_group,W-C1,2015,Southeast,Toys,0.0892477671540648
+year_sales_territory_stock_group,W-C1,2015,Southeast,USB Novelties,0.030124894199732
+year_sales_territory_stock_group,W-C1,2015,Southwest,Clothing,0.278666595478459
+year_sales_territory_stock_group,W-C1,2015,Southwest,Computing Novelties,0.215095674798991
+year_sales_territory_stock_group,W-C1,2015,Southwest,Furry Footwear,0.0319870612206444
+year_sales_territory_stock_group,W-C1,2015,Southwest,Mugs,0.0189458867232993
+year_sales_territory_stock_group,W-C1,2015,Southwest,Novelty Items,0.212899722405684
+year_sales_territory_stock_group,W-C1,2015,Southwest,Packaging Materials,0.572590533645749
+year_sales_territory_stock_group,W-C1,2015,Southwest,T-Shirts,0.162721367603552
+year_sales_territory_stock_group,W-C1,2015,Southwest,Toys,0.0963685636803527
+year_sales_territory_stock_group,W-C1,2015,Southwest,USB Novelties,0.0282752373331572
+year_sales_territory_stock_group,W-C1,2016,External,Clothing,0.218374405578929
+year_sales_territory_stock_group,W-C1,2016,External,Computing Novelties,0.166615848846644
+year_sales_territory_stock_group,W-C1,2016,External,Furry Footwear,0.0321765254971908
+year_sales_territory_stock_group,W-C1,2016,External,Mugs,0.0206531945677311
+year_sales_territory_stock_group,W-C1,2016,External,Novelty Items,0.24555240011003
+year_sales_territory_stock_group,W-C1,2016,External,Packaging Materials,0.577892964836497
+year_sales_territory_stock_group,W-C1,2016,External,T-Shirts,0.122878529453696
+year_sales_territory_stock_group,W-C1,2016,External,Toys,0.0997382101790348
+year_sales_territory_stock_group,W-C1,2016,External,USB Novelties,0.0147416772378139
+year_sales_territory_stock_group,W-C1,2016,Far West,Clothing,0.267085172644517
+year_sales_territory_stock_group,W-C1,2016,Far West,Computing Novelties,0.211642079872503
+year_sales_territory_stock_group,W-C1,2016,Far West,Furry Footwear,0.0291775758035473
+year_sales_territory_stock_group,W-C1,2016,Far West,Mugs,0.0168974997958635
+year_sales_territory_stock_group,W-C1,2016,Far West,Novelty Items,0.237260346930972
+year_sales_territory_stock_group,W-C1,2016,Far West,Packaging Materials,0.550675145988173
+year_sales_territory_stock_group,W-C1,2016,Far West,T-Shirts,0.162909228801146
+year_sales_territory_stock_group,W-C1,2016,Far West,Toys,0.0803724699911172
+year_sales_territory_stock_group,W-C1,2016,Far West,USB Novelties,0.0198083242456862
+year_sales_territory_stock_group,W-C1,2016,Great Lakes,Clothing,0.251727764608864
+year_sales_territory_stock_group,W-C1,2016,Great Lakes,Computing Novelties,0.200191575385595
+year_sales_territory_stock_group,W-C1,2016,Great Lakes,Furry Footwear,0.0259372387792443
+year_sales_territory_stock_group,W-C1,2016,Great Lakes,Mugs,0.0173346864170066
+year_sales_territory_stock_group,W-C1,2016,Great Lakes,Novelty Items,0.231963473707579
+year_sales_territory_stock_group,W-C1,2016,Great Lakes,Packaging Materials,0.570635537939412
+year_sales_territory_stock_group,W-C1,2016,Great Lakes,T-Shirts,0.155297388416839
+year_sales_territory_stock_group,W-C1,2016,Great Lakes,Toys,0.0850000168943873
+year_sales_territory_stock_group,W-C1,2016,Great Lakes,USB Novelties,0.0207930371715884
+year_sales_territory_stock_group,W-C1,2016,Mideast,Clothing,0.24001629820203
+year_sales_territory_stock_group,W-C1,2016,Mideast,Computing Novelties,0.186818493011306
+year_sales_territory_stock_group,W-C1,2016,Mideast,Furry Footwear,0.0290152848186683
+year_sales_territory_stock_group,W-C1,2016,Mideast,Mugs,0.0163513317499992
+year_sales_territory_stock_group,W-C1,2016,Mideast,Novelty Items,0.225615399564187
+year_sales_territory_stock_group,W-C1,2016,Mideast,Packaging Materials,0.582303638022346
+year_sales_territory_stock_group,W-C1,2016,Mideast,T-Shirts,0.146842326827531
+year_sales_territory_stock_group,W-C1,2016,Mideast,Toys,0.0884965012831928
+year_sales_territory_stock_group,W-C1,2016,Mideast,USB Novelties,0.0168911561222249
+year_sales_territory_stock_group,W-C1,2016,New England,Clothing,0.25849700643572
+year_sales_territory_stock_group,W-C1,2016,New England,Computing Novelties,0.209304877927501
+year_sales_territory_stock_group,W-C1,2016,New England,Furry Footwear,0.0252847015154378
+year_sales_territory_stock_group,W-C1,2016,New England,Mugs,0.0153904811593592
+year_sales_territory_stock_group,W-C1,2016,New England,Novelty Items,0.210616341541894
+year_sales_territory_stock_group,W-C1,2016,New England,Packaging Materials,0.581969546546994
+year_sales_territory_stock_group,W-C1,2016,New England,T-Shirts,0.166542407800443
+year_sales_territory_stock_group,W-C1,2016,New England,Toys,0.0771085135502917
+year_sales_territory_stock_group,W-C1,2016,New England,USB Novelties,0.0196022604244221
+year_sales_territory_stock_group,W-C1,2016,Plains,Clothing,0.265634371016624
+year_sales_territory_stock_group,W-C1,2016,Plains,Computing Novelties,0.214971010348415
+year_sales_territory_stock_group,W-C1,2016,Plains,Furry Footwear,0.0291274673042897
+year_sales_territory_stock_group,W-C1,2016,Plains,Mugs,0.0189465366449365
+year_sales_territory_stock_group,W-C1,2016,Plains,Novelty Items,0.217699366883139
+year_sales_territory_stock_group,W-C1,2016,Plains,Packaging Materials,0.564777433534505
+year_sales_territory_stock_group,W-C1,2016,Plains,T-Shirts,0.169941582580988
+year_sales_territory_stock_group,W-C1,2016,Plains,Toys,0.0774080303739266
+year_sales_territory_stock_group,W-C1,2016,Plains,USB Novelties,0.0207889913724729
+year_sales_territory_stock_group,W-C1,2016,Rocky Mountain,Clothing,0.270084231257712
+year_sales_territory_stock_group,W-C1,2016,Rocky Mountain,Computing Novelties,0.216280025288021
+year_sales_territory_stock_group,W-C1,2016,Rocky Mountain,Furry Footwear,0.0311891245689285
+year_sales_territory_stock_group,W-C1,2016,Rocky Mountain,Mugs,0.0192612123787011
+year_sales_territory_stock_group,W-C1,2016,Rocky Mountain,Novelty Items,0.252659804362466
+year_sales_territory_stock_group,W-C1,2016,Rocky Mountain,Packaging Materials,0.53139131292062
+year_sales_territory_stock_group,W-C1,2016,Rocky Mountain,T-Shirts,0.16611789325246
+year_sales_territory_stock_group,W-C1,2016,Rocky Mountain,Toys,0.0966803539871006
+year_sales_territory_stock_group,W-C1,2016,Rocky Mountain,USB Novelties,0.0248910598144189
+year_sales_territory_stock_group,W-C1,2016,Southeast,Clothing,0.247774689062159
+year_sales_territory_stock_group,W-C1,2016,Southeast,Computing Novelties,0.19023532838948
+year_sales_territory_stock_group,W-C1,2016,Southeast,Furry Footwear,0.0268482821633749
+year_sales_territory_stock_group,W-C1,2016,Southeast,Mugs,0.0170445400863722
+year_sales_territory_stock_group,W-C1,2016,Southeast,Novelty Items,0.233823950735872
+year_sales_territory_stock_group,W-C1,2016,Southeast,Packaging Materials,0.575064923973339
+year_sales_territory_stock_group,W-C1,2016,Southeast,T-Shirts,0.147792383664128
+year_sales_territory_stock_group,W-C1,2016,Southeast,Toys,0.0847999933246439
+year_sales_territory_stock_group,W-C1,2016,Southeast,USB Novelties,0.0190057695200787
+year_sales_territory_stock_group,W-C1,2016,Southwest,Clothing,0.255109828252264
+year_sales_territory_stock_group,W-C1,2016,Southwest,Computing Novelties,0.203258349079089
+year_sales_territory_stock_group,W-C1,2016,Southwest,Furry Footwear,0.0305883332711885
+year_sales_territory_stock_group,W-C1,2016,Southwest,Mugs,0.0193891751511415
+year_sales_territory_stock_group,W-C1,2016,Southwest,Novelty Items,0.229243850306804
+year_sales_territory_stock_group,W-C1,2016,Southwest,Packaging Materials,0.563614196470757
+year_sales_territory_stock_group,W-C1,2016,Southwest,T-Shirts,0.160467704478207
+year_sales_territory_stock_group,W-C1,2016,Southwest,Toys,0.0781470613827796
+year_sales_territory_stock_group,W-C1,2016,Southwest,USB Novelties,0.0182942116382159
+year_stock_group,W-C1,2013,Clothing,,0.274883701005627
+year_stock_group,W-C1,2013,Computing Novelties,,0.221901246692315
+year_stock_group,W-C1,2013,Furry Footwear,,0.0302595731769804
+year_stock_group,W-C1,2013,Mugs,,0.0186900362367512
+year_stock_group,W-C1,2013,Novelty Items,,0.197035529728935
+year_stock_group,W-C1,2013,Packaging Materials,,0.584482576351011
+year_stock_group,W-C1,2013,T-Shirts,,0.169445908595383
+year_stock_group,W-C1,2013,Toys,,0.0881783845464306
+year_stock_group,W-C1,2013,USB Novelties,,0.0278599943623747
+year_stock_group,W-C1,2014,Clothing,,0.273598363734046
+year_stock_group,W-C1,2014,Computing Novelties,,0.221895429360628
+year_stock_group,W-C1,2014,Furry Footwear,,0.0293970573765476
+year_stock_group,W-C1,2014,Mugs,,0.0183256839056821
+year_stock_group,W-C1,2014,Novelty Items,,0.197588890918952
+year_stock_group,W-C1,2014,Packaging Materials,,0.586508671372856
+year_stock_group,W-C1,2014,T-Shirts,,0.168674674471722
+year_stock_group,W-C1,2014,Toys,,0.0866722100041917
+year_stock_group,W-C1,2014,USB Novelties,,0.0285406095658839
+year_stock_group,W-C1,2015,Clothing,,0.267912792913091
+year_stock_group,W-C1,2015,Computing Novelties,,0.215600512284061
+year_stock_group,W-C1,2015,Furry Footwear,,0.0304184230943008
+year_stock_group,W-C1,2015,Mugs,,0.0186044873299103
+year_stock_group,W-C1,2015,Novelty Items,,0.200083956007923
+year_stock_group,W-C1,2015,Packaging Materials,,0.589218193179181
+year_stock_group,W-C1,2015,T-Shirts,,0.162145551586639
+year_stock_group,W-C1,2015,Toys,,0.0894140532103055
+year_stock_group,W-C1,2015,USB Novelties,,0.0293612750229235
+year_stock_group,W-C1,2016,Clothing,,0.254115733220653
+year_stock_group,W-C1,2016,Computing Novelties,,0.200622817596623
+year_stock_group,W-C1,2016,Furry Footwear,,0.0283343359655071
+year_stock_group,W-C1,2016,Mugs,,0.0176018163743708
+year_stock_group,W-C1,2016,Novelty Items,,0.230017508524119
+year_stock_group,W-C1,2016,Packaging Materials,,0.567850979267467
+year_stock_group,W-C1,2016,T-Shirts,,0.156656762201449
+year_stock_group,W-C1,2016,Toys,,0.0835875635666158
+year_stock_group,W-C1,2016,USB Novelties,,0.0194982117743526

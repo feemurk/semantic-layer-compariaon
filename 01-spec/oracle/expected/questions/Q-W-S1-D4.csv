@@ -1,0 +1,10 @@
+color,revenue_as_was,revenue_as_is,differs
+Black,8221649,8221649,false
+Blue,11388475,11388475,false
+Gray,1885586,,true
+Light Brown,1581984,1581984,false
+N/A,24184155.95,24184155.95,false
+Red,1466995,1466995,false
+Steel Gray,,1885586,true
+White,4622546,4622546,false
+Yellow,475930,475930,false

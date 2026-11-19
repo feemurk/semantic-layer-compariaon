@@ -1,0 +1,3 @@
+city_key,wwi_city_id,city,state_province,country,continent,sales_territory,region,subregion,valid_from,valid_to,is_current
+1,1,Seattle,Washington,United States,North America,Far West,Americas,Northern America,2013-01-01 00:00:00,9999-12-31 23:59:59.999999,true
+2,2,Miami,Florida,United States,North America,Southeast,Americas,Northern America,2013-01-01 00:00:00,9999-12-31 23:59:59.999999,true

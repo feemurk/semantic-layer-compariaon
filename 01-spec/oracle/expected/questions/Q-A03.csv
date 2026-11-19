@@ -1,0 +1,46 @@
+stock_group_name,delivery_month,units_sold
+Clothing,2016-01-01,69575
+Clothing,2016-02-01,52285
+Clothing,2016-03-01,66997
+Clothing,2016-04-01,70626
+Clothing,2016-05-01,66787
+Computing Novelties,2016-01-01,52796
+Computing Novelties,2016-02-01,41077
+Computing Novelties,2016-03-01,50700
+Computing Novelties,2016-04-01,51605
+Computing Novelties,2016-05-01,50634
+Furry Footwear,2016-01-01,9346
+Furry Footwear,2016-02-01,7033
+Furry Footwear,2016-03-01,10578
+Furry Footwear,2016-04-01,11955
+Furry Footwear,2016-05-01,10317
+Mugs,2016-01-01,6444
+Mugs,2016-02-01,5106
+Mugs,2016-03-01,6587
+Mugs,2016-04-01,6249
+Mugs,2016-05-01,6329
+Novelty Items,2016-01-01,53894
+Novelty Items,2016-02-01,41295
+Novelty Items,2016-03-01,54194
+Novelty Items,2016-04-01,54674
+Novelty Items,2016-05-01,52721
+Packaging Materials,2016-01-01,155291
+Packaging Materials,2016-02-01,119076
+Packaging Materials,2016-03-01,146983
+Packaging Materials,2016-04-01,147100
+Packaging Materials,2016-05-01,156937
+T-Shirts,2016-01-01,41988
+T-Shirts,2016-02-01,33036
+T-Shirts,2016-03-01,40080
+T-Shirts,2016-04-01,41460
+T-Shirts,2016-05-01,41016
+Toys,2016-01-01,3187
+Toys,2016-02-01,2613
+Toys,2016-03-01,3264
+Toys,2016-04-01,3293
+Toys,2016-05-01,3039
+USB Novelties,2016-01-01,2094
+USB Novelties,2016-02-01,1775
+USB Novelties,2016-03-01,2293
+USB Novelties,2016-04-01,1926
+USB Novelties,2016-05-01,1949

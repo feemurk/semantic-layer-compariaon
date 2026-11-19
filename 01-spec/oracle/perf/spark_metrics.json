@@ -1,0 +1,277 @@
+{
+ "summary": {
+  "engine": "spark",
+  "queries": 22,
+  "errors": 0,
+  "mismatched": 0,
+  "repeat": 1,
+  "wall_seconds": 1748.6,
+  "run_at_utc": "2026-11-19T08:58:05+00:00"
+ },
+ "results": [
+  {
+   "query_id": "B-N1",
+   "kind": "metrics",
+   "rows": 2061,
+   "runs_seconds": [
+    178.4059
+   ],
+   "first_run_seconds": 178.4059,
+   "warm_median_seconds": 178.4059,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "B-N2",
+   "kind": "metrics",
+   "rows": 2061,
+   "runs_seconds": [
+    182.206
+   ],
+   "first_run_seconds": 182.206,
+   "warm_median_seconds": 182.206,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "B-N3",
+   "kind": "metrics",
+   "rows": 2061,
+   "runs_seconds": [
+    193.2613
+   ],
+   "first_run_seconds": 193.2613,
+   "warm_median_seconds": 193.2613,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "B-N4",
+   "kind": "metrics",
+   "rows": 2061,
+   "runs_seconds": [
+    183.3355
+   ],
+   "first_run_seconds": 183.3355,
+   "warm_median_seconds": 183.3355,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "B-N5",
+   "kind": "metrics",
+   "rows": 2061,
+   "runs_seconds": [
+    172.3343
+   ],
+   "first_run_seconds": 172.3343,
+   "warm_median_seconds": 172.3343,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "B-W1",
+   "kind": "metrics",
+   "rows": 3980,
+   "runs_seconds": [
+    5.0499
+   ],
+   "first_run_seconds": 5.0499,
+   "warm_median_seconds": 5.0499,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "B-W2",
+   "kind": "metrics",
+   "rows": 3980,
+   "runs_seconds": [
+    4.128
+   ],
+   "first_run_seconds": 4.128,
+   "warm_median_seconds": 4.128,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "B-W3",
+   "kind": "metrics",
+   "rows": 3980,
+   "runs_seconds": [
+    4.939
+   ],
+   "first_run_seconds": 4.939,
+   "warm_median_seconds": 4.939,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "B-W4",
+   "kind": "metrics",
+   "rows": 3980,
+   "runs_seconds": [
+    6.2421
+   ],
+   "first_run_seconds": 6.2421,
+   "warm_median_seconds": 6.2421,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "B-W5",
+   "kind": "metrics",
+   "rows": 4011,
+   "runs_seconds": [
+    3.4586
+   ],
+   "first_run_seconds": 3.4586,
+   "warm_median_seconds": 3.4586,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "N-C1",
+   "kind": "metrics",
+   "rows": 5226,
+   "runs_seconds": [
+    29.3161
+   ],
+   "first_run_seconds": 29.3161,
+   "warm_median_seconds": 29.3161,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "N-C2",
+   "kind": "metrics",
+   "rows": 5226,
+   "runs_seconds": [
+    24.5066
+   ],
+   "first_run_seconds": 24.5066,
+   "warm_median_seconds": 24.5066,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "N-M1",
+   "kind": "metrics",
+   "rows": 2061,
+   "runs_seconds": [
+    162.5872
+   ],
+   "first_run_seconds": 162.5872,
+   "warm_median_seconds": 162.5872,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "N-M2",
+   "kind": "metrics",
+   "rows": 2061,
+   "runs_seconds": [
+    206.9218
+   ],
+   "first_run_seconds": 206.9218,
+   "warm_median_seconds": 206.9218,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "N-S1",
+   "kind": "metrics",
+   "rows": 2061,
+   "runs_seconds": [
+    166.83
+   ],
+   "first_run_seconds": 166.83,
+   "warm_median_seconds": 166.83,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "N-S2",
+   "kind": "metrics",
+   "rows": 2061,
+   "runs_seconds": [
+    199.8717
+   ],
+   "first_run_seconds": 199.8717,
+   "warm_median_seconds": 199.8717,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "W-C1",
+   "kind": "metrics",
+   "rows": 482,
+   "runs_seconds": [
+    2.1697
+   ],
+   "first_run_seconds": 2.1697,
+   "warm_median_seconds": 2.1697,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "W-C2",
+   "kind": "metrics",
+   "rows": 6723,
+   "runs_seconds": [
+    7.9806
+   ],
+   "first_run_seconds": 7.9806,
+   "warm_median_seconds": 7.9806,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "W-M1",
+   "kind": "metrics",
+   "rows": 3980,
+   "runs_seconds": [
+    5.2268
+   ],
+   "first_run_seconds": 5.2268,
+   "warm_median_seconds": 5.2268,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "W-M2",
+   "kind": "metrics",
+   "rows": 2273,
+   "runs_seconds": [
+    2.2762
+   ],
+   "first_run_seconds": 2.2762,
+   "warm_median_seconds": 2.2762,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "W-S1",
+   "kind": "metrics",
+   "rows": 3980,
+   "runs_seconds": [
+    4.2882
+   ],
+   "first_run_seconds": 4.2882,
+   "warm_median_seconds": 4.2882,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "query_id": "W-S2",
+   "kind": "metrics",
+   "rows": 4011,
+   "runs_seconds": [
+    3.0808
+   ],
+   "first_run_seconds": 3.0808,
+   "warm_median_seconds": 3.0808,
+   "error": null,
+   "mismatches": []
+  }
+ ]
+}

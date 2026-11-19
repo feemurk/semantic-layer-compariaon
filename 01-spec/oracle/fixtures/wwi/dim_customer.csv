@@ -1,0 +1,4 @@
+customer_key,wwi_customer_id,customer,bill_to_customer,category,buying_group,valid_from,valid_to,is_current
+0,0,Unknown,N/A,N/A,N/A,2013-01-01 00:00:00,9999-12-31 23:59:59.999999,true
+1,1,Cust A,Tailspin Toys (Head Office),Novelty Shop,Tailspin Toys,2013-01-01 00:00:00,9999-12-31 23:59:59.999999,true
+2,2,Cust B,Cust B,Novelty Shop,N/A,2013-01-01 00:00:00,9999-12-31 23:59:59.999999,true

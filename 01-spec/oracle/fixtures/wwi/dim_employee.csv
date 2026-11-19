@@ -1,0 +1,4 @@
+employee_key,wwi_employee_id,employee,is_salesperson,valid_from,valid_to,is_current
+0,0,Unknown,false,2013-01-01 00:00:00,9999-12-31 23:59:59.999999,true
+1,1,Sam Seller,true,2013-01-01 00:00:00,9999-12-31 23:59:59.999999,true
+2,2,Pat Picker,false,2013-01-01 00:00:00,9999-12-31 23:59:59.999999,true

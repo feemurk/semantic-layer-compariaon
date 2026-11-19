@@ -1,0 +1,247 @@
+# Canonical semantic metadata (SPEC § 3.1 "Agent metadata", § 11.2, § 12.1).
+# Every stack loads these names, descriptions, synonyms and formats into its native metadata
+# (MDX descriptions, TMDL descriptions/synonyms, Tableau field descriptions, Metric View
+# comment/display_name/synonyms/format). Equal metadata investment is a precondition of E7.
+# Limits applied to every object: at most 10 synonyms, each at most 255 characters
+# (Metric View YAML 1.1 agent metadata, SPEC V-01).
+version: 1
+formats:
+  currency: {type: currency, currency_code: USD, decimal_places: 2}
+  units: {type: number, decimal_places: 0}
+  count: {type: number, decimal_places: 0}
+  ratio_pct: {type: percentage, decimal_places: 2}
+  decimal_2: {type: number, decimal_places: 2}
+  days: {type: number, decimal_places: 1}
+  index: {type: number, decimal_places: 3}
+
+metrics:
+  - id: B-W1
+    name: revenue_including_tax
+    display_name: Revenue Including Tax
+    dataset: wwi
+    format: currency
+    description: Sum of invoice line totals including tax (fact_sale.total_including_tax).
+    synonyms: [gross revenue incl tax, revenue with tax, total including tax, invoiced amount]
+  - id: B-W2
+    name: gross_profit
+    display_name: Gross Profit
+    dataset: wwi
+    format: currency
+    description: Sum of invoice line profit (fact_sale.profit).
+    synonyms: [profit, margin dollars, gross margin amount]
+  - id: B-W3
+    name: units_sold
+    display_name: Units Sold
+    dataset: wwi
+    format: units
+    description: Sum of invoiced quantity (fact_sale.quantity).
+    synonyms: [quantity sold, sold units, sales quantity, units invoiced]
+  - id: B-W4
+    name: invoice_count
+    display_name: Invoice Count
+    dataset: wwi
+    format: count
+    description: Exact count of distinct invoices (fact_sale.wwi_invoice_id). Not additive across any dimension.
+    synonyms: [number of invoices, invoices, distinct invoices]
+  - id: B-W5
+    name: backordered_order_lines
+    display_name: Backordered Order Lines
+    dataset: wwi
+    format: count
+    description: Count of order lines with a backorder (fact_order.wwi_backorder_id is not null); blank when no line qualifies.
+    synonyms: [backorders, backordered lines, lines on backorder]
+  - id: B-N1
+    name: trip_count
+    display_name: Trip Count
+    dataset: nyctaxi
+    format: count
+    description: Count of valid Yellow Taxi trips (fact_trip rows).
+    synonyms: [trips, number of trips, rides, ride count]
+  - id: B-N2
+    name: total_trip_distance
+    display_name: Total Trip Distance
+    dataset: nyctaxi
+    format: decimal_2
+    description: Sum of trip distance in miles (fact_trip.trip_distance).
+    synonyms: [miles, distance, total miles, trip miles]
+  - id: B-N3
+    name: fare_amount
+    display_name: Fare Amount
+    dataset: nyctaxi
+    format: currency
+    description: Sum of metered fares (fact_trip.fare_amount), excluding tips, tolls and surcharges.
+    synonyms: [fares, metered fare, fare revenue]
+  - id: B-N4
+    name: tip_amount
+    display_name: Tip Amount (All Payment Types)
+    dataset: nyctaxi
+    format: currency
+    description: Sum of recorded tips across all payment types (fact_trip.tip_amount). TLC records tips only for card payments.
+    synonyms: [tips, all tips, gratuity]
+  - id: B-N5
+    name: tolls_amount
+    display_name: Tolls Amount
+    dataset: nyctaxi
+    format: currency
+    description: Sum of tolls (fact_trip.tolls_amount).
+    synonyms: [tolls, toll charges, bridge and tunnel tolls]
+  - id: W-S1
+    name: revenue
+    display_name: Revenue (Excl. Tax)
+    dataset: wwi
+    format: currency
+    description: Sum of invoice line totals excluding tax (fact_sale.total_excluding_tax), dated by invoice date.
+    synonyms: [revenue, sales, net sales, sales revenue, turnover, revenue excluding tax]
+  - id: W-S2
+    name: ordered_quantity
+    display_name: Ordered Quantity
+    dataset: wwi
+    format: units
+    description: Sum of ordered quantity (fact_order.quantity), dated by order date.
+    synonyms: [units ordered, order quantity, quantity ordered, demand]
+  - id: W-M1
+    name: gross_margin_pct
+    display_name: Gross Margin %
+    dataset: wwi
+    format: ratio_pct
+    description: Gross Profit divided by Revenue (Excl. Tax), computed from the aggregated numerator and denominator at every grain.
+    synonyms: [margin, gross margin, GM%, margin percent, profit margin]
+  - id: W-M2
+    name: closing_stock_on_hand
+    display_name: Closing Stock On Hand
+    dataset: wwi
+    format: units
+    description: Units on hand on the last day of the period (semi-additive); summed across stock items and stock groups.
+    synonyms: [stock on hand, inventory, closing inventory, ending inventory, units in stock]
+  - id: W-C1
+    name: stock_group_revenue_share
+    display_name: Stock Group Revenue Share
+    dataset: wwi
+    format: ratio_pct
+    description: Revenue of items in a stock group divided by revenue of the same context without the stock group filter. Items can belong to several groups, so shares do not add to 100%.
+    synonyms: [category share, group share, share of revenue, revenue mix]
+  - id: W-C2
+    name: days_of_supply
+    display_name: Days of Supply
+    dataset: wwi
+    format: days
+    description: Closing Stock On Hand divided by average daily Units Sold over the 91 days ending on the period end. Defined only by date and stock item attributes.
+    synonyms: [DOS, days of inventory, inventory cover, stock cover, weeks of supply]
+  - id: N-S1
+    name: gross_trip_revenue
+    display_name: Gross Trip Revenue
+    dataset: nyctaxi
+    format: currency
+    description: Sum of total amount charged (fact_trip.total_amount).
+    synonyms: [revenue, trip revenue, total amount, gross revenue, takings]
+  - id: N-S2
+    name: card_tips
+    display_name: Card Tips
+    dataset: nyctaxi
+    format: currency
+    description: Sum of tips on credit card trips (payment type 1); blank for other payment types.
+    synonyms: [credit card tips, card gratuity, tips on card]
+  - id: N-M1
+    name: distinct_od_pairs
+    display_name: Distinct OD Pairs
+    dataset: nyctaxi
+    format: count
+    description: Exact count of distinct pickup zone to dropoff zone pairs. Additive across zone and borough of either role; not additive across time, payment type, vendor or hour.
+    synonyms: [origin destination pairs, OD pairs, unique routes, distinct routes]
+  - id: N-M2
+    name: fare_per_mile
+    display_name: Fare per Mile
+    dataset: nyctaxi
+    format: decimal_2
+    description: Fare Amount divided by Total Trip Distance, computed from the aggregated sums at every grain.
+    synonyms: [fare per mile, price per mile, rate per mile]
+  - id: N-C1
+    name: revenue_ytd
+    display_name: Revenue YTD and YoY % vs STLY
+    dataset: nyctaxi
+    format: currency
+    description: Gross Trip Revenue from 1 January to the period end by pickup date, compared with the same period last year (29 February maps to 28 February).
+    synonyms: [year to date revenue, YTD revenue, YoY growth, year over year, same time last year]
+  - id: N-C2
+    name: mtd_ytd_pace_index
+    display_name: MTD-to-YTD Daily Pace Index
+    dataset: nyctaxi
+    format: index
+    description: Average daily trips month-to-date divided by average daily trips year-to-date, using calendar days elapsed. Above 1 means the month is running ahead of the year's pace.
+    synonyms: [pace index, run rate index, month pace, daily pace]
+
+dimensions:
+  wwi:
+    - name: date
+      display_name: Date
+      roles: {invoice_date: Invoice Date (sales), order_date: Order Date (orders), snapshot_date: Snapshot Date (stock)}
+      attributes: [date_key, calendar_year, calendar_quarter, calendar_month, month_name, fiscal_year, fiscal_quarter, fiscal_month, day_of_week]
+      description: Shared calendar with a fiscal year starting 1 November, labeled by the year in which it ends.
+      synonyms: [day, period, fiscal year, FY, month, quarter]
+    - name: delivery_date
+      display_name: Delivery Date
+      description: Date the invoice line was delivered (role of the Date dimension); blank for undelivered lines.
+      synonyms: [delivered on, ship date, delivery day]
+    - name: customer
+      display_name: Customer
+      attributes: [customer, category, buying_group]
+      description: Customer as recorded at the time of sale.
+      synonyms: [client, account, store, buyer]
+    - name: bill_to_customer
+      display_name: Bill-To Customer
+      description: Customer responsible for payment (role of the Customer dimension).
+      synonyms: [bill to, billing customer, payer, head office]
+    - name: city
+      display_name: City
+      attributes: [city, state_province, country, continent, sales_territory, region, subregion]
+      description: Delivery city as recorded at the time of sale; Sales Territory is an alternate hierarchy over State Province.
+      synonyms: [location, territory, sales territory, state, region]
+    - name: stock_item
+      display_name: Stock Item
+      attributes: [stock_item, brand, color, size, selling_package, is_chiller_stock]
+      description: Product as recorded at the time of sale (SCD Type 2); current attributes via the durable item id.
+      synonyms: [product, item, SKU, article]
+    - name: stock_group
+      display_name: Stock Group
+      description: Product group; an item can belong to several groups, so group totals overlap.
+      synonyms: [category, product group, product category, department]
+    - name: salesperson
+      display_name: Salesperson
+      description: Employee credited with the sale or order (role of the Employee dimension).
+      synonyms: [sales rep, seller, account manager, rep]
+    - name: picker
+      display_name: Picker
+      description: Employee who picked the order (role of the Employee dimension); applies to orders only.
+      synonyms: [warehouse picker, picked by, fulfiller]
+  nyctaxi:
+    - name: pickup_date
+      display_name: Pickup Date
+      attributes: [date_key, calendar_year, calendar_quarter, calendar_month, month_name, day_of_week, day_name]
+      description: Date the trip started; the anchor for year-to-date and pace metrics.
+      synonyms: [trip date, pickup day, date]
+    - name: dropoff_date
+      display_name: Dropoff Date
+      description: Date the trip ended (role of the Date dimension); differs from pickup date for trips crossing midnight.
+      synonyms: [dropoff day, trip end date, arrival date]
+    - name: pickup_hour
+      display_name: Pickup Hour
+      description: Hour of day the trip started, 0-23.
+      synonyms: [hour, time of day, hour of day]
+    - name: pickup_zone
+      display_name: Pickup Zone
+      attributes: [borough, zone, service_zone]
+      description: TLC taxi zone where the trip started (role of the Zone dimension).
+      synonyms: [origin, pickup location, pickup borough, from]
+    - name: dropoff_zone
+      display_name: Dropoff Zone
+      attributes: [borough, zone, service_zone]
+      description: TLC taxi zone where the trip ended (role of the Zone dimension).
+      synonyms: [destination, dropoff location, dropoff borough, to]
+    - name: payment_type
+      display_name: Payment Type
+      description: TLC payment type code and label (0 Flex Fare trip, 1 Credit card, 2 Cash, 3 No charge, 4 Dispute, 5 Unknown, 6 Voided trip).
+      synonyms: [payment method, paid by, tender]
+    - name: vendor
+      display_name: Vendor
+      description: TLC technology provider id that recorded the trip.
+      synonyms: [vendor id, provider, TPEP provider]

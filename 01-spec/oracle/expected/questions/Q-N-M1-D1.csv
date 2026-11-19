@@ -1,0 +1,8 @@
+grain,payment_type_name,distinct_od_pairs
+payment_type,Cash,24278
+payment_type,Credit card,44544
+payment_type,Dispute,12515
+payment_type,Flex Fare trip,36659
+payment_type,No charge,9218
+sum_of_members,,127214
+total,,50124

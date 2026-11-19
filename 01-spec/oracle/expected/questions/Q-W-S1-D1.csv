@@ -1,0 +1,148 @@
+grain,sales_territory,fiscal_month,state_province,city,revenue
+state,Southeast,6,Alabama,,78384.90
+state,Southeast,6,Arkansas,,88984.90
+state,Southeast,6,Florida,,209356.15
+state,Southeast,6,Georgia,,183019.50
+state,Southeast,6,Kentucky,,57070.50
+state,Southeast,6,Louisiana,,89820.45
+state,Southeast,6,Mississippi,,25377.25
+state,Southeast,6,North Carolina,,168750.35
+state,Southeast,6,South Carolina,,72490.90
+state,Southeast,6,Tennessee,,25230.60
+state,Southeast,6,Virginia,,58487.65
+state,Southeast,6,West Virginia,,128964.25
+city,Southeast,6,Alabama,Bazemore,1031
+city,Southeast,6,Alabama,Belgreen,6917
+city,Southeast,6,Alabama,Broomtown,8571.40
+city,Southeast,6,Alabama,Eulaton,449
+city,Southeast,6,Alabama,Flomaton,7073.90
+city,Southeast,6,Alabama,Guin,1254.30
+city,Southeast,6,Alabama,Highland Home,15849.90
+city,Southeast,6,Alabama,Jemison,8925
+city,Southeast,6,Alabama,Marion Junction,10636.40
+city,Southeast,6,Alabama,Robertsdale,10619
+city,Southeast,6,Alabama,Saks,790
+city,Southeast,6,Alabama,Southside,6268
+city,Southeast,6,Arkansas,Cale,1596.80
+city,Southeast,6,Arkansas,Grannis,4083.25
+city,Southeast,6,Arkansas,Greenfield,6896.25
+city,Southeast,6,Arkansas,Grider,8630.20
+city,Southeast,6,Arkansas,Morrison Bluff,15250
+city,Southeast,6,Arkansas,Reader,27841.40
+city,Southeast,6,Arkansas,Schaal,19242
+city,Southeast,6,Arkansas,Wesson,5445
+city,Southeast,6,Florida,Astor Park,5336
+city,Southeast,6,Florida,Bakers Mill,4270
+city,Southeast,6,Florida,Bokeelia,19537.15
+city,Southeast,6,Florida,Bratt,9800.15
+city,Southeast,6,Florida,Clewiston,498
+city,Southeast,6,Florida,Cloud Lake,6780.50
+city,Southeast,6,Florida,Compass Lake,2428.50
+city,Southeast,6,Florida,Cypress Quarters,14731.20
+city,Southeast,6,Florida,Florahome,7247.25
+city,Southeast,6,Florida,Key Biscayne,11617.20
+city,Southeast,6,Florida,Lake Clarke Shores,6432
+city,Southeast,6,Florida,Lynne,7549.50
+city,Southeast,6,Florida,Mary Esther,37707.60
+city,Southeast,6,Florida,Naples Park,833
+city,Southeast,6,Florida,Oriole Beach,5348
+city,Southeast,6,Florida,Tavares,13505.40
+city,Southeast,6,Florida,Tierra Verde,1205.80
+city,Southeast,6,Florida,Trilby,22812.80
+city,Southeast,6,Florida,Vamo,6983.10
+city,Southeast,6,Florida,Ward Ridge,2303
+city,Southeast,6,Florida,West Frostproof,22430
+city,Southeast,6,Georgia,Coosa,10884.70
+city,Southeast,6,Georgia,Gresston,19769
+city,Southeast,6,Georgia,Griswoldville,25990
+city,Southeast,6,Georgia,Gum Branch,38806
+city,Southeast,6,Georgia,Hahira,688
+city,Southeast,6,Georgia,Leathersville,3151
+city,Southeast,6,Georgia,Nicholson,15724.85
+city,Southeast,6,Georgia,Orchard Hill,15281
+city,Southeast,6,Georgia,Scott,5179.75
+city,Southeast,6,Georgia,Sea Island,15060.80
+city,Southeast,6,Georgia,Statenville,6709.80
+city,Southeast,6,Georgia,Waycross,25774.60
+city,Southeast,6,Kentucky,Calvert City,4645.50
+city,Southeast,6,Kentucky,Creelsboro,426
+city,Southeast,6,Kentucky,Diablock,1806
+city,Southeast,6,Kentucky,Drakesboro,3405.10
+city,Southeast,6,Kentucky,Ekron,11752.90
+city,Southeast,6,Kentucky,Elkatawa,10707
+city,Southeast,6,Kentucky,Frenchburg,7598.40
+city,Southeast,6,Kentucky,Garlin,4380
+city,Southeast,6,Kentucky,Johnetta,11512.60
+city,Southeast,6,Kentucky,Knifley,837
+city,Southeast,6,Louisiana,Alden Bridge,5971.60
+city,Southeast,6,Louisiana,Bayou Cane,9326.80
+city,Southeast,6,Louisiana,Gardere,19407.50
+city,Southeast,6,Louisiana,Kinder,15306
+city,Southeast,6,Louisiana,Larose,2504.25
+city,Southeast,6,Louisiana,Mamou,17165.20
+city,Southeast,6,Louisiana,Meaux,526
+city,Southeast,6,Louisiana,Mooringsport,9179.50
+city,Southeast,6,Louisiana,Plaquemine,2793.60
+city,Southeast,6,Louisiana,Saint Landry,648
+city,Southeast,6,Louisiana,Vidrine,6992
+city,Southeast,6,Mississippi,Darling,9705.40
+city,Southeast,6,Mississippi,Deeson,4565.85
+city,Southeast,6,Mississippi,Glancy,414
+city,Southeast,6,Mississippi,Mashulaville,3815
+city,Southeast,6,Mississippi,Tomnolen,6877
+city,Southeast,6,North Carolina,Abbottsburg,6984
+city,Southeast,6,North Carolina,Bethania,4911
+city,Southeast,6,North Carolina,Bladenboro,18529.80
+city,Southeast,6,North Carolina,Claremont,15381.30
+city,Southeast,6,North Carolina,Cramerton,5851.50
+city,Southeast,6,North Carolina,Dundarrach,7392
+city,Southeast,6,North Carolina,Harkers Island,13135.10
+city,Southeast,6,North Carolina,Hightsville,26900.90
+city,Southeast,6,North Carolina,Holden Beach,4156
+city,Southeast,6,North Carolina,Kannapolis,14021.50
+city,Southeast,6,North Carolina,Navassa,6087.60
+city,Southeast,6,North Carolina,Saxapahaw,8016
+city,Southeast,6,North Carolina,Shawboro,10044
+city,Southeast,6,North Carolina,Staley,6575
+city,Southeast,6,North Carolina,Valdese,20448.65
+city,Southeast,6,North Carolina,Valhalla,316
+city,Southeast,6,South Carolina,Blackville,2645
+city,Southeast,6,South Carolina,Boyden Arbor,3200
+city,Southeast,6,South Carolina,Cherry Grove Beach,2408
+city,Southeast,6,South Carolina,Dillon,4428
+city,Southeast,6,South Carolina,Hardeeville,2032.50
+city,Southeast,6,South Carolina,Lesslie,4741.60
+city,Southeast,6,South Carolina,Mauldin,8768.50
+city,Southeast,6,South Carolina,Nesmith,1791.05
+city,Southeast,6,South Carolina,New Zion,2731.50
+city,Southeast,6,South Carolina,Plum Branch,9031.70
+city,Southeast,6,South Carolina,Ridgeway,2861
+city,Southeast,6,South Carolina,Sans Souci,12604
+city,Southeast,6,South Carolina,Verdery,12253.30
+city,Southeast,6,South Carolina,Ware Shoals,2994.75
+city,Southeast,6,Tennessee,Corryton,10587.80
+city,Southeast,6,Tennessee,Fairfield Glade,3390
+city,Southeast,6,Tennessee,Greenback,6411
+city,Southeast,6,Tennessee,Obion,4841.80
+city,Southeast,6,Virginia,Accomac,17103.50
+city,Southeast,6,Virginia,Gargatha,1400
+city,Southeast,6,Virginia,Mappsburg,7516
+city,Southeast,6,Virginia,Oakpark,752
+city,Southeast,6,Virginia,Raven,1927
+city,Southeast,6,Virginia,Rich Creek,12918
+city,Southeast,6,Virginia,Sandy Level,7065.75
+city,Southeast,6,Virginia,Wyndham,9805.40
+city,Southeast,6,West Virginia,Annamoriah,4677
+city,Southeast,6,West Virginia,Bruceton Mills,5840.10
+city,Southeast,6,West Virginia,Delray,12323
+city,Southeast,6,West Virginia,East Dailey,7910.95
+city,Southeast,6,West Virginia,Elk Garden,1287
+city,Southeast,6,West Virginia,Gallipolis Ferry,20781.80
+city,Southeast,6,West Virginia,Gassaway,15664
+city,Southeast,6,West Virginia,Hambleton,7319
+city,Southeast,6,West Virginia,Lorentz,4475.50
+city,Southeast,6,West Virginia,Middleway,12465.40
+city,Southeast,6,West Virginia,Nitro,8839.60
+city,Southeast,6,West Virginia,Robertsburg,11807
+city,Southeast,6,West Virginia,Slanesville,9997.90
+city,Southeast,6,West Virginia,Triadelphia,5576
