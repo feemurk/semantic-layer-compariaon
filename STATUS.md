@@ -6,7 +6,7 @@ Status values: `Not Started` · `In Progress` · `Complete` · `Blocked`
 
 | Phase | Deliverable | Status | Last Updated | Notes |
 |---|---|---|---|---|
-| 1 | Specification: comparison dimensions, evaluation criteria, test scenarios (`01-spec/`) | Not Started | 2026-11-19 | Repository initialized; folder scaffolded. |
+| 1 | Specification: comparison dimensions, evaluation criteria, test scenarios (`01-spec/`) | In Progress | 2026-11-19 | 12-KPI matrix and canonical schema subset proposed; awaiting scope answers before `SPEC.md` lock. Metric Views syntax verification pending docs access. |
 | 2 | Implementation: `ssas-md` architectural guide and code (`02-implementations/ssas-md/`) | Not Started | 2026-11-19 | Folder scaffolded. Requires one `.md` guide plus standalone code files. |
 | 2 | Implementation: `powerbi-tabular` architectural guide and code (`02-implementations/powerbi-tabular/`) | Not Started | 2026-11-19 | Folder scaffolded. Requires one `.md` guide plus standalone code files. |
 | 2 | Implementation: `bi-layer` architectural guide and code (`02-implementations/bi-layer/`) | Not Started | 2026-11-19 | Folder scaffolded. Requires one `.md` guide plus standalone code files. |
