@@ -4,7 +4,7 @@ Binding project rules for the Enterprise Semantic Layer Comparative Architecture
 
 ## 1. Purpose
 
-A multi-phase comparative architecture study of semantic layer technologies, spanning legacy stacks (SSAS, Power BI Tabular, traditional BI-layer models) and modern stacks (Databricks Unity Catalog Metric Views). Each stack is evaluated against one common specification, documented at architectural depth, and assessed for the boundaries of its approach.
+A multi-phase comparative architecture study of semantic layer technologies: SSAS Multidimensional, Power BI / Analysis Services Tabular, Tableau, and Databricks Unity Catalog Metric Views. Each stack is evaluated against one common specification, documented at architectural depth, and assessed for the boundaries of its approach. The binding scope is `01-spec/SPEC.md`; it overrides any conflicting statement elsewhere.
 
 ## 2. Audience
 
@@ -30,7 +30,7 @@ Write for these readers. Assume fluency in dimensional modeling, calculation eng
 | 2 | Stack implementations, one directory per stack | `02-implementations/<stack>/` |
 | 3 | Boundaries and OCM analysis | `03-boundaries-ocm/` |
 
-Phase 2 stacks: `ssas-md/`, `powerbi-tabular/`, `bi-layer/`, `databricks-metric-views/`.
+Phase 2 stacks: `ssas-md/`, `powerbi-tabular/`, `bi-layer/` (Tableau), `databricks-metric-views/`. Phase 2 shared components: `platform/`, `agent-harness/`.
 
 Deliverable outputs live in `04-deliverables/` and follow § 8.
 
