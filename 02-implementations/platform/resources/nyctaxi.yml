@@ -1,0 +1,33 @@
+# NYC Taxi bronze and gold (SPEC § 5.2). Dimensions publish before nyctaxi_trips.
+resources:
+  pipelines:
+    nyctaxi_dimensions:
+      name: slc-nyctaxi-dimensions
+      serverless: true
+      continuous: false
+      channel: CURRENT
+      catalog: ${resources.catalogs.slc.name}
+      schema: ${resources.schemas.nyctaxi.name}
+      root_path: ../src
+      libraries:
+        - glob:
+            include: ../src/pipelines/nyctaxi_dimensions/**
+      configuration:
+        slc.gold_schema: ${resources.catalogs.slc.name}.${resources.schemas.nyctaxi.name}
+        slc.zone_csv_path: /Volumes/${resources.catalogs.slc.name}/${resources.schemas.raw_nyctaxi.name}/${resources.volumes.nyc_source.name}/taxi_zone_lookup.csv
+
+    nyctaxi_trips:
+      name: slc-nyctaxi-trips
+      serverless: true
+      continuous: false
+      channel: CURRENT
+      catalog: ${resources.catalogs.slc.name}
+      schema: ${resources.schemas.nyctaxi.name}
+      root_path: ../src
+      libraries:
+        - glob:
+            include: ../src/pipelines/nyctaxi_trips/**
+      configuration:
+        slc.raw_schema: ${resources.catalogs.slc.name}.${resources.schemas.raw_nyctaxi.name}
+        slc.gold_schema: ${resources.catalogs.slc.name}.${resources.schemas.nyctaxi.name}
+        slc.landing_path: /Volumes/${resources.catalogs.slc.name}/${resources.schemas.raw_nyctaxi.name}/${resources.volumes.nyc_landing.name}/tlc_yellow

@@ -1,0 +1,33 @@
+# WideWorldImporters gold (SPEC § 5.1). Dimensions publish before facts so that fact
+# foreign keys (declared RELY) reference existing parents; the build job orders them.
+resources:
+  pipelines:
+    wwi_gold_dimensions:
+      name: slc-wwi-gold-dimensions
+      serverless: true
+      continuous: false
+      channel: CURRENT
+      catalog: ${resources.catalogs.slc.name}
+      schema: ${resources.schemas.wwi.name}
+      root_path: ../src
+      libraries:
+        - glob:
+            include: ../src/pipelines/wwi_gold_dimensions/**
+      configuration:
+        slc.raw_schema: ${resources.catalogs.slc.name}.${resources.schemas.raw_wwi.name}
+        slc.gold_schema: ${resources.catalogs.slc.name}.${resources.schemas.wwi.name}
+
+    wwi_gold_facts:
+      name: slc-wwi-gold-facts
+      serverless: true
+      continuous: false
+      channel: CURRENT
+      catalog: ${resources.catalogs.slc.name}
+      schema: ${resources.schemas.wwi.name}
+      root_path: ../src
+      libraries:
+        - glob:
+            include: ../src/pipelines/wwi_gold_facts/**
+      configuration:
+        slc.raw_schema: ${resources.catalogs.slc.name}.${resources.schemas.raw_wwi.name}
+        slc.gold_schema: ${resources.catalogs.slc.name}.${resources.schemas.wwi.name}

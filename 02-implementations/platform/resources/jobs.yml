@@ -1,0 +1,84 @@
+resources:
+  jobs:
+    # Baseline B0 build and profiling (SPEC § 4, § 13 Phase 2 exit criterion).
+    slc_platform_build:
+      name: slc-platform-build
+      max_concurrent_runs: 1
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: '6'
+      tasks:
+        - task_key: wwi_ingest
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.wwi_ingestion.id}
+        - task_key: wwi_gold_dimensions
+          depends_on: [{ task_key: wwi_ingest }]
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.wwi_gold_dimensions.id}
+        - task_key: wwi_gold_facts
+          depends_on: [{ task_key: wwi_gold_dimensions }]
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.wwi_gold_facts.id}
+        - task_key: load_tlc
+          environment_key: default
+          spark_python_task:
+            python_file: ../src/jobs/load_tlc.py
+            parameters:
+              - --catalog
+              - ${resources.catalogs.slc.name}
+              - --first-month
+              - ${var.tlc_first_month}
+              - --last-month
+              - ${var.tlc_last_month}
+        - task_key: nyctaxi_dimensions
+          depends_on: [{ task_key: load_tlc }]
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.nyctaxi_dimensions.id}
+        - task_key: nyctaxi_trips
+          depends_on: [{ task_key: nyctaxi_dimensions }]
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.nyctaxi_trips.id}
+        - task_key: profiling
+          depends_on: [{ task_key: wwi_gold_facts }, { task_key: nyctaxi_trips }]
+          environment_key: default
+          spark_python_task:
+            python_file: ../src/jobs/run_profiling.py
+            parameters: [--catalog, '${resources.catalogs.slc.name}']
+
+    # Re-run the profiling assertions against the current build.
+    slc_platform_profiling:
+      name: slc-platform-profiling
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: '6'
+      tasks:
+        - task_key: profiling
+          environment_key: default
+          spark_python_task:
+            python_file: ../src/jobs/run_profiling.py
+            parameters: [--catalog, '${resources.catalogs.slc.name}']
+
+    # Freshness replay (SPEC § 9.4). Deploy and run with `-t freshness` so nyctaxi_trips is continuous.
+    slc_nyctaxi_replay:
+      name: slc-nyctaxi-replay
+      max_concurrent_runs: 1
+      timeout_seconds: 216000
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: '6'
+      tasks:
+        - task_key: prepare
+          environment_key: default
+          spark_python_task:
+            python_file: ../src/jobs/replay_tlc.py
+            parameters: [prepare, --catalog, '${resources.catalogs.slc.name}']
+        - task_key: replay
+          depends_on: [{ task_key: prepare }]
+          environment_key: default
+          timeout_seconds: 216000
+          spark_python_task:
+            python_file: ../src/jobs/replay_tlc.py
+            parameters: [run, --catalog, '${resources.catalogs.slc.name}']

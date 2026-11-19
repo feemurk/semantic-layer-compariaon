@@ -1,0 +1,105 @@
+# Lakeflow Connect SQL Server ingestion of the restored WideWorldImporters copy (SPEC § 4).
+# Change tracking on every source table (all have primary keys); see src/sql/source/.
+resources:
+  pipelines:
+    wwi_gateway:
+      name: slc-wwi-ingestion-gateway
+      # Gateway pipelines must be continuous and run on classic compute.
+      continuous: true
+      channel: CURRENT
+      catalog: ${resources.catalogs.slc.name}
+      schema: ${resources.schemas.raw_wwi.name}
+      gateway_definition:
+        connection_name: ${var.sqlserver_connection}
+        gateway_storage_catalog: ${resources.catalogs.slc.name}
+        gateway_storage_schema: ${resources.schemas.raw_wwi.name}
+
+    wwi_ingestion:
+      name: slc-wwi-ingestion
+      continuous: false
+      channel: CURRENT
+      serverless: true
+      catalog: ${resources.catalogs.slc.name}
+      schema: ${resources.schemas.raw_wwi.name}
+      ingestion_definition:
+        ingestion_gateway_id: ${resources.pipelines.wwi_gateway.id}
+        table_configuration:
+          scd_type: SCD_TYPE_1
+        objects:
+          - table:
+              source_catalog: WideWorldImportersDW
+              source_schema: Fact
+              source_table: Sale
+              destination_catalog: ${resources.catalogs.slc.name}
+              destination_schema: ${resources.schemas.raw_wwi.name}
+              destination_table: dw_fact_sale
+          - table:
+              source_catalog: WideWorldImportersDW
+              source_schema: Fact
+              source_table: Order
+              destination_catalog: ${resources.catalogs.slc.name}
+              destination_schema: ${resources.schemas.raw_wwi.name}
+              destination_table: dw_fact_order
+          - table:
+              source_catalog: WideWorldImportersDW
+              source_schema: Fact
+              source_table: Movement
+              destination_catalog: ${resources.catalogs.slc.name}
+              destination_schema: ${resources.schemas.raw_wwi.name}
+              destination_table: dw_fact_movement
+          - table:
+              source_catalog: WideWorldImportersDW
+              source_schema: Fact
+              source_table: Stock Holding
+              destination_catalog: ${resources.catalogs.slc.name}
+              destination_schema: ${resources.schemas.raw_wwi.name}
+              destination_table: dw_fact_stock_holding
+          - table:
+              source_catalog: WideWorldImportersDW
+              source_schema: Dimension
+              source_table: Stock Item
+              destination_catalog: ${resources.catalogs.slc.name}
+              destination_schema: ${resources.schemas.raw_wwi.name}
+              destination_table: dw_dimension_stock_item
+          - table:
+              source_catalog: WideWorldImportersDW
+              source_schema: Dimension
+              source_table: Customer
+              destination_catalog: ${resources.catalogs.slc.name}
+              destination_schema: ${resources.schemas.raw_wwi.name}
+              destination_table: dw_dimension_customer
+          - table:
+              source_catalog: WideWorldImportersDW
+              source_schema: Dimension
+              source_table: City
+              destination_catalog: ${resources.catalogs.slc.name}
+              destination_schema: ${resources.schemas.raw_wwi.name}
+              destination_table: dw_dimension_city
+          - table:
+              source_catalog: WideWorldImportersDW
+              source_schema: Dimension
+              source_table: Employee
+              destination_catalog: ${resources.catalogs.slc.name}
+              destination_schema: ${resources.schemas.raw_wwi.name}
+              destination_table: dw_dimension_employee
+          - table:
+              source_catalog: WideWorldImportersDW
+              source_schema: Dimension
+              source_table: Date
+              destination_catalog: ${resources.catalogs.slc.name}
+              destination_schema: ${resources.schemas.raw_wwi.name}
+              destination_table: dw_dimension_date
+          - table:
+              source_catalog: WideWorldImporters
+              source_schema: Warehouse
+              source_table: StockGroups
+              destination_catalog: ${resources.catalogs.slc.name}
+              destination_schema: ${resources.schemas.raw_wwi.name}
+              destination_table: oltp_warehouse_stockgroups
+          - table:
+              source_catalog: WideWorldImporters
+              source_schema: Warehouse
+              source_table: StockItemStockGroups
+              destination_catalog: ${resources.catalogs.slc.name}
+              destination_schema: ${resources.schemas.raw_wwi.name}
+              destination_table: oltp_warehouse_stockitemstockgroups

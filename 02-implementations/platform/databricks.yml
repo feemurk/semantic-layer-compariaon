@@ -1,0 +1,35 @@
+# Shared data platform for the semantic layer comparison study (SPEC § 4, § 5).
+# Declarative Automation Bundle (formerly Databricks Asset Bundles).
+# Prerequisites: src/sql/source/*.sql run on the SQL Server copy, and
+# src/sql/setup/sqlserver_connection.sql run in the workspace. See PLATFORM_GUIDE.md § 7.
+bundle:
+  name: slc-platform
+  engine: direct # required for the catalogs resource
+
+include:
+  - resources/*.yml
+
+variables:
+  catalog:
+    description: Unity Catalog catalog holding every schema of the study (SPEC § 4).
+    default: slc
+  sqlserver_connection:
+    description: Unity Catalog connection (type SQLSERVER) to the restored WideWorldImporters instance.
+    default: slc_wwi_sqlserver
+  tlc_first_month:
+    description: First TLC Yellow Taxi month to load (SPEC § 5.2 source window).
+    default: '2023-01'
+  tlc_last_month:
+    description: Last TLC Yellow Taxi month to load (SPEC § 5.2 source window).
+    default: '2024-12'
+
+targets:
+  # Baseline B0 build: triggered pipelines, run by the slc_platform_build job.
+  baseline:
+    default: true
+  # Freshness test (SPEC § 9.4): nyctaxi_trips runs continuously while replay_tlc.py lands batches.
+  freshness:
+    resources:
+      pipelines:
+        nyctaxi_trips:
+          continuous: true

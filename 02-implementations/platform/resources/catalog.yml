@@ -1,0 +1,41 @@
+resources:
+  catalogs:
+    slc:
+      name: ${var.catalog}
+      comment: Semantic layer comparison study. Single physical source for every stack (SPEC § 4).
+
+  schemas:
+    raw_wwi:
+      name: raw_wwi
+      catalog_name: ${resources.catalogs.slc.name}
+      comment: Bronze. WideWorldImporters tables written by Lakeflow Connect, source column names kept.
+    wwi:
+      name: wwi
+      catalog_name: ${resources.catalogs.slc.name}
+      comment: Gold. Canonical WideWorldImporters schema (SPEC § 5.1).
+    raw_nyctaxi:
+      name: raw_nyctaxi
+      catalog_name: ${resources.catalogs.slc.name}
+      comment: Bronze. TLC Yellow Taxi source files, landing files and trips_bronze.
+    nyctaxi:
+      name: nyctaxi
+      catalog_name: ${resources.catalogs.slc.name}
+      comment: Gold. Canonical NYC Taxi schema (SPEC § 5.2).
+    ops:
+      name: ops
+      catalog_name: ${resources.catalogs.slc.name}
+      comment: Operational tables (freshness replay log).
+
+  volumes:
+    nyc_source:
+      catalog_name: ${resources.catalogs.slc.name}
+      schema_name: ${resources.schemas.raw_nyctaxi.name}
+      name: source
+      volume_type: MANAGED
+      comment: Immutable TLC downloads, taxi_zone_lookup.csv, withheld replay month.
+    nyc_landing:
+      catalog_name: ${resources.catalogs.slc.name}
+      schema_name: ${resources.schemas.raw_nyctaxi.name}
+      name: landing
+      volume_type: MANAGED
+      comment: Normalized Parquet read by Auto Loader (baseline months and replay batches).

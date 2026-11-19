@@ -6,8 +6,8 @@ Status values: `Not Started` · `In Progress` · `Complete` · `Blocked`
 
 | Phase | Deliverable | Status | Last Updated | Notes |
 |---|---|---|---|---|
-| 1 | Specification `01-spec/SPEC.md` v1.0: 22-metric catalog, canonical schema, 70-question self-service bank, evaluation E1–E9, oracle, security, agent protocol | Complete | 2026-11-19 | Locked. `python3 scripts/test_spec.py`: 22 tests passed (8 positive, 14 negative). `python3 scripts/test_init_structure.py`: 13 passed. |
-| 2 | Shared data platform and baseline B0 (`02-implementations/platform/`) | Not Started | 2026-11-19 | SPEC § 4–5. Requires TLC and WideWorldImporters download hosts added to the environment. |
+| 1 | Specification `01-spec/SPEC.md` v1.1: 22-metric catalog, canonical schema, 70-question self-service bank, evaluation E1–E9, oracle, security, agent protocol | Complete | 2026-11-19 | Locked v1.0; amended to v1.1 under § 16 with Phase 2 source-profiling corrections (columnstore/change tracking, TLC type drift, snapshot fallback, SCD2 probe, NYC calendar 2025). `python3 scripts/test_spec.py`: 22 passed. |
+| 2 | Shared data platform and baseline B0 (`02-implementations/platform/`) | Blocked | 2026-11-19 | Code complete and verified on the real sources: local B0 from restored WWI (SQL Server 2025) and 24 TLC months passes 71/71 profiling checks; `scripts/test_platform.py` 62/62 with all real-data layers on. Blocked on a Databricks workspace and a reachable SQL Server 2025 host to deploy the bundle and build B0 there (runbook: `PLATFORM_GUIDE.md` § 7). Confirm V-24 to V-26 on first deployment. |
 | 2 | Correctness oracle, fixtures, expected answers, glossary (`01-spec/oracle/`, `01-spec/glossary.yaml`) | Not Started | 2026-11-19 | SPEC § 9. DuckDB fixture suite in CI; authoritative run on Databricks serverless SQL. |
 | 2 | Implementation: SSAS Multidimensional (`02-implementations/ssas-md/`) | Not Started | 2026-11-19 | SPEC § 3.1 S1. Verify V-11 before build. |
 | 2 | Implementation: Power BI / Tabular (`02-implementations/powerbi-tabular/`) | Not Started | 2026-11-19 | SPEC § 3.1 S2. Import, Direct Lake, DirectQuery variants on F64. Verify V-12, V-13, V-17. |

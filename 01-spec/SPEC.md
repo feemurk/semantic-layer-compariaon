@@ -2,9 +2,9 @@
 
 | Field | Value |
 |---|---|
-| Version | 1.0 |
+| Version | 1.1 |
 | State | LOCKED |
-| Locked on | 2026-11-19 |
+| Locked on | 2026-11-19 (v1.0); amended 2026-11-19 (v1.1, § 16) |
 | Governs | Phases 1–3 and `04-deliverables/` |
 | Change control | § 16. No scope change without a version bump and a changelog entry. |
 
@@ -96,10 +96,10 @@ All stacks use the latest documented release and capabilities as of the lock dat
 - **Single physical source:** Databricks serverless SQL on Unity Catalog. Every stack reads the same Delta tables and the same columns defined in § 5. No stack keeps its own copy of the source data, other than its own internal storage (MOLAP, VertiPaq, extracts, materializations), which is filled from these tables.
 - **Catalog layout:** catalog `slc`, schemas `slc.wwi` and `slc.nyctaxi` (gold, canonical), `slc.raw_wwi` and `slc.raw_nyctaxi` (bronze).
 - **Ingestion:**
-  - WideWorldImporters: full snapshot of `WideWorldImportersDW` tables listed in § 5.1, plus `Warehouse.StockGroups` and `Warehouse.StockItemStockGroups` from the `WideWorldImporters` OLTP database, ingested with a Lakeflow Connect SQL Server managed ingestion pipeline from a restored copy of the official sample.
-  - NYC Taxi: TLC Yellow Taxi monthly Parquet files and the taxi zone lookup, ingested with Auto Loader into bronze and transformed by Lakeflow Declarative Pipelines into gold.
-- **Physical design:** primary and foreign key constraints declared with `RELY`; liquid clustering on `fact_trip (pickup_date)` and `fact_sale (invoice_date)`; all money columns `DECIMAL`.
-- **Deployment:** the platform is a Databricks Asset Bundle under `02-implementations/platform/`.
+  - WideWorldImporters: full snapshot of `WideWorldImportersDW` tables listed in § 5.1 (plus `[Dimension].[Date]` for the § 5.4 profiling test), and `Warehouse.StockGroups` and `Warehouse.StockItemStockGroups` from the `WideWorldImporters` OLTP database. Ingested with a Lakeflow Connect SQL Server managed ingestion pipeline (change tracking) from a restored copy of the official sample on SQL Server 2025. Source preparation drops the clustered columnstore index on the four ingested `WideWorldImportersDW` fact tables before enabling change tracking, because SQL Server rejects change tracking and CDC on clustered columnstore tables (V-21); rows and primary keys are unchanged.
+  - NYC Taxi: TLC Yellow Taxi monthly Parquet files and the taxi zone lookup. Each downloaded file is read with its own schema and normalized to one landing schema before Auto Loader ingests it into bronze, because column types and name case drift between months and Spark cannot read an INT64 Parquet column as DOUBLE (V-19). Lakeflow pipelines transform bronze into gold.
+- **Physical design:** primary and foreign key constraints declared with `RELY`; liquid clustering on `fact_trip (pickup_date)` and `fact_sale (invoice_date)`; all money columns `DECIMAL`. Each dataset's dimensions are published by a pipeline that runs before its facts pipeline, so every foreign key references an existing parent.
+- **Deployment:** the platform is a Declarative Automation Bundle (formerly Databricks Asset Bundles) under `02-implementations/platform/`.
 - **Baseline snapshot B0:** the complete gold build defined in § 5. All correctness scoring (E1, E2, E7, E8) runs on B0.
 - **Network hosts required in Phase 2:** the TLC download CDN and the Microsoft sample download location for WideWorldImporters.
 
@@ -119,7 +119,7 @@ Source date range: 2013-01-01 to 2016-05-31.
 | `fact_order` | `order_key` BIGINT ← `[Fact].[Order].[Order Key]` · `order_date` DATE ← `[Order Date Key]` · `city_key` INT · `customer_key` INT · `stock_item_key` INT · `salesperson_key` INT · `picker_key` INT NULL ← `[Picker Key]` · `wwi_order_id` INT · `wwi_backorder_id` INT NULL · `quantity` INT · `total_excluding_tax` DECIMAL(18,2) |
 | `fact_stock_movement` | `movement_key` BIGINT ← `[Fact].[Movement].[Movement Key]` · `movement_date` DATE ← `[Date Key]` · `stock_item_key` INT · `transaction_type_key` INT · `quantity` INT (signed) |
 | `stock_holding_current` | `stock_item_key` INT ← `[Fact].[Stock Holding].[Stock Item Key]` · `quantity_on_hand` INT ← `[Quantity On Hand]`. Build input only; not exposed to any semantic layer. |
-| `fact_stock_holding_daily` | Derived (§ 5.3). `snapshot_date` DATE · `wwi_stock_item_id` INT · `stock_item_key` INT · `quantity_on_hand` INT |
+| `fact_stock_holding_daily` | Derived (§ 5.3). `snapshot_date` DATE · `wwi_stock_item_id` INT · `stock_item_key` INT · `quantity_on_hand` INT · `balance_basis` STRING |
 | `dim_stock_item` | `stock_item_key` INT ← `[Dimension].[Stock Item].[Stock Item Key]` · `wwi_stock_item_id` INT · `stock_item` STRING · `brand` STRING · `color` STRING · `size` STRING · `selling_package` STRING · `is_chiller_stock` BOOLEAN · `unit_price` DECIMAL(18,2) · `valid_from` TIMESTAMP · `valid_to` TIMESTAMP · `is_current` BOOLEAN (derived) |
 | `dim_stock_group` | `stock_group_id` INT ← `[Warehouse].[StockGroups].[StockGroupID]` · `stock_group_name` STRING ← `[StockGroupName]` |
 | `bridge_stock_item_group` | `wwi_stock_item_id` INT ← `[Warehouse].[StockItemStockGroups].[StockItemID]` · `stock_group_id` INT ← `[StockGroupID]` |
@@ -134,7 +134,7 @@ Source window: pickups from 2023-01-01 to 2024-12-31.
 
 | Table | Columns (type) ← source |
 |---|---|
-| `fact_trip` | `trip_id` BIGINT (deterministic surrogate; ordering defined in the platform build) · `vendor_id` INT ← `VendorID` · `pickup_ts` TIMESTAMP_NTZ ← `tpep_pickup_datetime` · `dropoff_ts` TIMESTAMP_NTZ ← `tpep_dropoff_datetime` · `pickup_date` DATE · `dropoff_date` DATE · `pickup_hour` TINYINT · `pu_location_id` INT ← `PULocationID` · `do_location_id` INT ← `DOLocationID` · `od_pair_id` INT (= `pu_location_id * 1000 + do_location_id`) · `passenger_count` INT · `trip_distance` DECIMAL(9,2) · `payment_type` INT · `fare_amount` DECIMAL(10,2) · `tip_amount` DECIMAL(10,2) · `tolls_amount` DECIMAL(10,2) · `total_amount` DECIMAL(10,2) |
+| `fact_trip` | `trip_id` BIGINT (deterministic surrogate; ordering defined in the platform build) · `vendor_id` INT ← `VendorID` · `pickup_ts` TIMESTAMP_NTZ ← `tpep_pickup_datetime` · `dropoff_ts` TIMESTAMP_NTZ ← `tpep_dropoff_datetime` · `pickup_date` DATE · `dropoff_date` DATE · `pickup_hour` TINYINT · `pu_location_id` INT ← `PULocationID` · `do_location_id` INT ← `DOLocationID` · `od_pair_id` INT (= `pu_location_id * 1000 + do_location_id`) · `passenger_count` INT NULL · `trip_distance` DECIMAL(9,2) · `payment_type` INT · `fare_amount` DECIMAL(10,2) · `tip_amount` DECIMAL(10,2) · `tolls_amount` DECIMAL(10,2) · `total_amount` DECIMAL(10,2) |
 | `fact_trip_quarantine` | All `fact_trip` columns plus `reject_reason` STRING. Not exposed to any semantic layer. |
 | `dim_zone` | `location_id` INT ← `LocationID` · `borough` STRING ← `Borough` · `zone` STRING ← `Zone` · `service_zone` STRING ← `service_zone`. Role-played as Pickup Zone and Dropoff Zone. |
 | `dim_payment_type` | `payment_type` INT · `payment_type_name` STRING; codes 0–6 per the TLC Yellow Taxi data dictionary |
@@ -145,14 +145,18 @@ Source window: pickups from 2023-01-01 to 2024-12-31.
 1. **NYC valid trip predicate:** a source row enters `fact_trip` only if `pickup_ts < dropoff_ts`, `0 < trip_distance <= 200`, `fare_amount >= 0`, `total_amount >= 0`, and `pickup_date` is within the source window. Every other row goes to `fact_trip_quarantine` with the first failed rule as `reject_reason`.
 2. **NYC numeric conversion:** source doubles are converted with `CAST(ROUND(x, 2) AS DECIMAL(p, 2))`.
 3. **WWI unknown members:** key `0` rows in WWI dimensions are retained with their source labels. Facts referencing unknown members are never dropped.
-4. **WWI SCD Type 2:** facts join on surrogate keys (as-was attribution). As-is attribution uses the durable key (`wwi_*_id`) joined to the row where `is_current = true`. Both attributions must be exposed (§ 7, question `Q-W-S1-D4`).
+4. **WWI SCD Type 2:** facts join on surrogate keys (as-was attribution). As-is attribution uses the durable key (`wwi_*_id`) joined to the row where `is_current = true`. Both attributions must be exposed (§ 7, question `Q-W-S1-D4`). Source profile: only `dim_stock_item.color` differs across versions; sales attributed to `Gray` are `Steel Gray` in the current version (9,472 lines). Customer, city and employee versions carry no attribute changes. `is_current` marks exactly one row per durable key: the open-ended row with the latest `valid_from`, ties broken by the highest surrogate key. 4,612 cities have two open-ended rows with identical `valid_from` and attributes.
 5. **Undelivered sales:** rows with `delivery_date IS NULL` group under a NULL Delivery Date member and are included in totals.
-6. **Daily stock snapshot derivation:** for every `wwi_stock_item_id` and every date `t` from 2013-01-01 to 2016-05-31: `quantity_on_hand(item, t) = QOH_current(item) − Σ quantity of fact_stock_movement rows for item with movement_date > t`. `stock_item_key` is the `dim_stock_item` version whose validity interval contains `t`, or the earliest version if `t` precedes all versions.
+6. **Daily stock snapshot derivation:** for every `wwi_stock_item_id` with a current holding and every date `t` from 2013-01-01 to 2016-05-31, let `cum(t)` = Σ movement quantity with `movement_date ≤ t`, and `B(t) = QOH_current − (cum(∞) − cum(t))` (holding back-cast).
+   - If `B(t) ≥ 0` for every `t` in the window: `quantity_on_hand = B(t)`, `balance_basis = 'holding_backcast'`.
+   - Otherwise the movement history cannot be reconciled with the current holding: `quantity_on_hand = O + cum(t)` with `O = max(0, −min_t cum(t))`, `balance_basis = 'flow_min_opening'`.
+   - Source profile (2026-11-19): 218 items back-cast; 9 items flow-based. For those 9 items, `[Fact].[Movement]` and `[Fact].[Purchase]` agree on receipts of 8.6M–25.1M units, while `[Fact].[Stock Holding]` shows 3–50 units on hand.
+   - `stock_item_key` is the `dim_stock_item` version whose validity interval contains the start of `t`, or the earliest version if `t` precedes all versions.
 7. **No-data semantics:** a NULL value, an empty cell, BLANK, and an absent row are equivalent in reconciliation. No metric returns 0 where the oracle returns NULL.
 
 ### 5.4 `dim_date` (both schemas)
 
-Generated, gap-free, covering full calendar years of the source window (WWI: 2013–2016; NYC: 2023–2024). Columns: `date_key` DATE · `calendar_year` SMALLINT · `calendar_quarter` TINYINT · `calendar_month` TINYINT · `month_name` STRING · `month_start_date` DATE · `day_of_month` TINYINT · `day_of_year` SMALLINT · `day_of_week` TINYINT (ISO, Monday = 1) · `day_name` STRING · `iso_week_number` TINYINT · `fiscal_year` SMALLINT · `fiscal_quarter` TINYINT · `fiscal_month` TINYINT · `fiscal_period_index` INT · `day_of_fiscal_year` SMALLINT.
+Generated, gap-free, covering full calendar years that span every date value in the facts (WWI: 2013–2016; NYC: 2023–2025, because 571 valid trips picked up on 2024-12-31 drop off on 2025-01-01). Columns: `date_key` DATE · `calendar_year` SMALLINT · `calendar_quarter` TINYINT · `calendar_month` TINYINT · `month_name` STRING · `month_start_date` DATE · `day_of_month` TINYINT · `day_of_year` SMALLINT · `day_of_week` TINYINT (ISO, Monday = 1) · `day_name` STRING · `iso_week_number` TINYINT · `fiscal_year` SMALLINT · `fiscal_quarter` TINYINT · `fiscal_month` TINYINT · `fiscal_period_index` INT · `day_of_fiscal_year` SMALLINT.
 
 Fiscal calendar (WWI): fiscal year starts 1 November and is labeled by the calendar year in which it ends; November is `fiscal_month = 1`. `fiscal_period_index = fiscal_year * 12 + fiscal_month` (consecutive across years). A Phase 2 profiling test asserts equality with the source `[Dimension].[Date]` fiscal columns. NYC uses the same columns; fiscal columns are populated by the same rule and are not used by NYC metrics.
 
@@ -329,7 +333,7 @@ All stacks answer every question on B0 without model changes between questions. 
 | Q-W-S1-D1 | D1 | W-S1 | For the Sales Territory with the highest FY2015 revenue, break its revenue in its peak fiscal month down by State Province, then by City. |
 | Q-W-S1-D2 | D2 | W-S1 | For that Sales Territory, which 10 stock items contributed the most FY2015 revenue, and what share of the territory's revenue do they represent together? |
 | Q-W-S1-D3 | D3 | W-S1 | Compare FY2015 and FY2014 revenue by Buying Group and Customer Category. |
-| Q-W-S1-D4 | D4 | W-S1 | Show FY2015 revenue by Customer Category as recorded at time of sale and by each customer's current category; list categories where the two differ. |
+| Q-W-S1-D4 | D4 | W-S1 | Show FY2015 revenue by stock item Color as recorded at time of sale and by each item's current Color; list colors where the two differ. |
 | Q-W-S2-P | P | W-S2, W-S1 | Ordered quantity and revenue (excl. tax) by calendar month for 2015 on one shared date axis. |
 | Q-W-S2-D1 | D1 | W-S2, B-W3 | For the 2015 month with the largest gap between ordered quantity and units sold, break ordered quantity down by stock item. |
 | Q-W-S2-D2 | D2 | W-S2 | For that month, ordered quantity by picker. |
@@ -563,6 +567,15 @@ Vendor capability claims this spec relies on. `Pending` entries are verified aga
 | V-15 | GitHub Copilot agent mode MCP server support | Pending | — |
 | V-16 | Unity Catalog ABAC policies and row filters as applied to the § 10 scenario | Pending | — |
 | V-17 | Fabric Git integration with TMDL and `fabric-cicd` deployment | Pending | — |
+| V-18 | Lakeflow pipelines Python API is `pyspark.pipelines` (`dp`); `@dp.materialized_view` and `@dp.table` accept `schema` DDL with primary and foreign keys, `cluster_by`, and `private` | Verified | https://docs.databricks.com/aws/en/ldp/developer/python-ref |
+| V-19 | Auto Loader on Parquet picks the widest type across files; schema hints make the reader read as the hinted type and rescue mismatches into `_rescued_data`; case-mismatched names are rescued unless `readerCaseSensitive` is false. Spark 4.3 fails reading INT64 as DOUBLE (reproduced on TLC 2023-01/2023-02) | Verified | https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema |
+| V-20 | Lakeflow Connect SQL Server: continuous gateway on classic compute, serverless ingestion pipeline, table-level `objects` with `destination_table`, change tracking for tables with primary keys | Verified | https://docs.databricks.com/aws/en/ingestion/lakeflow-connect/sql-server-pipeline |
+| V-21 | SQL Server change tracking cannot be used with columnstore indexes; CDC is supported only with a nonclustered columnstore index (reproduced as Msg 35353 on SQL Server 2025) | Verified | https://learn.microsoft.com/en-us/sql/t-sql/statements/create-columnstore-index-transact-sql |
+| V-22 | Bundles manage `catalogs` (direct engine), `schemas` and `volumes`; serverless job environments use `environment_version`; pipeline `root_path` is added to `sys.path` | Verified | https://docs.databricks.com/aws/en/dev-tools/bundles/resources |
+| V-23 | Materialized view incremental refresh includes a `WINDOW_FUNCTION` technique | Verified | https://docs.databricks.com/aws/en/ldp/incremental-refresh |
+| V-24 | Lakeflow Connect bronze tables keep SQL Server column names, including spaces (gold transforms reference e.g. `` `Sale Key` ``) | Pending | — |
+| V-25 | TLC Yellow Taxi data dictionary labels payment type 0 as "Flex Fare trip" | Pending | — |
+| V-26 | `DELETE` on a streaming table that an Auto Loader flow writes to (freshness replay `prepare`) | Pending | — |
 
 ---
 
@@ -594,3 +607,4 @@ Amendments require: a version bump in the header, a changelog row, an updated `s
 | Version | Date | Change |
 |---|---|---|
 | 1.0 | 2026-11-19 | Initial locked specification. |
+| 1.1 | 2026-11-19 | Phase 2 platform build corrections from profiling the real sources (restored WideWorldImporters on SQL Server 2025; 24 TLC months). § 4: clustered columnstore index removal before change tracking, landing normalization for TLC type drift, dimensions-before-facts pipelines, bundle rename. § 5.1 and § 5.3 rule 6: back-cast snapshot with flow fallback and `balance_basis`, because 9 items' movement history cannot be reconciled with current holdings. § 5.3 rule 4 and `Q-W-S1-D4`: SCD2 probe moved from customer category (no history in source) to stock item color; single current row per durable key despite 4,612 duplicated open-ended city rows. § 5.4: NYC calendar extended to 2025 for dropoff dates. § 5.2: `passenger_count` marked NULL (5,400,588 source rows, all payment type 0). § 14: V-18 to V-26. |

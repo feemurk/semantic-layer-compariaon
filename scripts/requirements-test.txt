@@ -1,0 +1,5 @@
+# Pinned dependencies for scripts/test_platform.py (Java 17+ required for PySpark).
+pyspark[pipelines]==4.3.0
+pyarrow==21.0.0
+pyyaml==6.0.2
+duckdb==1.4.1
