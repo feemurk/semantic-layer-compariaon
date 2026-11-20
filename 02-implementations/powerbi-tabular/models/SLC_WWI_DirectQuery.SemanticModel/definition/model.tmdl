@@ -1,0 +1,27 @@
+/// WideWorldImporters semantic model of the semantic layer comparison study (SPEC § 3.1 S2).
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+
+	annotation SLC_StorageVariant = directquery
+
+ref table Date
+ref table 'Delivery Date'
+ref table Customer
+ref table 'Bill-To Customer'
+ref table City
+ref table 'Stock Item'
+ref table 'Stock Item (Current)'
+ref table 'Stock Group'
+ref table 'Stock Item Group'
+ref table Salesperson
+ref table Picker
+ref table Sales
+ref table Orders
+ref table 'Stock Holding'
+
+ref role 'Territory Analyst - Southeast'
+
+ref cultureInfo en-US

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Dimension xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ID>Employee</ID>
+  <Name>Employee</Name>
+  <Description>Employee. Role-played as Salesperson (sales and orders) and Picker (orders only).</Description>
+  <Source xsi:type="DataSourceViewBinding">
+    <DataSourceViewID>slc</DataSourceViewID>
+  </Source>
+  <Type>Regular</Type>
+  <UnknownMember>Visible</UnknownMember>
+  <Language>1033</Language>
+  <Collation>Latin1_General_CI_AS</Collation>
+  <UnknownMemberName>Unknown</UnknownMemberName>
+  <Attributes>
+    <Attribute>
+      <ID>Employee Key</ID>
+      <Name>Employee Key</Name>
+      <Usage>Key</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_employee</TableID>
+            <ColumnID>employee_key</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_employee</TableID>
+          <ColumnID>employee</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Employee</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Employee</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Key</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Employee</ID>
+      <Name>Employee</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_employee</TableID>
+            <ColumnID>employee</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_employee</TableID>
+          <ColumnID>employee</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+  </Attributes>
+</Dimension>

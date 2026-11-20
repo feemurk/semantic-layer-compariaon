@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Dimension xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ID>City</ID>
+  <Name>City</Name>
+  <Description>Delivery city as recorded at the time of sale; Sales Territory is an alternate hierarchy over State Province.</Description>
+  <Source xsi:type="DataSourceViewBinding">
+    <DataSourceViewID>slc</DataSourceViewID>
+  </Source>
+  <Type>Regular</Type>
+  <UnknownMember>None</UnknownMember>
+  <Language>1033</Language>
+  <Collation>Latin1_General_CI_AS</Collation>
+  <UnknownMemberName>Unknown</UnknownMemberName>
+  <Attributes>
+    <Attribute>
+      <ID>City Key</ID>
+      <Name>City Key</Name>
+      <Usage>Key</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_city</TableID>
+            <ColumnID>city_key</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_city</TableID>
+          <ColumnID>city</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>City</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>City</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Key</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>City</ID>
+      <Name>City</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_city</TableID>
+            <ColumnID>state_province</ColumnID>
+          </Source>
+        </KeyColumn>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_city</TableID>
+            <ColumnID>city</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_city</TableID>
+          <ColumnID>city</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>State Province</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>State Province</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>State Province</ID>
+      <Name>State Province</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_city</TableID>
+            <ColumnID>state_province</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_city</TableID>
+          <ColumnID>state_province</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Country</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Country</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Sales Territory</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Sales Territory</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Country</ID>
+      <Name>Country</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_city</TableID>
+            <ColumnID>country</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_city</TableID>
+          <ColumnID>country</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Continent</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Continent</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Continent</ID>
+      <Name>Continent</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_city</TableID>
+            <ColumnID>continent</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_city</TableID>
+          <ColumnID>continent</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Sales Territory</ID>
+      <Name>Sales Territory</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_city</TableID>
+            <ColumnID>sales_territory</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_city</TableID>
+          <ColumnID>sales_territory</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+  </Attributes>
+  <Hierarchies>
+    <Hierarchy>
+      <ID>Geography</ID>
+      <Name>Geography</Name>
+      <Levels>
+        <Level>
+          <ID>Continent</ID>
+          <Name>Continent</Name>
+          <SourceAttributeID>Continent</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>Country</ID>
+          <Name>Country</Name>
+          <SourceAttributeID>Country</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>State Province</ID>
+          <Name>State Province</Name>
+          <SourceAttributeID>State Province</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>City</ID>
+          <Name>City</Name>
+          <SourceAttributeID>City</SourceAttributeID>
+        </Level>
+      </Levels>
+    </Hierarchy>
+    <Hierarchy>
+      <ID>Territory</ID>
+      <Name>Territory</Name>
+      <Levels>
+        <Level>
+          <ID>Sales Territory</ID>
+          <Name>Sales Territory</Name>
+          <SourceAttributeID>Sales Territory</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>State Province</ID>
+          <Name>State Province</Name>
+          <SourceAttributeID>State Province</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>City</ID>
+          <Name>City</Name>
+          <SourceAttributeID>City</SourceAttributeID>
+        </Level>
+      </Levels>
+    </Hierarchy>
+  </Hierarchies>
+</Dimension>

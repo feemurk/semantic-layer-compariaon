@@ -1,0 +1,9 @@
+// Q-A02 Invoice count (exact distinct) by salesperson by fiscal year.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS ( 'Salesperson'[Salesperson], 'Date'[Fiscal Year], "n", [Invoice Count] ),
+    "salesperson", 'Salesperson'[Salesperson],
+    "fiscal_year", 'Date'[Fiscal Year],
+    "invoice_count", [n]
+)
+ORDER BY [salesperson], [fiscal_year]

@@ -1,0 +1,9 @@
+/// SPEC § 10: sales and order rows restricted to cities in the Southeast sales territory (as-was city); no inventory access. Members: Microsoft Entra group slc_territory_southeast (assigned in the service).
+role 'Territory Analyst - Southeast'
+	modelPermission: read
+
+	tablePermission City = 'City'[Sales Territory] = "Southeast"
+
+	tablePermission 'Stock Holding' = FALSE ()
+
+	annotation SLC_EntraGroup = slc_territory_southeast

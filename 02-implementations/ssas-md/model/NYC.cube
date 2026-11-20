@@ -1,0 +1,2155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Cube xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ID>NYC</ID>
+  <Name>NYC</Name>
+  <Description>NYC Yellow Taxi trips 2023-2024 (N-S1 to N-C2, B-N1 to B-N5).</Description>
+  <Language>1033</Language>
+  <Collation>Latin1_General_CI_AS</Collation>
+  <Dimensions>
+    <Dimension>
+      <ID>Pickup Date</ID>
+      <Name>Pickup Date</Name>
+      <Description>Date the trip started; the anchor for year-to-date and pace metrics.</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>trip date; pickup day; date</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>NYC Date</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Dropoff Date</ID>
+      <Name>Dropoff Date</Name>
+      <Description>Date the trip ended (role of the Date dimension); differs from pickup date for trips crossing midnight.</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>dropoff day; trip end date; arrival date</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>NYC Date</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Pickup Zone</ID>
+      <Name>Pickup Zone</Name>
+      <Description>TLC taxi zone where the trip started (role of the Zone dimension).</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>origin; pickup location; pickup borough; from</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>Zone</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Dropoff Zone</ID>
+      <Name>Dropoff Zone</Name>
+      <Description>TLC taxi zone where the trip ended (role of the Zone dimension).</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>destination; dropoff location; dropoff borough; to</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>Zone</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Payment Type</ID>
+      <Name>Payment Type</Name>
+      <Description>TLC payment type code and label (0 Flex Fare trip, 1 Credit card, 2 Cash, 3 No charge, 4 Dispute, 5 Unknown, 6 Voided trip).</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>payment method; paid by; tender</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>Payment Type</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Vendor</ID>
+      <Name>Vendor</Name>
+      <Description>TLC technology provider id that recorded the trip.</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>vendor id; provider; TPEP provider</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>Vendor</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Pickup Hour</ID>
+      <Name>Pickup Hour</Name>
+      <Description>Hour of day the trip started, 0-23.</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>hour; time of day; hour of day</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>Pickup Hour</DimensionID>
+    </Dimension>
+  </Dimensions>
+  <CubePermissions>
+    <CubePermission>
+      <ID>SLC Analysts - NYC</ID>
+      <Name>SLC Analysts - NYC</Name>
+      <RoleID>SLC Analysts</RoleID>
+      <Read>Allowed</Read>
+    </CubePermission>
+    <CubePermission>
+      <ID>Manhattan Pickup Analyst - NYC</ID>
+      <Name>Manhattan Pickup Analyst - NYC</Name>
+      <RoleID>Manhattan Pickup Analyst</RoleID>
+      <Read>Allowed</Read>
+      <DimensionPermissions>
+        <CubeDimensionPermission>
+          <CubeDimensionID>Pickup Zone</CubeDimensionID>
+          <Read>Allowed</Read>
+          <AttributePermissions>
+            <AttributePermission>
+              <AttributeID>Borough</AttributeID>
+              <AllowedSet>{[Pickup Zone].[Borough].&amp;[Manhattan]}</AllowedSet>
+              <VisualTotals>1</VisualTotals>
+            </AttributePermission>
+          </AttributePermissions>
+        </CubeDimensionPermission>
+      </DimensionPermissions>
+    </CubePermission>
+  </CubePermissions>
+  <MdxScripts>
+    <MdxScript>
+      <ID>MdxScript</ID>
+      <Name>MdxScript</Name>
+      <Commands>
+        <Command>
+          <Text>/*
+  MDX calculation script of cube [NYC] (S1, SPEC § 6.4). build_model.py embeds this file in NYC.cube.
+  Stored measures: Trip Count, Total Trip Distance, Fare Amount, Tip Amount, Tolls Amount, Gross Trip Revenue
+  (Trips); Distinct OD Pairs (OD Pairs, distinct count); hidden helpers Card Tips Sum, Card Trips.
+  Period-anchored metrics (N-C1, N-C2) anchor on t(P): the last calendar date of the Pickup Date period in context,
+  capped at the source window (2023-01-01 to 2024-12-31), as SPEC § 6.1 defines it, whether or not trips exist that
+  day. EXISTING evaluates the date set in the cell's context; LinkMember moves the anchor from the Date attribute
+  hierarchy into the Calendar user hierarchy so PeriodsToDate can walk it.
+*/
+CALCULATE;
+
+// N-S2: tips on credit card trips; NULL where the context holds no card trip (every payment type except 1).
+CREATE MEMBER CURRENTCUBE.[Measures].[Card Tips] AS
+  IIF(IsEmpty([Measures].[Card Trips]) OR [Measures].[Card Trips] = 0,
+      NULL,
+      [Measures].[Card Tips Sum]),
+  FORMAT_STRING = "#,##0.00",
+  NON_EMPTY_BEHAVIOR = { [Measures].[Card Trips] },
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// N-M2: fare amount over trip distance from the aggregated sums at every grain.
+CREATE MEMBER CURRENTCUBE.[Measures].[Fare per Mile] AS
+  IIF(IsEmpty([Measures].[Total Trip Distance]) OR [Measures].[Total Trip Distance] = 0,
+      NULL,
+      [Measures].[Fare Amount] / [Measures].[Total Trip Distance]),
+  FORMAT_STRING = "#,##0.00",
+  NON_EMPTY_BEHAVIOR = { [Measures].[Total Trip Distance] },
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// N-C1: revenue from 1 January of the anchor's year to the anchor.
+CREATE MEMBER CURRENTCUBE.[Measures].[Revenue YTD] AS
+  IIF(Count(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&amp;[1])) = 0,
+      NULL,
+      Sum(PeriodsToDate([Pickup Date].[Calendar].[Calendar Year],
+                        LinkMember(Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members,
+                                               [Pickup Date].[In Source Window].&amp;[1]), 1).Item(0).Item(0),
+                                   [Pickup Date].[Calendar])),
+          [Measures].[Gross Trip Revenue])),
+  FORMAT_STRING = "#,##0.00",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// N-C1: the same window one year earlier. The STLY Date ID property maps the anchor by calendar date, with 29 February
+// to 28 February; ParallelPeriod is not used because it maps by position within the year, which shifts every date
+// after 28 February of a leap year by one day. NULL when the prior year precedes the calendar (2023 anchors).
+CREATE MEMBER CURRENTCUBE.[Measures].[Revenue STLY YTD] AS
+  IIF(Count(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&amp;[1])) = 0,
+      NULL,
+      IIF(Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&amp;[1]), 1)
+            .Item(0).Item(0).Properties("STLY Date ID") = "",
+          NULL,
+          Sum(PeriodsToDate([Pickup Date].[Calendar].[Calendar Year],
+                            StrToMember("[Pickup Date].[Calendar].[Date].&amp;["
+                                        + Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members,
+                                                      [Pickup Date].[In Source Window].&amp;[1]), 1)
+                                            .Item(0).Item(0).Properties("STLY Date ID")
+                                        + "]")),
+              [Measures].[Gross Trip Revenue]))),
+  FORMAT_STRING = "#,##0.00",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// N-C1: year-over-year change of Revenue YTD; NULL when the prior-year value is empty or zero.
+CREATE MEMBER CURRENTCUBE.[Measures].[Revenue YoY %] AS
+  IIF(IsEmpty([Measures].[Revenue STLY YTD]) OR [Measures].[Revenue STLY YTD] = 0,
+      NULL,
+      ([Measures].[Revenue YTD] - [Measures].[Revenue STLY YTD]) / [Measures].[Revenue STLY YTD]),
+  FORMAT_STRING = "0.00%",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// N-C2 components: period-to-date trip counts and calendar days elapsed at the anchor.
+CREATE MEMBER CURRENTCUBE.[Measures].[Trips MTD] AS
+  IIF(Count(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&amp;[1])) = 0,
+      NULL,
+      Sum(PeriodsToDate([Pickup Date].[Calendar].[Month],
+                        LinkMember(Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members,
+                                               [Pickup Date].[In Source Window].&amp;[1]), 1).Item(0).Item(0),
+                                   [Pickup Date].[Calendar])),
+          [Measures].[Trip Count])),
+  FORMAT_STRING = "#,##0",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+CREATE MEMBER CURRENTCUBE.[Measures].[Trips YTD] AS
+  IIF(Count(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&amp;[1])) = 0,
+      NULL,
+      Sum(PeriodsToDate([Pickup Date].[Calendar].[Calendar Year],
+                        LinkMember(Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members,
+                                               [Pickup Date].[In Source Window].&amp;[1]), 1).Item(0).Item(0),
+                                   [Pickup Date].[Calendar])),
+          [Measures].[Trip Count])),
+  FORMAT_STRING = "#,##0",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+CREATE MEMBER CURRENTCUBE.[Measures].[Days Elapsed In Month] AS
+  IIF(Count(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&amp;[1])) = 0,
+      NULL,
+      CInt(Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&amp;[1]), 1)
+             .Item(0).Item(0).Properties("Day Of Month"))),
+  FORMAT_STRING = "0",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+CREATE MEMBER CURRENTCUBE.[Measures].[Days Elapsed In Year] AS
+  IIF(Count(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&amp;[1])) = 0,
+      NULL,
+      CInt(Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&amp;[1]), 1)
+             .Item(0).Item(0).Properties("Day Of Year"))),
+  FORMAT_STRING = "0",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// N-C2: average daily trips month-to-date over average daily trips year-to-date, with calendar-day denominators.
+CREATE MEMBER CURRENTCUBE.[Measures].[Pace Index] AS
+  IIF(IsEmpty([Measures].[Trips MTD]) OR IsEmpty([Measures].[Trips YTD]) OR [Measures].[Trips YTD] = 0,
+      NULL,
+      ([Measures].[Trips MTD] / [Measures].[Days Elapsed In Month])
+        / ([Measures].[Trips YTD] / [Measures].[Days Elapsed In Year])),
+  FORMAT_STRING = "0.000",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// SPEC § 6.5: N-C1 and N-C2 return NULL when grouped or filtered by the Dropoff Date role. Any Dropoff Date member
+// below All sets the Calendar Year attribute through attribute relationships, so scoping that attribute and the
+// unrelated Day Of Week attribute covers every Dropoff Date selection.
+SCOPE({[Measures].[Revenue YTD], [Measures].[Revenue STLY YTD], [Measures].[Revenue YoY %],
+       [Measures].[Trips MTD], [Measures].[Trips YTD], [Measures].[Days Elapsed In Month],
+       [Measures].[Days Elapsed In Year], [Measures].[Pace Index]});
+  SCOPE([Dropoff Date].[Calendar Year].[Calendar Year].Members);
+    THIS = NULL;
+  END SCOPE;
+  SCOPE([Dropoff Date].[Day Of Week].[Day Of Week].Members);
+    THIS = NULL;
+  END SCOPE;
+END SCOPE;
+</Text>
+        </Command>
+      </Commands>
+      <CalculationProperties>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Card Tips]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Sum of tips on credit card trips (payment type 1); blank for other payment types.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>credit card tips; card gratuity; tips on card</Value>
+            </Annotation>
+          </Annotations>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Fare per Mile]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Fare Amount divided by Total Trip Distance, computed from the aggregated sums at every grain.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>fare per mile; price per mile; rate per mile</Value>
+            </Annotation>
+          </Annotations>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Revenue YTD]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Gross Trip Revenue from 1 January to the period end by pickup date, compared with the same period last year (29 February maps to 28 February).</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>year to date revenue; YTD revenue; YoY growth; year over year; same time last year</Value>
+            </Annotation>
+          </Annotations>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Revenue STLY YTD]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Revenue YTD for the same date one year earlier (29 February maps to 28 February).</Description>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Revenue YoY %]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>(Revenue YTD - Revenue STLY YTD) / Revenue STLY YTD.</Description>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Trips MTD]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Trips from the first day of the anchor month to the anchor date.</Description>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Trips YTD]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Trips from 1 January of the anchor year to the anchor date.</Description>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Days Elapsed In Month]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Day of month of the anchor date (calendar days elapsed).</Description>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Days Elapsed In Year]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Day of year of the anchor date (calendar days elapsed).</Description>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Pace Index]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Average daily trips month-to-date divided by average daily trips year-to-date, using calendar days elapsed. Above 1 means the month is running ahead of the year's pace.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>pace index; run rate index; month pace; daily pace</Value>
+            </Annotation>
+          </Annotations>
+        </CalculationProperty>
+      </CalculationProperties>
+    </MdxScript>
+  </MdxScripts>
+  <MeasureGroups>
+    <MeasureGroup>
+      <ID>Trips</ID>
+      <Name>Trips</Name>
+      <Description>Valid trips (fact_trip); monthly MOLAP partitions plus a ROLAP hot partition.</Description>
+      <Measures>
+        <Measure>
+          <ID>Trip Count</ID>
+          <Name>Trip Count</Name>
+          <Description>Count of valid Yellow Taxi trips (fact_trip rows).</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>trips; number of trips; rides; ride count</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>Count</AggregateFunction>
+          <DataType>BigInt</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <DataSize>4</DataSize>
+            <Source xsi:type="RowBinding">
+              <TableID>nyc_trips</TableID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Total Trip Distance</ID>
+          <Name>Total Trip Distance</Name>
+          <Description>Sum of trip distance in miles (fact_trip.trip_distance).</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>miles; distance; total miles; trip miles</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>Sum</AggregateFunction>
+          <DataType>Currency</DataType>
+          <Source>
+            <DataType>Currency</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>nyc_trips</TableID>
+              <ColumnID>trip_distance</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Fare Amount</ID>
+          <Name>Fare Amount</Name>
+          <Description>Sum of metered fares (fact_trip.fare_amount), excluding tips, tolls and surcharges.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>fares; metered fare; fare revenue</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>Sum</AggregateFunction>
+          <DataType>Currency</DataType>
+          <Source>
+            <DataType>Currency</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>nyc_trips</TableID>
+              <ColumnID>fare_amount</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Tip Amount</ID>
+          <Name>Tip Amount</Name>
+          <Description>Sum of recorded tips across all payment types (fact_trip.tip_amount). TLC records tips only for card payments.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>tips; all tips; gratuity</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>Sum</AggregateFunction>
+          <DataType>Currency</DataType>
+          <Source>
+            <DataType>Currency</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>nyc_trips</TableID>
+              <ColumnID>tip_amount</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Tolls Amount</ID>
+          <Name>Tolls Amount</Name>
+          <Description>Sum of tolls (fact_trip.tolls_amount).</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>tolls; toll charges; bridge and tunnel tolls</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>Sum</AggregateFunction>
+          <DataType>Currency</DataType>
+          <Source>
+            <DataType>Currency</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>nyc_trips</TableID>
+              <ColumnID>tolls_amount</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Gross Trip Revenue</ID>
+          <Name>Gross Trip Revenue</Name>
+          <Description>Sum of total amount charged (fact_trip.total_amount).</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>revenue; trip revenue; total amount; gross revenue; takings</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>Sum</AggregateFunction>
+          <DataType>Currency</DataType>
+          <Source>
+            <DataType>Currency</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>nyc_trips</TableID>
+              <ColumnID>total_amount</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Card Tips Sum</ID>
+          <Name>Card Tips Sum</Name>
+          <AggregateFunction>Sum</AggregateFunction>
+          <DataType>Currency</DataType>
+          <Source>
+            <DataType>Currency</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>nyc_trips</TableID>
+              <ColumnID>card_tip</ColumnID>
+            </Source>
+          </Source>
+          <Visible>false</Visible>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Card Trips</ID>
+          <Name>Card Trips</Name>
+          <AggregateFunction>Sum</AggregateFunction>
+          <DataType>BigInt</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>nyc_trips</TableID>
+              <ColumnID>card_trip</ColumnID>
+            </Source>
+          </Source>
+          <Visible>false</Visible>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <IgnoreUnrelatedDimensions>false</IgnoreUnrelatedDimensions>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Pickup Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>pickup_date_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Dropoff Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>dropoff_date_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Pickup Zone</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Zone</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>pu_location_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Dropoff Zone</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Zone</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>do_location_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Payment Type</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Payment Type Code</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>payment_type</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Vendor</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Vendor</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>vendor_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Pickup Hour</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Pickup Hour</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>UnsignedTinyInt</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>pickup_hour</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+      </Dimensions>
+      <Partitions>
+        <Partition>
+          <ID>Trips 2023-01</ID>
+          <Name>Trips 2023-01</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-01-01' AND t.pickup_date &lt; '2023-02-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2023-02</ID>
+          <Name>Trips 2023-02</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-02-01' AND t.pickup_date &lt; '2023-03-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2023-03</ID>
+          <Name>Trips 2023-03</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-03-01' AND t.pickup_date &lt; '2023-04-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2023-04</ID>
+          <Name>Trips 2023-04</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-04-01' AND t.pickup_date &lt; '2023-05-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2023-05</ID>
+          <Name>Trips 2023-05</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-05-01' AND t.pickup_date &lt; '2023-06-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2023-06</ID>
+          <Name>Trips 2023-06</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-06-01' AND t.pickup_date &lt; '2023-07-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2023-07</ID>
+          <Name>Trips 2023-07</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-07-01' AND t.pickup_date &lt; '2023-08-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2023-08</ID>
+          <Name>Trips 2023-08</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-08-01' AND t.pickup_date &lt; '2023-09-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2023-09</ID>
+          <Name>Trips 2023-09</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-09-01' AND t.pickup_date &lt; '2023-10-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2023-10</ID>
+          <Name>Trips 2023-10</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-10-01' AND t.pickup_date &lt; '2023-11-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2023-11</ID>
+          <Name>Trips 2023-11</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-11-01' AND t.pickup_date &lt; '2023-12-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2023-12</ID>
+          <Name>Trips 2023-12</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-12-01' AND t.pickup_date &lt; '2024-01-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2024-01</ID>
+          <Name>Trips 2024-01</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-01-01' AND t.pickup_date &lt; '2024-02-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2024-02</ID>
+          <Name>Trips 2024-02</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-02-01' AND t.pickup_date &lt; '2024-03-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2024-03</ID>
+          <Name>Trips 2024-03</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-03-01' AND t.pickup_date &lt; '2024-04-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2024-04</ID>
+          <Name>Trips 2024-04</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-04-01' AND t.pickup_date &lt; '2024-05-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2024-05</ID>
+          <Name>Trips 2024-05</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-05-01' AND t.pickup_date &lt; '2024-06-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2024-06</ID>
+          <Name>Trips 2024-06</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-06-01' AND t.pickup_date &lt; '2024-07-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2024-07</ID>
+          <Name>Trips 2024-07</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-07-01' AND t.pickup_date &lt; '2024-08-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2024-08</ID>
+          <Name>Trips 2024-08</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-08-01' AND t.pickup_date &lt; '2024-09-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2024-09</ID>
+          <Name>Trips 2024-09</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-09-01' AND t.pickup_date &lt; '2024-10-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2024-10</ID>
+          <Name>Trips 2024-10</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-10-01' AND t.pickup_date &lt; '2024-11-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2024-11</ID>
+          <Name>Trips 2024-11</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-11-01' AND t.pickup_date &lt; '2024-12-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips 2024-12</ID>
+          <Name>Trips 2024-12</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-12-01' AND t.pickup_date &lt; '2025-01-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>Trips Hot</ID>
+          <Name>Trips Hot</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2025-01-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Rolap</StorageMode>
+        </Partition>
+      </Partitions>
+    </MeasureGroup>
+    <MeasureGroup>
+      <ID>OD Pairs</ID>
+      <Name>OD Pairs</Name>
+      <Description>Distinct OD pair count in its dedicated measure group (B-06).</Description>
+      <Measures>
+        <Measure>
+          <ID>Distinct OD Pairs</ID>
+          <Name>Distinct OD Pairs</Name>
+          <Description>Exact count of distinct pickup zone to dropoff zone pairs. Additive across zone and borough of either role; not additive across time, payment type, vendor or hour.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>origin destination pairs; OD pairs; unique routes; distinct routes</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>DistinctCount</AggregateFunction>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>nyc_trips</TableID>
+              <ColumnID>od_pair_id</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <IgnoreUnrelatedDimensions>false</IgnoreUnrelatedDimensions>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Pickup Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>pickup_date_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Dropoff Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>dropoff_date_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Pickup Zone</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Zone</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>pu_location_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Dropoff Zone</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Zone</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>do_location_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Payment Type</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Payment Type Code</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>payment_type</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Vendor</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Vendor</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>vendor_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Pickup Hour</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Pickup Hour</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>UnsignedTinyInt</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>nyc_trips</TableID>
+                    <ColumnID>pickup_hour</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+      </Dimensions>
+      <Partitions>
+        <Partition>
+          <ID>OD Pairs 2023-01</ID>
+          <Name>OD Pairs 2023-01</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-01-01' AND t.pickup_date &lt; '2023-02-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2023-02</ID>
+          <Name>OD Pairs 2023-02</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-02-01' AND t.pickup_date &lt; '2023-03-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2023-03</ID>
+          <Name>OD Pairs 2023-03</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-03-01' AND t.pickup_date &lt; '2023-04-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2023-04</ID>
+          <Name>OD Pairs 2023-04</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-04-01' AND t.pickup_date &lt; '2023-05-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2023-05</ID>
+          <Name>OD Pairs 2023-05</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-05-01' AND t.pickup_date &lt; '2023-06-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2023-06</ID>
+          <Name>OD Pairs 2023-06</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-06-01' AND t.pickup_date &lt; '2023-07-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2023-07</ID>
+          <Name>OD Pairs 2023-07</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-07-01' AND t.pickup_date &lt; '2023-08-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2023-08</ID>
+          <Name>OD Pairs 2023-08</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-08-01' AND t.pickup_date &lt; '2023-09-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2023-09</ID>
+          <Name>OD Pairs 2023-09</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-09-01' AND t.pickup_date &lt; '2023-10-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2023-10</ID>
+          <Name>OD Pairs 2023-10</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-10-01' AND t.pickup_date &lt; '2023-11-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2023-11</ID>
+          <Name>OD Pairs 2023-11</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-11-01' AND t.pickup_date &lt; '2023-12-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2023-12</ID>
+          <Name>OD Pairs 2023-12</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2023-12-01' AND t.pickup_date &lt; '2024-01-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2024-01</ID>
+          <Name>OD Pairs 2024-01</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-01-01' AND t.pickup_date &lt; '2024-02-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2024-02</ID>
+          <Name>OD Pairs 2024-02</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-02-01' AND t.pickup_date &lt; '2024-03-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2024-03</ID>
+          <Name>OD Pairs 2024-03</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-03-01' AND t.pickup_date &lt; '2024-04-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2024-04</ID>
+          <Name>OD Pairs 2024-04</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-04-01' AND t.pickup_date &lt; '2024-05-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2024-05</ID>
+          <Name>OD Pairs 2024-05</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-05-01' AND t.pickup_date &lt; '2024-06-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2024-06</ID>
+          <Name>OD Pairs 2024-06</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-06-01' AND t.pickup_date &lt; '2024-07-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2024-07</ID>
+          <Name>OD Pairs 2024-07</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-07-01' AND t.pickup_date &lt; '2024-08-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2024-08</ID>
+          <Name>OD Pairs 2024-08</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-08-01' AND t.pickup_date &lt; '2024-09-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2024-09</ID>
+          <Name>OD Pairs 2024-09</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-09-01' AND t.pickup_date &lt; '2024-10-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2024-10</ID>
+          <Name>OD Pairs 2024-10</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-10-01' AND t.pickup_date &lt; '2024-11-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2024-11</ID>
+          <Name>OD Pairs 2024-11</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-11-01' AND t.pickup_date &lt; '2024-12-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs 2024-12</ID>
+          <Name>OD Pairs 2024-12</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2024-12-01' AND t.pickup_date &lt; '2025-01-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+        <Partition>
+          <ID>OD Pairs Hot</ID>
+          <Name>OD Pairs Hot</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  t.trip_id,
+  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,
+  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,
+  t.pickup_hour,
+  t.pu_location_id,
+  t.do_location_id,
+  t.payment_type,
+  t.vendor_id,
+  t.od_pair_id,
+  t.trip_distance,
+  t.fare_amount,
+  t.tip_amount,
+  t.tolls_amount,
+  t.total_amount,
+  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,
+  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip
+FROM nyctaxi.fact_trip t
+WHERE t.pickup_date &gt;= '2025-01-01'</QueryDefinition>
+          </Source>
+          <StorageMode>Rolap</StorageMode>
+        </Partition>
+      </Partitions>
+    </MeasureGroup>
+  </MeasureGroups>
+  <Source>
+    <DataSourceViewID>slc</DataSourceViewID>
+  </Source>
+</Cube>

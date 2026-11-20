@@ -1,0 +1,129 @@
+/*
+  MDX calculation script of cube [NYC] (S1, SPEC § 6.4). build_model.py embeds this file in NYC.cube.
+  Stored measures: Trip Count, Total Trip Distance, Fare Amount, Tip Amount, Tolls Amount, Gross Trip Revenue
+  (Trips); Distinct OD Pairs (OD Pairs, distinct count); hidden helpers Card Tips Sum, Card Trips.
+  Period-anchored metrics (N-C1, N-C2) anchor on t(P): the last calendar date of the Pickup Date period in context,
+  capped at the source window (2023-01-01 to 2024-12-31), as SPEC § 6.1 defines it, whether or not trips exist that
+  day. EXISTING evaluates the date set in the cell's context; LinkMember moves the anchor from the Date attribute
+  hierarchy into the Calendar user hierarchy so PeriodsToDate can walk it.
+*/
+CALCULATE;
+
+// N-S2: tips on credit card trips; NULL where the context holds no card trip (every payment type except 1).
+CREATE MEMBER CURRENTCUBE.[Measures].[Card Tips] AS
+  IIF(IsEmpty([Measures].[Card Trips]) OR [Measures].[Card Trips] = 0,
+      NULL,
+      [Measures].[Card Tips Sum]),
+  FORMAT_STRING = "#,##0.00",
+  NON_EMPTY_BEHAVIOR = { [Measures].[Card Trips] },
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// N-M2: fare amount over trip distance from the aggregated sums at every grain.
+CREATE MEMBER CURRENTCUBE.[Measures].[Fare per Mile] AS
+  IIF(IsEmpty([Measures].[Total Trip Distance]) OR [Measures].[Total Trip Distance] = 0,
+      NULL,
+      [Measures].[Fare Amount] / [Measures].[Total Trip Distance]),
+  FORMAT_STRING = "#,##0.00",
+  NON_EMPTY_BEHAVIOR = { [Measures].[Total Trip Distance] },
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// N-C1: revenue from 1 January of the anchor's year to the anchor.
+CREATE MEMBER CURRENTCUBE.[Measures].[Revenue YTD] AS
+  IIF(Count(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&[1])) = 0,
+      NULL,
+      Sum(PeriodsToDate([Pickup Date].[Calendar].[Calendar Year],
+                        LinkMember(Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members,
+                                               [Pickup Date].[In Source Window].&[1]), 1).Item(0).Item(0),
+                                   [Pickup Date].[Calendar])),
+          [Measures].[Gross Trip Revenue])),
+  FORMAT_STRING = "#,##0.00",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// N-C1: the same window one year earlier. The STLY Date ID property maps the anchor by calendar date, with 29 February
+// to 28 February; ParallelPeriod is not used because it maps by position within the year, which shifts every date
+// after 28 February of a leap year by one day. NULL when the prior year precedes the calendar (2023 anchors).
+CREATE MEMBER CURRENTCUBE.[Measures].[Revenue STLY YTD] AS
+  IIF(Count(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&[1])) = 0,
+      NULL,
+      IIF(Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&[1]), 1)
+            .Item(0).Item(0).Properties("STLY Date ID") = "",
+          NULL,
+          Sum(PeriodsToDate([Pickup Date].[Calendar].[Calendar Year],
+                            StrToMember("[Pickup Date].[Calendar].[Date].&["
+                                        + Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members,
+                                                      [Pickup Date].[In Source Window].&[1]), 1)
+                                            .Item(0).Item(0).Properties("STLY Date ID")
+                                        + "]")),
+              [Measures].[Gross Trip Revenue]))),
+  FORMAT_STRING = "#,##0.00",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// N-C1: year-over-year change of Revenue YTD; NULL when the prior-year value is empty or zero.
+CREATE MEMBER CURRENTCUBE.[Measures].[Revenue YoY %] AS
+  IIF(IsEmpty([Measures].[Revenue STLY YTD]) OR [Measures].[Revenue STLY YTD] = 0,
+      NULL,
+      ([Measures].[Revenue YTD] - [Measures].[Revenue STLY YTD]) / [Measures].[Revenue STLY YTD]),
+  FORMAT_STRING = "0.00%",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// N-C2 components: period-to-date trip counts and calendar days elapsed at the anchor.
+CREATE MEMBER CURRENTCUBE.[Measures].[Trips MTD] AS
+  IIF(Count(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&[1])) = 0,
+      NULL,
+      Sum(PeriodsToDate([Pickup Date].[Calendar].[Month],
+                        LinkMember(Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members,
+                                               [Pickup Date].[In Source Window].&[1]), 1).Item(0).Item(0),
+                                   [Pickup Date].[Calendar])),
+          [Measures].[Trip Count])),
+  FORMAT_STRING = "#,##0",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+CREATE MEMBER CURRENTCUBE.[Measures].[Trips YTD] AS
+  IIF(Count(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&[1])) = 0,
+      NULL,
+      Sum(PeriodsToDate([Pickup Date].[Calendar].[Calendar Year],
+                        LinkMember(Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members,
+                                               [Pickup Date].[In Source Window].&[1]), 1).Item(0).Item(0),
+                                   [Pickup Date].[Calendar])),
+          [Measures].[Trip Count])),
+  FORMAT_STRING = "#,##0",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+CREATE MEMBER CURRENTCUBE.[Measures].[Days Elapsed In Month] AS
+  IIF(Count(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&[1])) = 0,
+      NULL,
+      CInt(Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&[1]), 1)
+             .Item(0).Item(0).Properties("Day Of Month"))),
+  FORMAT_STRING = "0",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+CREATE MEMBER CURRENTCUBE.[Measures].[Days Elapsed In Year] AS
+  IIF(Count(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&[1])) = 0,
+      NULL,
+      CInt(Tail(Exists(EXISTING [Pickup Date].[Date].[Date].Members, [Pickup Date].[In Source Window].&[1]), 1)
+             .Item(0).Item(0).Properties("Day Of Year"))),
+  FORMAT_STRING = "0",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// N-C2: average daily trips month-to-date over average daily trips year-to-date, with calendar-day denominators.
+CREATE MEMBER CURRENTCUBE.[Measures].[Pace Index] AS
+  IIF(IsEmpty([Measures].[Trips MTD]) OR IsEmpty([Measures].[Trips YTD]) OR [Measures].[Trips YTD] = 0,
+      NULL,
+      ([Measures].[Trips MTD] / [Measures].[Days Elapsed In Month])
+        / ([Measures].[Trips YTD] / [Measures].[Days Elapsed In Year])),
+  FORMAT_STRING = "0.000",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trips';
+
+// SPEC § 6.5: N-C1 and N-C2 return NULL when grouped or filtered by the Dropoff Date role. Any Dropoff Date member
+// below All sets the Calendar Year attribute through attribute relationships, so scoping that attribute and the
+// unrelated Day Of Week attribute covers every Dropoff Date selection.
+SCOPE({[Measures].[Revenue YTD], [Measures].[Revenue STLY YTD], [Measures].[Revenue YoY %],
+       [Measures].[Trips MTD], [Measures].[Trips YTD], [Measures].[Days Elapsed In Month],
+       [Measures].[Days Elapsed In Year], [Measures].[Pace Index]});
+  SCOPE([Dropoff Date].[Calendar Year].[Calendar Year].Members);
+    THIS = NULL;
+  END SCOPE;
+  SCOPE([Dropoff Date].[Day Of Week].[Day Of Week].Members);
+    THIS = NULL;
+  END SCOPE;
+END SCOPE;

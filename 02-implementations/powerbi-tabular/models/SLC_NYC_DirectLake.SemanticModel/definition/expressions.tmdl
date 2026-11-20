@@ -1,0 +1,9 @@
+expression OneLakeSourceUrl = "SLC_ONELAKE_SOURCE_URL" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 32eda253-b356-5abc-9ef8-8c2dfa7f9013
+
+expression 'DirectLake - slc' =
+		let
+		    Source = AzureStorage.DataLake(OneLakeSourceUrl, [HierarchicalNavigation = true])
+		in
+		    Source
+	lineageTag: 2245bc68-4935-5a0e-aa81-bfb7c41c548d

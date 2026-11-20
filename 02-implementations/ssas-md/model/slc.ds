@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DataSource xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RelationalDataSource">
+  <ID>slc_adapter</ID>
+  <Name>slc_adapter</Name>
+  <Description>SQL Server 2025 adapter database: PolyBase ODBC external tables over the Databricks gold tables (adapter/). ODBC sources are not supported for multidimensional models and ROLAP requires a SQL Server relational source.</Description>
+  <ConnectionString>Provider=MSOLEDBSQL;Data Source=slc-sql2025;Initial Catalog=slc_adapter;Integrated Security=SSPI;Encrypt=Mandatory</ConnectionString>
+  <ImpersonationInfo>
+    <ImpersonationMode>ImpersonateServiceAccount</ImpersonationMode>
+  </ImpersonationInfo>
+  <Timeout>PT0S</Timeout>
+</DataSource>

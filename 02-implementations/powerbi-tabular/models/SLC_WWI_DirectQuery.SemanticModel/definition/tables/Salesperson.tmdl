@@ -1,0 +1,33 @@
+/// Employee credited with the sale or order (role of the Employee dimension).
+table Salesperson
+	lineageTag: 9361b403-ef22-54f7-92f3-109ebbf05015
+
+	/// Surrogate key (SCD2 version).
+	column 'Salesperson Key'
+		dataType: int64
+		isKey
+		isHidden
+		lineageTag: b2bf2ad8-f06b-509a-a2b9-0de67173b348
+		summarizeBy: none
+		sourceColumn: employee_key
+
+	/// Employee credited with the sale or order.
+	column Salesperson
+		dataType: string
+		lineageTag: 0a83e900-333e-5d0e-8923-83e1014cff73
+		summarizeBy: none
+		sourceColumn: employee
+
+	partition Salesperson = m
+		mode: dual
+		source =
+				let
+				    Source = Databricks.Catalogs(DatabricksHost, DatabricksHttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null, Implementation = "2.0"]),
+				    CatalogData = Source{[Name = UnityCatalog, Kind = "Database"]}[Data],
+				    SchemaData = CatalogData{[Name = "wwi", Kind = "Schema"]}[Data],
+				    TableData = SchemaData{[Name = "dim_employee", Kind = "Table"]}[Data],
+				    Selected = Table.SelectColumns(TableData, {"employee_key", "employee"})
+				in
+				    Selected
+
+	annotation SLC_Synonyms = ["sales rep", "seller", "account manager", "rep"]

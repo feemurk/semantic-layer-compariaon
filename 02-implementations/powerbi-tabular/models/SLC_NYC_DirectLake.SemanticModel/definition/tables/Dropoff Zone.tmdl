@@ -1,0 +1,53 @@
+/// TLC taxi zone where the trip ended (role of the Zone dimension).
+table 'Dropoff Zone'
+	lineageTag: 3a498aea-d3ce-5af8-821f-1c2fee76f936
+
+	/// TLC location id of the dropoff zone.
+	column 'Dropoff Location ID'
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: 74451413-88b1-51d3-8f35-c6df11dd0620
+		summarizeBy: none
+		sourceColumn: location_id
+
+	/// Borough of the dropoff zone.
+	column 'Dropoff Borough'
+		dataType: string
+		lineageTag: 4c25a1ae-633b-54cb-9426-052056929fcd
+		summarizeBy: none
+		sourceColumn: borough
+
+	/// TLC taxi zone of the dropoff.
+	column 'Dropoff Zone'
+		dataType: string
+		lineageTag: 3f5ed999-8085-51da-b038-b5c16776192a
+		summarizeBy: none
+		sourceColumn: zone
+
+	/// TLC service zone of the dropoff (Yellow Zone, Boro Zone, Airports, EWR).
+	column 'Dropoff Service Zone'
+		dataType: string
+		lineageTag: 98918ad2-794e-576e-8658-a6936871b4cc
+		summarizeBy: none
+		sourceColumn: service_zone
+
+	hierarchy 'Dropoff Geography'
+		lineageTag: a6f0b47e-9aeb-5a95-988f-a154ee02f8b7
+
+		level 'Dropoff Borough'
+			lineageTag: d95bae8f-c196-590d-aad3-480f9c512d07
+			column: 'Dropoff Borough'
+
+		level 'Dropoff Zone'
+			lineageTag: f940acc2-3c0b-550d-bf0c-ee3245e81368
+			column: 'Dropoff Zone'
+
+	partition 'Dropoff Zone' = entity
+		mode: directLake
+		source
+			entityName: dim_zone
+			schemaName: nyctaxi
+			expressionSource: 'DirectLake - slc'
+
+	annotation SLC_Synonyms = ["destination", "dropoff location", "to"]

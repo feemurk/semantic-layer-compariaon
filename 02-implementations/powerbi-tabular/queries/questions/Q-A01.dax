@@ -1,0 +1,15 @@
+// Q-A01 The 5 bill-to customers with the highest revenue including tax in calendar 2015 (Bill-To Customer role).
+DEFINE
+    VAR billto =
+        SUMMARIZECOLUMNS (
+            'Bill-To Customer'[Bill-To Customer],
+            TREATAS ( { 2015 }, 'Date'[Calendar Year] ),
+            "rev", [Revenue Including Tax]
+        )
+EVALUATE
+SELECTCOLUMNS (
+    TOPN ( 5, billto, [rev], DESC, 'Bill-To Customer'[Bill-To Customer], ASC ),
+    "bill_to_customer", 'Bill-To Customer'[Bill-To Customer],
+    "revenue_including_tax", [rev]
+)
+ORDER BY [revenue_including_tax] DESC, [bill_to_customer]

@@ -1,0 +1,26 @@
+// Q-W-S1-D4 FY2015 revenue by stock item Color as recorded at the time of sale ('Stock Item'[Color]) and by each item's current
+// Color ('Stock Item (Current)'[Current Color]); differs flags colors where the two attributions disagree.
+DEFINE
+    VAR fy = TREATAS ( { 2015 }, 'Date'[Fiscal Year] )
+    VAR as_was = SUMMARIZECOLUMNS ( 'Stock Item'[Color], fy, "rev", [Revenue (Excl. Tax)] )
+    VAR as_is = SUMMARIZECOLUMNS ( 'Stock Item (Current)'[Current Color], fy, "rev", [Revenue (Excl. Tax)] )
+    VAR colors =
+        DISTINCT (
+            UNION (
+                SELECTCOLUMNS ( as_was, "color", 'Stock Item'[Color] ),
+                SELECTCOLUMNS ( as_is, "color", 'Stock Item (Current)'[Current Color] )
+            )
+        )
+EVALUATE
+SELECTCOLUMNS (
+    colors,
+    "color", [color],
+    "revenue_as_was", VAR c = [color] RETURN MAXX ( FILTER ( as_was, 'Stock Item'[Color] = c ), [rev] ),
+    "revenue_as_is", VAR c = [color] RETURN MAXX ( FILTER ( as_is, 'Stock Item (Current)'[Current Color] = c ), [rev] ),
+    "differs",
+        VAR c = [color]
+        VAR w = MAXX ( FILTER ( as_was, 'Stock Item'[Color] = c ), [rev] )
+        VAR i = MAXX ( FILTER ( as_is, 'Stock Item (Current)'[Current Color] = c ), [rev] )
+        RETURN COALESCE ( w, 0 ) <> COALESCE ( i, 0 )
+)
+ORDER BY [color]

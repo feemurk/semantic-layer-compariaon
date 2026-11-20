@@ -1,0 +1,186 @@
+/// Shared calendar with a fiscal year starting 1 November, labeled by the year in which it ends.
+table Date
+	dataCategory: Time
+	lineageTag: 4c6f58a3-722e-57a0-a543-a8af3138ab62
+
+	/// Calendar date of the invoice, order or stock snapshot.
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: yyyy-MM-dd
+		lineageTag: 0d6237c0-84c1-5d95-b657-93a8f6c49909
+		summarizeBy: none
+		sourceColumn: date_key
+
+	/// Calendar year.
+	column 'Calendar Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: 46f20eb8-a18f-5c86-9b31-e89b28c0d74f
+		summarizeBy: none
+		sourceColumn: calendar_year
+
+	/// Calendar quarter 1-4.
+	column 'Calendar Quarter'
+		dataType: int64
+		formatString: 0
+		lineageTag: c456d1b1-bc52-5acd-b77f-d7fca4361973
+		summarizeBy: none
+		sourceColumn: calendar_quarter
+
+	/// Calendar month 1-12.
+	column 'Calendar Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: a58ab90b-803f-5a29-b85f-22905b83e341
+		summarizeBy: none
+		sourceColumn: calendar_month
+
+	/// Month name.
+	column 'Month Name'
+		dataType: string
+		lineageTag: 10ecaf37-b4d7-5f0c-adac-d53406f75be5
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: 'Calendar Month'
+
+	/// First day of the calendar month.
+	column 'Month Start'
+		dataType: dateTime
+		formatString: yyyy-MM-dd
+		lineageTag: 13a864ff-0783-5622-8eae-c265a4db6419
+		summarizeBy: none
+		sourceColumn: month_start_date
+
+	/// Day of the month.
+	column 'Day of Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: 21a58a12-61cb-5447-bc4d-ff14512ca0ca
+		summarizeBy: none
+		sourceColumn: day_of_month
+
+	/// Day of the year.
+	column 'Day of Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: 470a55bf-41e6-5501-924a-35887c7d75d5
+		summarizeBy: none
+		sourceColumn: day_of_year
+
+	/// ISO day of week, Monday = 1.
+	column 'Day of Week'
+		dataType: int64
+		formatString: 0
+		lineageTag: 1f4e94c4-9d9c-5939-8830-e58c81acd101
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+	/// Day name.
+	column 'Day Name'
+		dataType: string
+		lineageTag: f335cb04-ba30-533b-9641-87e948984830
+		summarizeBy: none
+		sourceColumn: day_name
+		sortByColumn: 'Day of Week'
+
+	/// ISO week number.
+	column 'ISO Week'
+		dataType: int64
+		formatString: 0
+		lineageTag: cfc28e95-d924-5dfa-8fcd-35509d0ba85b
+		summarizeBy: none
+		sourceColumn: iso_week_number
+
+	/// Fiscal year starting 1 November, labeled by the year in which it ends.
+	column 'Fiscal Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: e5d0fdf4-3a30-50fe-876e-1a66f968c10f
+		summarizeBy: none
+		sourceColumn: fiscal_year
+
+	/// Fiscal quarter 1-4 (Q1 = November-January).
+	column 'Fiscal Quarter'
+		dataType: int64
+		formatString: 0
+		lineageTag: d1ce2b15-74a4-5c2a-9ec6-59c248c1c612
+		summarizeBy: none
+		sourceColumn: fiscal_quarter
+
+	/// Fiscal month 1-12 (November = 1).
+	column 'Fiscal Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: c89ec2c7-efaf-524c-a2c2-bb050a4e5ddd
+		summarizeBy: none
+		sourceColumn: fiscal_month
+
+	/// fiscal_year * 12 + fiscal_month; consecutive across years.
+	column 'Fiscal Period'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 38561e88-7015-532c-bd19-02ea80b7dd41
+		summarizeBy: none
+		sourceColumn: fiscal_period_index
+
+	/// Day of the fiscal year.
+	column 'Day of Fiscal Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: 477ca9de-6a3c-5d1b-a025-0bc4f07f95b0
+		summarizeBy: none
+		sourceColumn: day_of_fiscal_year
+
+	hierarchy Calendar
+		lineageTag: 664b9218-68c2-512a-8a09-5ac05765bb73
+
+		level 'Calendar Year'
+			lineageTag: 9c1fe7ad-353d-530c-be49-616bbba32a62
+			column: 'Calendar Year'
+
+		level 'Calendar Quarter'
+			lineageTag: 79c6fec8-7894-5f74-8d61-c9d64b896e38
+			column: 'Calendar Quarter'
+
+		level 'Month Start'
+			lineageTag: 27a20117-4216-5243-91c6-4963c29a7ac3
+			column: 'Month Start'
+
+		level Date
+			lineageTag: e4d50a04-1b16-5dc4-9a8d-a1262a1deb52
+			column: Date
+
+	hierarchy Fiscal
+		lineageTag: 9ed3b2e3-632e-592c-9dbd-8545a7320480
+
+		level 'Fiscal Year'
+			lineageTag: 823951e9-bd4f-5b9b-bd3c-ddeb1197e96b
+			column: 'Fiscal Year'
+
+		level 'Fiscal Quarter'
+			lineageTag: 83b19a2a-1f37-5e0b-a991-403b3922373f
+			column: 'Fiscal Quarter'
+
+		level 'Fiscal Month'
+			lineageTag: 66567ea3-4c07-5f3b-892a-605bf2668df6
+			column: 'Fiscal Month'
+
+		level Date
+			lineageTag: a1c4556d-e665-5eab-a8de-29828317bce4
+			column: Date
+
+	partition Date = m
+		mode: import
+		source =
+				let
+				    Source = Databricks.Catalogs(DatabricksHost, DatabricksHttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null, Implementation = "2.0"]),
+				    CatalogData = Source{[Name = UnityCatalog, Kind = "Database"]}[Data],
+				    SchemaData = CatalogData{[Name = "wwi", Kind = "Schema"]}[Data],
+				    TableData = SchemaData{[Name = "dim_date", Kind = "Table"]}[Data],
+				    Selected = Table.SelectColumns(TableData, {"date_key", "calendar_year", "calendar_quarter", "calendar_month", "month_name", "month_start_date", "day_of_month", "day_of_year", "day_of_week", "day_name", "iso_week_number", "fiscal_year", "fiscal_quarter", "fiscal_month", "fiscal_period_index", "day_of_fiscal_year"})
+				in
+				    Selected
+
+	annotation SLC_Synonyms = ["day", "period", "fiscal year", "FY", "month", "quarter"]

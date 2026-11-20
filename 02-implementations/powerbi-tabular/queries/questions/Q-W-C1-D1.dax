@@ -1,0 +1,25 @@
+// Q-W-C1-D1 For the stock group with the highest FY2015 share (ties: name), each stock item's share of that group's revenue.
+DEFINE
+    VAR fy = TREATAS ( { 2015 }, 'Date'[Fiscal Year] )
+    VAR groups = SUMMARIZECOLUMNS ( 'Stock Group'[Stock Group], fy, "rev", [Revenue (Excl. Tax)] )
+    VAR top_group = TOPN ( 1, groups, [rev], DESC, 'Stock Group'[Stock Group], ASC )
+    VAR group_name = MAXX ( top_group, 'Stock Group'[Stock Group] )
+    VAR group_revenue = MAXX ( top_group, [rev] )
+    VAR items =
+        SUMMARIZECOLUMNS (
+            'Stock Item'[WWI Stock Item ID],
+            'Stock Item'[Stock Item],
+            fy,
+            TREATAS ( { group_name }, 'Stock Group'[Stock Group] ),
+            "rev", [Revenue (Excl. Tax)]
+        )
+EVALUATE
+SELECTCOLUMNS (
+    items,
+    "stock_group_name", group_name,
+    "wwi_stock_item_id", 'Stock Item'[WWI Stock Item ID],
+    "stock_item", 'Stock Item'[Stock Item],
+    "revenue", [rev],
+    "share_of_group", DIVIDE ( [rev], group_revenue )
+)
+ORDER BY [share_of_group] DESC, [wwi_stock_item_id]

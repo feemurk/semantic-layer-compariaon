@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Role xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>Territory Analyst - Southeast</ID>
+  <Name>Territory Analyst - Southeast</Name>
+  <Description>SPEC § 10: sales and orders restricted to the Southeast sales territory (as-was city); no inventory access.</Description>
+  <Members>
+    <Member>
+      <Name>SLC\slc_territory_southeast</Name>
+    </Member>
+  </Members>
+</Role>

@@ -1,0 +1,20 @@
+// Q-W-C2-D3 Days of supply for chiller vs non-chiller items at each calendar quarter end of 2015.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Date'[Calendar Quarter],
+        'Stock Item'[Is Chiller Stock],
+        TREATAS ( { 2015 }, 'Date'[Calendar Year] ),
+        "d", [Snapshot Anchor Date],
+        "units", [Closing Stock On Hand],
+        "u91", [Units Sold 91D],
+        "dos", [Days of Supply]
+    ),
+    "calendar_quarter", 'Date'[Calendar Quarter],
+    "quarter_end_date", [d],
+    "is_chiller_stock", 'Stock Item'[Is Chiller Stock],
+    "closing_units", [units],
+    "units_sold_91d", [u91],
+    "days_of_supply", [dos]
+)
+ORDER BY [calendar_quarter], [is_chiller_stock]

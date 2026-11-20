@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Batch xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" Transaction="true">
+  <Parallel>
+    <Process>
+      <Object>
+        <DatabaseID>slc</DatabaseID>
+      </Object>
+      <Type>ProcessFull</Type>
+      <WriteBackTableCreation>UseExisting</WriteBackTableCreation>
+    </Process>
+  </Parallel>
+</Batch>

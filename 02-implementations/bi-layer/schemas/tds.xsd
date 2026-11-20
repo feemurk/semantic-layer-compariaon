@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Validation entry point for standalone published data source files (.tds). The official 2026.3 schema declares only
+     <workbook> as a global element; a .tds root is the same <datasource> content model (DataSource-CT), so this wrapper
+     includes the official schema unchanged and declares that root. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:user="http://www.tableausoftware.com/xml/user"
+           elementFormDefault="qualified">
+  <xs:import namespace="http://www.tableausoftware.com/xml/user" schemaLocation="tableau_user_namespace.xsd"/>
+  <xs:include schemaLocation="vendor/twb_2026.3.0.xsd"/>
+  <xs:element name="datasource" type="DataSource-CT"/>
+</xs:schema>

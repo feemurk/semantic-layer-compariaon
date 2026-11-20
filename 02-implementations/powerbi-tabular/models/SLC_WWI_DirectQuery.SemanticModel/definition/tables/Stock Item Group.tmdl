@@ -1,0 +1,32 @@
+/// Bridge between stock items (durable id) and stock groups (many-to-many).
+table 'Stock Item Group'
+	isHidden
+	lineageTag: f625a1e2-d3f5-5dd2-8632-88b7255c48d4
+
+	/// Durable stock item id.
+	column wwi_stock_item_id
+		dataType: int64
+		isHidden
+		lineageTag: cd3cda0d-ccb9-5940-b6e7-2561e739fdca
+		summarizeBy: none
+		sourceColumn: wwi_stock_item_id
+
+	/// Stock group id.
+	column stock_group_id
+		dataType: int64
+		isHidden
+		lineageTag: 6b05e538-b3e0-5b40-b991-22c6710b4c4f
+		summarizeBy: none
+		sourceColumn: stock_group_id
+
+	partition 'Stock Item Group' = m
+		mode: dual
+		source =
+				let
+				    Source = Databricks.Catalogs(DatabricksHost, DatabricksHttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null, Implementation = "2.0"]),
+				    CatalogData = Source{[Name = UnityCatalog, Kind = "Database"]}[Data],
+				    SchemaData = CatalogData{[Name = "wwi", Kind = "Schema"]}[Data],
+				    TableData = SchemaData{[Name = "bridge_stock_item_group", Kind = "Table"]}[Data],
+				    Selected = Table.SelectColumns(TableData, {"wwi_stock_item_id", "stock_group_id"})
+				in
+				    Selected

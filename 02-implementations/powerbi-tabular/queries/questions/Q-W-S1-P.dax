@@ -1,0 +1,16 @@
+// Q-W-S1-P Revenue (excl. tax) by Sales Territory by fiscal month for fiscal year 2015.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'City'[Sales Territory],
+        'Date'[Fiscal Month],
+        'Date'[Month Start],
+        TREATAS ( { 2015 }, 'Date'[Fiscal Year] ),
+        "rev", [Revenue (Excl. Tax)]
+    ),
+    "sales_territory", 'City'[Sales Territory],
+    "fiscal_month", 'Date'[Fiscal Month],
+    "month_start_date", 'Date'[Month Start],
+    "revenue", [rev]
+)
+ORDER BY [sales_territory], [fiscal_month]

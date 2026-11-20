@@ -1,0 +1,74 @@
+relationship b59baaf7-6d1e-563c-bd94-faf4bd87f21d
+	fromColumn: Sales.invoice_date
+	toColumn: Date.Date
+
+relationship 3ca13ff6-e548-5240-b8dc-b161188875da
+	fromColumn: Sales.delivery_date
+	toColumn: 'Delivery Date'.'Delivery Date'
+
+relationship e1b49636-38c4-5597-97e5-ac3c71dc25d7
+	fromColumn: Sales.customer_key
+	toColumn: Customer.'Customer Key'
+
+relationship 5bab8ee5-5900-5159-ba01-48feb3cb464f
+	fromColumn: Sales.bill_to_customer_key
+	toColumn: 'Bill-To Customer'.'Bill-To Customer Key'
+
+relationship 360c9bf2-e7f8-50a1-a172-f5694435dd84
+	fromColumn: Sales.city_key
+	toColumn: City.'City Key'
+
+relationship ac3788d2-62c5-504f-a4b3-af879f853de9
+	fromColumn: Sales.stock_item_key
+	toColumn: 'Stock Item'.'Stock Item Key'
+
+relationship e20b6718-25a9-544d-a72a-43b8f6a323ac
+	fromColumn: Sales.salesperson_key
+	toColumn: Salesperson.'Salesperson Key'
+
+relationship 2540cf19-9a5b-5159-82cc-fcf062b85ed9
+	fromColumn: Orders.order_date
+	toColumn: Date.Date
+
+relationship 8a50388c-ffa7-545b-adf5-25087db57bd3
+	fromColumn: Orders.customer_key
+	toColumn: Customer.'Customer Key'
+
+relationship ac3a5bd6-96e2-5dc0-92bb-4312d3d16c2d
+	fromColumn: Orders.city_key
+	toColumn: City.'City Key'
+
+relationship fee9bc56-70a3-569d-8fa7-b28cd9f9c1ad
+	fromColumn: Orders.stock_item_key
+	toColumn: 'Stock Item'.'Stock Item Key'
+
+relationship ba985b85-3a77-5f23-a75f-d8875c555727
+	fromColumn: Orders.salesperson_key
+	toColumn: Salesperson.'Salesperson Key'
+
+relationship 4176ec0b-9707-55fe-bf41-92a4fe968db5
+	fromColumn: Orders.picker_key
+	toColumn: Picker.'Picker Key'
+
+relationship 79982fc1-d650-59a3-b722-fc4d6a3cfe6c
+	fromColumn: 'Stock Holding'.snapshot_date
+	toColumn: Date.Date
+
+relationship f8da0ae4-1113-5dca-ae6e-42d37b841fbb
+	fromColumn: 'Stock Holding'.stock_item_key
+	toColumn: 'Stock Item'.'Stock Item Key'
+
+relationship 2ef45587-3da4-532e-9227-5d42650e4b1d
+	fromColumn: 'Stock Item'.'WWI Stock Item ID'
+	toColumn: 'Stock Item (Current)'.'Current WWI Stock Item ID'
+
+relationship 177e1193-717c-5c22-a2d4-24a799a78159
+	fromCardinality: many
+	toCardinality: many
+	crossFilteringBehavior: oneDirection
+	fromColumn: 'Stock Item'.'WWI Stock Item ID'
+	toColumn: 'Stock Item Group'.wwi_stock_item_id
+
+relationship bca5f6ae-f32e-52be-9e4b-79cd68960111
+	fromColumn: 'Stock Item Group'.stock_group_id
+	toColumn: 'Stock Group'.'Stock Group ID'

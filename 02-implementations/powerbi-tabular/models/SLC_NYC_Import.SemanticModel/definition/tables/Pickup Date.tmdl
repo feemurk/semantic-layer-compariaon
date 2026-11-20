@@ -1,0 +1,126 @@
+/// Date the trip started; the anchor for year-to-date and pace metrics.
+table 'Pickup Date'
+	dataCategory: Time
+	lineageTag: b61edbb1-16c4-5984-8827-def05a1d5da2
+
+	/// Calendar date of the trip pickup.
+	column 'Pickup Date'
+		dataType: dateTime
+		isKey
+		formatString: yyyy-MM-dd
+		lineageTag: a6772855-1259-5ac6-88a4-7fc7717475bb
+		summarizeBy: none
+		sourceColumn: date_key
+
+	/// Calendar year.
+	column 'Pickup Calendar Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: 8b878c99-93b9-5875-a0ac-e2343bb85594
+		summarizeBy: none
+		sourceColumn: calendar_year
+
+	/// Calendar quarter 1-4.
+	column 'Pickup Calendar Quarter'
+		dataType: int64
+		formatString: 0
+		lineageTag: 1f23a242-33f0-505a-8a60-463f56cb9338
+		summarizeBy: none
+		sourceColumn: calendar_quarter
+
+	/// Calendar month 1-12.
+	column 'Pickup Calendar Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: 52cc5362-656a-5000-ae51-2e887c8cc00d
+		summarizeBy: none
+		sourceColumn: calendar_month
+
+	/// Month name.
+	column 'Pickup Month Name'
+		dataType: string
+		lineageTag: d9a9d65d-cb7a-5d89-beee-3026e174c09a
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: 'Pickup Calendar Month'
+
+	/// First day of the calendar month.
+	column 'Pickup Month Start'
+		dataType: dateTime
+		formatString: yyyy-MM-dd
+		lineageTag: b3e1b816-ba35-5da2-a9e4-cc1eac2bf8b0
+		summarizeBy: none
+		sourceColumn: month_start_date
+
+	/// Day of the month.
+	column 'Pickup Day of Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: 787b7ce1-6ded-53ea-abad-fa620143181d
+		summarizeBy: none
+		sourceColumn: day_of_month
+
+	/// Day of the year.
+	column 'Pickup Day of Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: 98b7e918-8b59-524f-bdf9-f327b519d0db
+		summarizeBy: none
+		sourceColumn: day_of_year
+
+	/// ISO day of week, Monday = 1.
+	column 'Pickup Day of Week'
+		dataType: int64
+		formatString: 0
+		lineageTag: 786a522e-d2d7-5488-815b-c60efe18fbd2
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+	/// Day name.
+	column 'Pickup Day Name'
+		dataType: string
+		lineageTag: 2cb62c2f-2311-51b6-9db7-1c23b31ca2fe
+		summarizeBy: none
+		sourceColumn: day_name
+		sortByColumn: 'Pickup Day of Week'
+
+	/// ISO week number.
+	column 'Pickup ISO Week'
+		dataType: int64
+		formatString: 0
+		lineageTag: e2e881ce-4a68-55fe-baea-6c0769f978b1
+		summarizeBy: none
+		sourceColumn: iso_week_number
+
+	hierarchy 'Pickup Calendar'
+		lineageTag: 841bcfda-3455-53c3-a000-33dd6a2da9b9
+
+		level 'Pickup Calendar Year'
+			lineageTag: 4dbdbc5c-acd9-55e0-8d75-f2bdf9ca52e7
+			column: 'Pickup Calendar Year'
+
+		level 'Pickup Calendar Quarter'
+			lineageTag: a575a694-bff3-5bb5-8048-c7e06b954e2e
+			column: 'Pickup Calendar Quarter'
+
+		level 'Pickup Month Start'
+			lineageTag: 9e0da788-1e02-5c69-a6fd-8a2606f19235
+			column: 'Pickup Month Start'
+
+		level 'Pickup Date'
+			lineageTag: 1a47de86-41e6-53d7-9894-2096bd3a1b8c
+			column: 'Pickup Date'
+
+	partition 'Pickup Date' = m
+		mode: dual
+		source =
+				let
+				    Source = Databricks.Catalogs(DatabricksHost, DatabricksHttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null, Implementation = "2.0"]),
+				    CatalogData = Source{[Name = UnityCatalog, Kind = "Database"]}[Data],
+				    SchemaData = CatalogData{[Name = "nyctaxi", Kind = "Schema"]}[Data],
+				    TableData = SchemaData{[Name = "dim_date", Kind = "Table"]}[Data],
+				    Selected = Table.SelectColumns(TableData, {"date_key", "calendar_year", "calendar_quarter", "calendar_month", "month_name", "month_start_date", "day_of_month", "day_of_year", "day_of_week", "day_name", "iso_week_number"})
+				in
+				    Selected
+
+	annotation SLC_Synonyms = ["trip date", "pickup day", "date"]

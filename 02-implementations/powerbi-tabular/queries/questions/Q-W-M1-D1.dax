@@ -1,0 +1,35 @@
+// Q-W-M1-D1 For the customer category with the lowest FY2015 gross margin %, the 10 lowest-margin stock items with FY2015
+// revenue above 10,000.
+DEFINE
+    VAR fy = TREATAS ( { 2015 }, 'Date'[Fiscal Year] )
+    VAR categories = SUMMARIZECOLUMNS ( 'Customer'[Customer Category], fy, "gm", [Gross Margin %] )
+    VAR low_category =
+        MAXX ( TOPN ( 1, categories, [gm], ASC, 'Customer'[Customer Category], ASC ), 'Customer'[Customer Category] )
+    VAR items =
+        FILTER (
+            SUMMARIZECOLUMNS (
+                'Stock Item'[WWI Stock Item ID],
+                'Stock Item'[Stock Item],
+                fy,
+                TREATAS ( { low_category }, 'Customer'[Customer Category] ),
+                "rev", [Revenue (Excl. Tax)],
+                "gp", [Gross Profit],
+                "gm", [Gross Margin %]
+            ),
+            [rev] > 10000
+        )
+    VAR ranked =
+        ADDCOLUMNS ( items, "rank_no", ROWNUMBER ( items, ORDERBY ( [gm], ASC, 'Stock Item'[WWI Stock Item ID], ASC ) ) )
+    VAR top10 = FILTER ( ranked, [rank_no] <= 10 )
+EVALUATE
+SELECTCOLUMNS (
+    top10,
+    "customer_category", low_category,
+    "rank_no", [rank_no],
+    "wwi_stock_item_id", 'Stock Item'[WWI Stock Item ID],
+    "stock_item", 'Stock Item'[Stock Item],
+    "revenue", [rev],
+    "profit", [gp],
+    "gross_margin_pct", [gm]
+)
+ORDER BY [rank_no]

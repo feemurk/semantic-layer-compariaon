@@ -1,0 +1,877 @@
+cultureInfo en-US
+
+	linguisticMetadata =
+			{
+			  "Entities": {
+			    "bill-to_customer": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Bill-To Customer"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "bill-to customer": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "bill to": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "billing customer": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "payer": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "head office": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "city": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "City"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "city": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "location": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "territory": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "sales territory": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "state": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "region": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "customer": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Customer"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "customer": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "client": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "account": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "store": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "buyer": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "date": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Date"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "date": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "day": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "period": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "fiscal year": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "FY": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "month": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "quarter": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "delivery_date": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Delivery Date"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "delivery date": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "delivered on": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "ship date": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "delivery day": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "orders": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Orders"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "orders": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "orders": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "order lines": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "orders.backordered_order_lines": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Orders",
+			          "ConceptualProperty": "Backordered Order Lines"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "backordered order lines": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "backorders": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "backordered lines": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "lines on backorder": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "orders.ordered_quantity": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Orders",
+			          "ConceptualProperty": "Ordered Quantity"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "ordered quantity": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "units ordered": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "order quantity": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "quantity ordered": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "demand": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "picker": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Picker"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "picker": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "warehouse picker": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "picked by": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "fulfiller": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "sales": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Sales"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "sales": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "sales": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "invoices": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "invoice lines": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "sales.gross_margin_%": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Sales",
+			          "ConceptualProperty": "Gross Margin %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "gross margin %": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "margin": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "gross margin": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "GM%": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "margin percent": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "profit margin": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "sales.gross_profit": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Sales",
+			          "ConceptualProperty": "Gross Profit"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "gross profit": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "profit": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "margin dollars": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "gross margin amount": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "sales.invoice_count": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Sales",
+			          "ConceptualProperty": "Invoice Count"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "invoice count": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "number of invoices": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "invoices": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "distinct invoices": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "sales.revenue_(excl._tax)": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Sales",
+			          "ConceptualProperty": "Revenue (Excl. Tax)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "revenue (excl. tax)": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "revenue": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "sales": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "net sales": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "sales revenue": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "turnover": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "revenue excluding tax": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "sales.revenue_including_tax": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Sales",
+			          "ConceptualProperty": "Revenue Including Tax"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "revenue including tax": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "gross revenue incl tax": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "revenue with tax": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "total including tax": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "invoiced amount": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "sales.stock_group_revenue_share": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Sales",
+			          "ConceptualProperty": "Stock Group Revenue Share"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "stock group revenue share": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "category share": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "group share": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "share of revenue": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "revenue mix": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "sales.units_sold": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Sales",
+			          "ConceptualProperty": "Units Sold"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "units sold": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "quantity sold": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "sold units": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "sales quantity": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "units invoiced": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "salesperson": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Salesperson"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "salesperson": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "sales rep": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "seller": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "account manager": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "rep": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "stock_group": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Stock Group"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "stock group": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "category": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "product group": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "product category": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "department": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "stock_holding": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Stock Holding"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "stock holding": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "stock": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "inventory": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "stock on hand": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "stock_holding.closing_stock_on_hand": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Stock Holding",
+			          "ConceptualProperty": "Closing Stock On Hand"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "closing stock on hand": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "stock on hand": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "inventory": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "closing inventory": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "ending inventory": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "units in stock": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "stock_holding.days_of_supply": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Stock Holding",
+			          "ConceptualProperty": "Days of Supply"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "days of supply": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "DOS": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "days of inventory": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "inventory cover": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "stock cover": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "weeks of supply": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "stock_holding.units_sold_91d": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Stock Holding",
+			          "ConceptualProperty": "Units Sold 91D"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "units sold 91d": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "trailing 91 day sales": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "91 day units": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "stock_item": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Stock Item"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "stock item": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "product": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "item": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "SKU": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "article": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "stock_item_(current)": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Stock Item (Current)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "stock item (current)": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "current product": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "item today": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "as-is item": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    }
+			  },
+			  "Language": "en-US",
+			  "Version": "1.0.0"
+			}
+		contentType: json

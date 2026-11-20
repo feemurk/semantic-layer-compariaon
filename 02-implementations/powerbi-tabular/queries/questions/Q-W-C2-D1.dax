@@ -1,0 +1,16 @@
+// Q-W-C2-D1 Days of supply at 2015-12-31 by stock group.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Stock Group'[Stock Group],
+        TREATAS ( { DATE ( 2015, 12, 31 ) }, 'Date'[Date] ),
+        "units", [Closing Stock On Hand],
+        "u91", [Units Sold 91D],
+        "dos", [Days of Supply]
+    ),
+    "stock_group_name", 'Stock Group'[Stock Group],
+    "closing_units", [units],
+    "units_sold_91d", [u91],
+    "days_of_supply", [dos]
+)
+ORDER BY [stock_group_name]

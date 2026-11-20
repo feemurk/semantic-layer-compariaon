@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "SLC_WWI_DirectLake",
+    "description": "WideWorldImporters semantic model of the semantic layer comparison study (SPEC \u00a7 3.1 S2). Storage mode variant: directlake."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "5deb6ec0-cb2c-5bd1-aed9-34b5f06a0a00"
+  }
+}

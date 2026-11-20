@@ -1,0 +1,45 @@
+// Q-W-M1-D2 For the 10 items of Q-W-M1-D1, gross margin % by Sales Territory (FY2015, within the lowest-margin category).
+DEFINE
+    VAR fy = TREATAS ( { 2015 }, 'Date'[Fiscal Year] )
+    VAR categories = SUMMARIZECOLUMNS ( 'Customer'[Customer Category], fy, "gm", [Gross Margin %] )
+    VAR low_category =
+        MAXX ( TOPN ( 1, categories, [gm], ASC, 'Customer'[Customer Category], ASC ), 'Customer'[Customer Category] )
+    VAR items =
+        FILTER (
+            SUMMARIZECOLUMNS (
+                'Stock Item'[WWI Stock Item ID],
+                'Stock Item'[Stock Item],
+                fy,
+                TREATAS ( { low_category }, 'Customer'[Customer Category] ),
+                "rev", [Revenue (Excl. Tax)],
+                "gp", [Gross Profit],
+                "gm", [Gross Margin %]
+            ),
+            [rev] > 10000
+        )
+    VAR ranked =
+        ADDCOLUMNS ( items, "rank_no", ROWNUMBER ( items, ORDERBY ( [gm], ASC, 'Stock Item'[WWI Stock Item ID], ASC ) ) )
+    VAR top10 = FILTER ( ranked, [rank_no] <= 10 )
+    VAR by_territory =
+        SUMMARIZECOLUMNS (
+            'Stock Item'[WWI Stock Item ID],
+            'Stock Item'[Stock Item],
+            'City'[Sales Territory],
+            fy,
+            TREATAS ( { low_category }, 'Customer'[Customer Category] ),
+            TREATAS ( SELECTCOLUMNS ( top10, "id", 'Stock Item'[WWI Stock Item ID] ), 'Stock Item'[WWI Stock Item ID] ),
+            "rev", [Revenue (Excl. Tax)],
+            "gp", [Gross Profit],
+            "gm", [Gross Margin %]
+        )
+EVALUATE
+SELECTCOLUMNS (
+    by_territory,
+    "wwi_stock_item_id", 'Stock Item'[WWI Stock Item ID],
+    "stock_item", 'Stock Item'[Stock Item],
+    "sales_territory", 'City'[Sales Territory],
+    "revenue", [rev],
+    "profit", [gp],
+    "gross_margin_pct", [gm]
+)
+ORDER BY [wwi_stock_item_id], [sales_territory]

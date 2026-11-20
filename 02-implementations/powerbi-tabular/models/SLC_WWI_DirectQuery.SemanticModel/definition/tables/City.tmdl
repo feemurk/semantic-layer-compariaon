@@ -1,0 +1,117 @@
+/// Delivery city as recorded at the time of sale; Sales Territory is an alternate hierarchy over State Province.
+table City
+	lineageTag: f2b2a507-6296-59ec-aa2b-857c2db41ec1
+
+	/// Surrogate key (SCD2 version).
+	column 'City Key'
+		dataType: int64
+		isKey
+		isHidden
+		lineageTag: 43cebc36-adc4-55f7-990a-08a7a9effef9
+		summarizeBy: none
+		sourceColumn: city_key
+
+	/// Durable city id.
+	column 'WWI City ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 582a6034-2ead-577b-885c-0f3d9f7f638b
+		summarizeBy: none
+		sourceColumn: wwi_city_id
+
+	/// Delivery city as recorded at the time of sale.
+	column City
+		dataType: string
+		lineageTag: 29a9b62b-8f3c-5aba-a9e3-547ded67cd19
+		summarizeBy: none
+		sourceColumn: city
+
+	/// State or province.
+	column 'State Province'
+		dataType: string
+		lineageTag: 5726d7cb-36ec-5dd2-856b-0446d7cb8a95
+		summarizeBy: none
+		sourceColumn: state_province
+
+	/// Country.
+	column Country
+		dataType: string
+		lineageTag: 04dc243c-c2a0-526f-92a0-e3c6330a5dae
+		summarizeBy: none
+		sourceColumn: country
+
+	/// Continent.
+	column Continent
+		dataType: string
+		lineageTag: 8fdbb7be-db93-5da8-82ac-792258716351
+		summarizeBy: none
+		sourceColumn: continent
+
+	/// Sales territory (alternate hierarchy over State Province).
+	column 'Sales Territory'
+		dataType: string
+		lineageTag: b8073f8e-121a-5ee5-b476-ce60b66a9888
+		summarizeBy: none
+		sourceColumn: sales_territory
+
+	/// Region.
+	column Region
+		dataType: string
+		lineageTag: d11ce1cf-6fea-563b-a87a-7e7cafd4cb1f
+		summarizeBy: none
+		sourceColumn: region
+
+	/// Subregion.
+	column Subregion
+		dataType: string
+		lineageTag: e7b237b5-9b88-5328-bb3d-4c2ba5ed7abd
+		summarizeBy: none
+		sourceColumn: subregion
+
+	hierarchy Geography
+		lineageTag: cbfdb5d0-5627-53f9-bf83-67380b9f5fd9
+
+		level Continent
+			lineageTag: 3e8328b1-e8b9-5cbf-b95b-b7d837b2d1d0
+			column: Continent
+
+		level Country
+			lineageTag: 1c97c782-42b6-53ef-bbd9-0dd85055b199
+			column: Country
+
+		level 'State Province'
+			lineageTag: 466382cb-7254-50b0-ac13-adad58d07fa8
+			column: 'State Province'
+
+		level City
+			lineageTag: c071a163-0bc3-5fb2-8889-deec702b5236
+			column: City
+
+	hierarchy 'Sales Territory Hierarchy'
+		lineageTag: b708e7a6-c990-53ff-b0fb-c1df15591f93
+
+		level 'Sales Territory'
+			lineageTag: 552742d9-fc17-5c9a-996b-141a11cdf9cd
+			column: 'Sales Territory'
+
+		level 'State Province'
+			lineageTag: bd7c0fd6-0b9b-5ad8-9d79-fae180b28417
+			column: 'State Province'
+
+		level City
+			lineageTag: e20524e7-e52d-57b8-aaa5-434b4e0e391f
+			column: City
+
+	partition City = m
+		mode: dual
+		source =
+				let
+				    Source = Databricks.Catalogs(DatabricksHost, DatabricksHttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null, Implementation = "2.0"]),
+				    CatalogData = Source{[Name = UnityCatalog, Kind = "Database"]}[Data],
+				    SchemaData = CatalogData{[Name = "wwi", Kind = "Schema"]}[Data],
+				    TableData = SchemaData{[Name = "dim_city", Kind = "Table"]}[Data],
+				    Selected = Table.SelectColumns(TableData, {"city_key", "wwi_city_id", "city", "state_province", "country", "continent", "sales_territory", "region", "subregion"})
+				in
+				    Selected
+
+	annotation SLC_Synonyms = ["location", "territory", "sales territory", "state", "region"]

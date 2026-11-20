@@ -1,0 +1,16 @@
+// Q-W-M1-D3 Gross margin % by selling package, FY2014 vs FY2015, and the change in percentage points.
+DEFINE
+    VAR base =
+        SUMMARIZECOLUMNS ( 'Stock Item'[Selling Package], TREATAS ( { 2014, 2015 }, 'Date'[Fiscal Year] ), "gm", [Gross Margin %] )
+EVALUATE
+SELECTCOLUMNS (
+    base,
+    "selling_package", 'Stock Item'[Selling Package],
+    "gross_margin_pct_fy2014", CALCULATE ( [Gross Margin %], 'Date'[Fiscal Year] = 2014 ),
+    "gross_margin_pct_fy2015", CALCULATE ( [Gross Margin %], 'Date'[Fiscal Year] = 2015 ),
+    "change_points",
+        VAR a = CALCULATE ( [Gross Margin %], 'Date'[Fiscal Year] = 2014 )
+        VAR b = CALCULATE ( [Gross Margin %], 'Date'[Fiscal Year] = 2015 )
+        RETURN IF ( ISBLANK ( a ) || ISBLANK ( b ), BLANK (), ( b - a ) * 100 )
+)
+ORDER BY [selling_package]

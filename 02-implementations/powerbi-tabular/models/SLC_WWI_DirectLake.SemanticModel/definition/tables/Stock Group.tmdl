@@ -1,0 +1,28 @@
+/// Product group; an item can belong to several groups, so group totals overlap.
+table 'Stock Group'
+	lineageTag: ce8080a9-84ef-5864-b662-017725ef53c3
+
+	/// Stock group id.
+	column 'Stock Group ID'
+		dataType: int64
+		isKey
+		isHidden
+		lineageTag: 02305499-e67a-5faa-bed0-8162c356940a
+		summarizeBy: none
+		sourceColumn: stock_group_id
+
+	/// Stock group name. Groups overlap: an item can belong to several.
+	column 'Stock Group'
+		dataType: string
+		lineageTag: 863eab85-865c-52a5-8a55-f9a66f9d1f88
+		summarizeBy: none
+		sourceColumn: stock_group_name
+
+	partition 'Stock Group' = entity
+		mode: directLake
+		source
+			entityName: dim_stock_group
+			schemaName: wwi
+			expressionSource: 'DirectLake - slc'
+
+	annotation SLC_Synonyms = ["category", "product group", "product category", "department"]

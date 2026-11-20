@@ -1,0 +1,17 @@
+// Q-A04 The 20 State Province x Customer Category combinations with the highest gross profit in calendar 2015.
+DEFINE
+    VAR combos =
+        SUMMARIZECOLUMNS (
+            'City'[State Province],
+            'Customer'[Customer Category],
+            TREATAS ( { 2015 }, 'Date'[Calendar Year] ),
+            "gp", [Gross Profit]
+        )
+EVALUATE
+SELECTCOLUMNS (
+    TOPN ( 20, combos, [gp], DESC, 'City'[State Province], ASC, 'Customer'[Customer Category], ASC ),
+    "state_province", 'City'[State Province],
+    "customer_category", 'Customer'[Customer Category],
+    "gross_profit", [gp]
+)
+ORDER BY [gross_profit] DESC, [state_province], [customer_category]

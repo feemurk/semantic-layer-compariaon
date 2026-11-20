@@ -1,0 +1,33 @@
+/// Employee who picked the order (role of the Employee dimension); applies to orders only.
+table Picker
+	lineageTag: 6b8e8b67-9384-59dd-9776-7efe2ae5eaa2
+
+	/// Surrogate key (SCD2 version).
+	column 'Picker Key'
+		dataType: int64
+		isKey
+		isHidden
+		lineageTag: 9ddee4fe-94ec-5859-ac5f-e5a7fb28d2e9
+		summarizeBy: none
+		sourceColumn: employee_key
+
+	/// Employee who picked the order.
+	column Picker
+		dataType: string
+		lineageTag: 5069dab6-bcec-5951-8cb4-dd8e6bb6bae1
+		summarizeBy: none
+		sourceColumn: employee
+
+	partition Picker = m
+		mode: import
+		source =
+				let
+				    Source = Databricks.Catalogs(DatabricksHost, DatabricksHttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null, Implementation = "2.0"]),
+				    CatalogData = Source{[Name = UnityCatalog, Kind = "Database"]}[Data],
+				    SchemaData = CatalogData{[Name = "wwi", Kind = "Schema"]}[Data],
+				    TableData = SchemaData{[Name = "dim_employee", Kind = "Table"]}[Data],
+				    Selected = Table.SelectColumns(TableData, {"employee_key", "employee"})
+				in
+				    Selected
+
+	annotation SLC_Synonyms = ["warehouse picker", "picked by", "fulfiller"]

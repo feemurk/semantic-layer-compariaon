@@ -1,0 +1,53 @@
+/// TLC taxi zone where the trip started (role of the Zone dimension).
+table 'Pickup Zone'
+	lineageTag: 608db433-3187-5b7b-8f1a-ea2729a7d395
+
+	/// TLC location id of the pickup zone.
+	column 'Pickup Location ID'
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: f343eefc-e3e2-5a29-b215-6c567af0bf36
+		summarizeBy: none
+		sourceColumn: location_id
+
+	/// Borough of the pickup zone.
+	column 'Pickup Borough'
+		dataType: string
+		lineageTag: 5a1ea293-273e-574c-8fae-bbb15bea5494
+		summarizeBy: none
+		sourceColumn: borough
+
+	/// TLC taxi zone of the pickup.
+	column 'Pickup Zone'
+		dataType: string
+		lineageTag: 3bb1a56a-e652-54d0-80b4-a58d8ea5abd0
+		summarizeBy: none
+		sourceColumn: zone
+
+	/// TLC service zone of the pickup (Yellow Zone, Boro Zone, Airports, EWR).
+	column 'Pickup Service Zone'
+		dataType: string
+		lineageTag: 0e73370a-c548-5de0-8379-d8a8d4bdda04
+		summarizeBy: none
+		sourceColumn: service_zone
+
+	hierarchy 'Pickup Geography'
+		lineageTag: 985b3504-a2d4-5e95-a47f-8eecd2fe59d8
+
+		level 'Pickup Borough'
+			lineageTag: 950ecd6f-8609-5ff9-b1e0-b32d7596de80
+			column: 'Pickup Borough'
+
+		level 'Pickup Zone'
+			lineageTag: 3096dff1-d8de-556a-a983-cc33fd453a92
+			column: 'Pickup Zone'
+
+	partition 'Pickup Zone' = entity
+		mode: directLake
+		source
+			entityName: dim_zone
+			schemaName: nyctaxi
+			expressionSource: 'DirectLake - slc'
+
+	annotation SLC_Synonyms = ["origin", "pickup location", "from"]

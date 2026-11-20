@@ -1,0 +1,50 @@
+/// Date the invoice line was delivered (role of the Date dimension); blank for undelivered lines.
+table 'Delivery Date'
+	lineageTag: 4a579c91-2815-52b0-8b0b-0ac44ef04d89
+
+	/// Date the invoice line was delivered.
+	column 'Delivery Date'
+		dataType: dateTime
+		isKey
+		formatString: yyyy-MM-dd
+		lineageTag: bc456f8a-57b1-51f1-8278-4301cfe61a4f
+		summarizeBy: none
+		sourceColumn: date_key
+
+	/// Calendar year of delivery.
+	column 'Delivery Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: a318bf1c-bf2e-5a79-9e79-2486784cb129
+		summarizeBy: none
+		sourceColumn: calendar_year
+
+	/// Calendar month of delivery.
+	column 'Delivery Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: 3968f7a5-3894-55fd-9122-0affd8182f84
+		summarizeBy: none
+		sourceColumn: calendar_month
+
+	/// First day of the delivery month.
+	column 'Delivery Month Start'
+		dataType: dateTime
+		formatString: yyyy-MM-dd
+		lineageTag: 14a7eb81-1413-531c-b6dc-7247099b8b0f
+		summarizeBy: none
+		sourceColumn: month_start_date
+
+	partition 'Delivery Date' = m
+		mode: import
+		source =
+				let
+				    Source = Databricks.Catalogs(DatabricksHost, DatabricksHttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null, Implementation = "2.0"]),
+				    CatalogData = Source{[Name = UnityCatalog, Kind = "Database"]}[Data],
+				    SchemaData = CatalogData{[Name = "wwi", Kind = "Schema"]}[Data],
+				    TableData = SchemaData{[Name = "dim_date", Kind = "Table"]}[Data],
+				    Selected = Table.SelectColumns(TableData, {"date_key", "calendar_year", "calendar_month", "month_start_date"})
+				in
+				    Selected
+
+	annotation SLC_Synonyms = ["delivered on", "ship date", "delivery day"]

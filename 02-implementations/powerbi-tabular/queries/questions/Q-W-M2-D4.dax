@@ -1,0 +1,49 @@
+// Q-W-M2-D4 The 10 stock items with the lowest closing stock at any calendar month end of 2015: each item's minimum month-end
+// closing units, the first month end at that minimum and its balance basis (ties: units, then item id). Names are as-is.
+DEFINE
+    VAR month_ends =
+        SUMMARIZECOLUMNS (
+            'Stock Holding'[wwi_stock_item_id],
+            'Date'[Month Start],
+            TREATAS ( { 2015 }, 'Date'[Calendar Year] ),
+            "units", [Closing Stock On Hand],
+            "d", [Snapshot Anchor Date]
+        )
+    VAR item_min = GROUPBY ( month_ends, 'Stock Holding'[wwi_stock_item_id], "min_units", MINX ( CURRENTGROUP (), [units] ) )
+    VAR first_at_min =
+        ADDCOLUMNS (
+            item_min,
+            "first_d",
+                VAR id = 'Stock Holding'[wwi_stock_item_id]
+                VAR m = [min_units]
+                RETURN MINX ( FILTER ( month_ends, 'Stock Holding'[wwi_stock_item_id] = id && [units] = m ), [d] )
+        )
+    VAR ranked =
+        ADDCOLUMNS (
+            first_at_min,
+            "rank_no", ROWNUMBER ( first_at_min, ORDERBY ( [min_units], ASC, 'Stock Holding'[wwi_stock_item_id], ASC ) )
+        )
+EVALUATE
+SELECTCOLUMNS (
+    FILTER ( ranked, [rank_no] <= 10 ),
+    "rank_no", [rank_no],
+    "wwi_stock_item_id", 'Stock Holding'[wwi_stock_item_id],
+    "stock_item",
+        LOOKUPVALUE (
+            'Stock Item (Current)'[Current Stock Item],
+            'Stock Item (Current)'[Current WWI Stock Item ID], 'Stock Holding'[wwi_stock_item_id]
+        ),
+    "min_closing_units", [min_units],
+    "month_end_date", [first_d],
+    "balance_basis",
+        VAR id = 'Stock Holding'[wwi_stock_item_id]
+        VAR d = [first_d]
+        RETURN
+            CALCULATE (
+                MAX ( 'Stock Holding'[Balance Basis] ),
+                REMOVEFILTERS ( 'Date' ),
+                'Date'[Date] = d,
+                'Stock Holding'[wwi_stock_item_id] = id
+            )
+)
+ORDER BY [rank_no]

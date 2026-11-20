@@ -1,0 +1,23 @@
+// Q-W-C2-D2 The 10 stock items with the lowest days of supply at 2015-12-31, excluding items with no sales in the trailing 91
+// days (ties: item id). Trailing sales are taken per durable item id across item versions.
+DEFINE
+    VAR year_end = TREATAS ( { DATE ( 2015, 12, 31 ) }, 'Date'[Date] )
+    VAR items =
+        ADDCOLUMNS (
+            SUMMARIZECOLUMNS ( 'Stock Item'[WWI Stock Item ID], 'Stock Item'[Stock Item], year_end, "units", [Closing Stock On Hand] ),
+            "u91", CALCULATE ( [Units Sold 91D], year_end, REMOVEFILTERS ( 'Stock Item'[Stock Item] ) )
+        )
+    VAR supplied = FILTER ( ADDCOLUMNS ( items, "dos", DIVIDE ( [units] * 91.0, [u91] ) ), [u91] > 0 )
+    VAR ranked =
+        ADDCOLUMNS ( supplied, "rank_no", ROWNUMBER ( supplied, ORDERBY ( [dos], ASC, 'Stock Item'[WWI Stock Item ID], ASC ) ) )
+EVALUATE
+SELECTCOLUMNS (
+    FILTER ( ranked, [rank_no] <= 10 ),
+    "rank_no", [rank_no],
+    "wwi_stock_item_id", 'Stock Item'[WWI Stock Item ID],
+    "stock_item", 'Stock Item'[Stock Item],
+    "closing_units", [units],
+    "units_sold_91d", [u91],
+    "days_of_supply", [dos]
+)
+ORDER BY [rank_no]

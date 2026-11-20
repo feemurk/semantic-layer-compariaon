@@ -1,0 +1,14 @@
+// Q-W-M2-D1 Closing stock on hand at the end of FY2015 (2015-10-31) by stock group, with the deduplicated total.
+DEFINE
+    VAR fy_end = TREATAS ( { DATE ( 2015, 10, 31 ) }, 'Date'[Date] )
+    VAR groups = SUMMARIZECOLUMNS ( 'Stock Group'[Stock Group], fy_end, "units", [Closing Stock On Hand] )
+EVALUATE
+UNION (
+    SELECTCOLUMNS ( groups, "grain", "group", "stock_group_name", 'Stock Group'[Stock Group], "closing_units", [units] ),
+    ROW (
+        "grain", "total",
+        "stock_group_name", CONVERT ( BLANK (), STRING ),
+        "closing_units", CALCULATE ( [Closing Stock On Hand], fy_end )
+    )
+)
+ORDER BY [grain], [stock_group_name]

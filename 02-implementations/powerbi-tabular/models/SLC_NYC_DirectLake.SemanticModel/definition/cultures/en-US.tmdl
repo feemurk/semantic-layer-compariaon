@@ -1,0 +1,665 @@
+cultureInfo en-US
+
+	linguisticMetadata =
+			{
+			  "Entities": {
+			    "dropoff_date": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Dropoff Date"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "dropoff date": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "dropoff day": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "trip end date": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "arrival date": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "dropoff_zone": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Dropoff Zone"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "dropoff zone": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "destination": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "dropoff location": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "to": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "payment_type": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Payment Type"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "payment type": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "payment method": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "paid by": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "tender": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "pickup_date": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Pickup Date"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "pickup date": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "trip date": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "pickup day": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "date": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "pickup_zone": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Pickup Zone"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "pickup zone": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "origin": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "pickup location": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "from": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "trips": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "trips": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "rides": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "taxi trips": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.card_tips": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Card Tips"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "card tips": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "credit card tips": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "card gratuity": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "tips on card": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.distinct_od_pairs": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Distinct OD Pairs"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "distinct od pairs": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "origin destination pairs": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "OD pairs": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "unique routes": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "distinct routes": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.fare_amount": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Fare Amount"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "fare amount": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "fares": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "metered fare": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "fare revenue": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.fare_per_mile": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Fare per Mile"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "fare per mile": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "fare per mile": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "price per mile": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "rate per mile": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.gross_trip_revenue": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Gross Trip Revenue"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "gross trip revenue": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "revenue": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "trip revenue": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "total amount": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "gross revenue": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "takings": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.mtd-to-ytd_daily_pace_index": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "MTD-to-YTD Daily Pace Index"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "mtd-to-ytd daily pace index": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "pace index": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "run rate index": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "month pace": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "daily pace": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.revenue_stly_ytd": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Revenue STLY YTD"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "revenue stly ytd": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "STLY revenue": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "last year YTD": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "prior year to date revenue": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "same time last year": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.revenue_yoy_%_vs_stly": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Revenue YoY % vs STLY"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "revenue yoy % vs stly": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "YoY growth": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "year over year": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "growth vs last year": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.revenue_ytd": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Revenue YTD"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "revenue ytd": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "year to date revenue": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "YTD revenue": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.tip_amount_(all_payment_types)": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Tip Amount (All Payment Types)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "tip amount (all payment types)": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "tips": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "all tips": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "gratuity": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.tolls_amount": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Tolls Amount"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "tolls amount": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "tolls": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "toll charges": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "bridge and tunnel tolls": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.total_trip_distance": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Total Trip Distance"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "total trip distance": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "miles": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "distance": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "total miles": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "trip miles": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.trip_count": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Trip Count"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "trip count": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "trips": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "number of trips": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "rides": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "ride count": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.trips_mtd": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Trips MTD"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "trips mtd": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "month to date trips": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    },
+			    "trips.trips_ytd": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Trips",
+			          "ConceptualProperty": "Trips YTD"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "trips ytd": {
+			            "State": "Authored"
+			          }
+			        },
+			        {
+			          "year to date trips": {
+			            "State": "Authored"
+			          }
+			        }
+			      ]
+			    }
+			  },
+			  "Language": "en-US",
+			  "Version": "1.0.0"
+			}
+		contentType: json

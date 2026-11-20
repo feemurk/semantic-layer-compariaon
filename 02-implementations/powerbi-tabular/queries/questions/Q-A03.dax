@@ -1,0 +1,14 @@
+// Q-A03 Units sold by stock group by delivery month for January-May 2016, delivered lines only (Delivery Date role).
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Stock Group'[Stock Group],
+        'Delivery Date'[Delivery Month Start],
+        DATESBETWEEN ( 'Delivery Date'[Delivery Date], DATE ( 2016, 1, 1 ), DATE ( 2016, 5, 31 ) ),
+        "units", [Units Sold]
+    ),
+    "stock_group_name", 'Stock Group'[Stock Group],
+    "delivery_month", 'Delivery Date'[Delivery Month Start],
+    "units_sold", [units]
+)
+ORDER BY [stock_group_name], [delivery_month]

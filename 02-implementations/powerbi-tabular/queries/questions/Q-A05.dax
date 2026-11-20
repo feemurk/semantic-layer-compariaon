@@ -1,0 +1,14 @@
+// Q-A05 Backordered order lines by stock group by calendar quarter for 2015.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Stock Group'[Stock Group],
+        'Date'[Calendar Quarter],
+        TREATAS ( { 2015 }, 'Date'[Calendar Year] ),
+        "bo", [Backordered Order Lines]
+    ),
+    "stock_group_name", 'Stock Group'[Stock Group],
+    "calendar_quarter", 'Date'[Calendar Quarter],
+    "backordered_lines", [bo]
+)
+ORDER BY [stock_group_name], [calendar_quarter]

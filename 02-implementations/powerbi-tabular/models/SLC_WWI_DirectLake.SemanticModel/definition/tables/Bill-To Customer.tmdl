@@ -1,0 +1,35 @@
+/// Customer responsible for payment (role of the Customer dimension).
+table 'Bill-To Customer'
+	lineageTag: 9e685eb7-088a-5d8b-8ad9-043b1ec354d0
+
+	/// Surrogate key (SCD2 version).
+	column 'Bill-To Customer Key'
+		dataType: int64
+		isKey
+		isHidden
+		lineageTag: ea2c06a3-2cc9-5dad-9b7f-235c9d83a358
+		summarizeBy: none
+		sourceColumn: customer_key
+
+	/// Customer responsible for payment.
+	column 'Bill-To Customer'
+		dataType: string
+		lineageTag: 57ed6e7d-aeb0-5adc-a05a-2c64257f809e
+		summarizeBy: none
+		sourceColumn: customer
+
+	/// Category of the bill-to customer.
+	column 'Bill-To Category'
+		dataType: string
+		lineageTag: 33459cd2-affb-5625-aa53-d320be39c1f6
+		summarizeBy: none
+		sourceColumn: category
+
+	partition 'Bill-To Customer' = entity
+		mode: directLake
+		source
+			entityName: dim_customer
+			schemaName: wwi
+			expressionSource: 'DirectLake - slc'
+
+	annotation SLC_Synonyms = ["bill to", "billing customer", "payer", "head office"]

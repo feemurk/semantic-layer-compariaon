@@ -1,0 +1,48 @@
+// Q-W-M1-D4 The salesperson whose gross margin % fell the most from FY2014 to FY2015 (ties: name), and that salesperson's
+// margins, change in points and FY2015 revenue by stock group.
+DEFINE
+    VAR salespeople =
+        SUMMARIZECOLUMNS ( 'Salesperson'[Salesperson], TREATAS ( { 2014, 2015 }, 'Date'[Fiscal Year] ), "rev", [Revenue (Excl. Tax)] )
+    VAR margins =
+        ADDCOLUMNS (
+            salespeople,
+            "gm14", CALCULATE ( [Gross Margin %], 'Date'[Fiscal Year] = 2014 ),
+            "gm15", CALCULATE ( [Gross Margin %], 'Date'[Fiscal Year] = 2015 )
+        )
+    VAR worst =
+        TOPN (
+            1,
+            FILTER ( margins, NOT ISBLANK ( [gm14] ) && NOT ISBLANK ( [gm15] ) ),
+            [gm15] - [gm14], ASC,
+            'Salesperson'[Salesperson], ASC
+        )
+    VAR worst_salesperson = MAXX ( worst, 'Salesperson'[Salesperson] )
+    VAR worst_gm14 = MAXX ( worst, [gm14] )
+    VAR worst_gm15 = MAXX ( worst, [gm15] )
+    VAR groups =
+        SUMMARIZECOLUMNS (
+            'Stock Group'[Stock Group],
+            TREATAS ( { worst_salesperson }, 'Salesperson'[Salesperson] ),
+            TREATAS ( { 2014, 2015 }, 'Date'[Fiscal Year] ),
+            "rev", [Revenue (Excl. Tax)]
+        )
+    VAR group_margins =
+        ADDCOLUMNS (
+            groups,
+            "g14", CALCULATE ( [Gross Margin %], 'Date'[Fiscal Year] = 2014, 'Salesperson'[Salesperson] = worst_salesperson ),
+            "g15", CALCULATE ( [Gross Margin %], 'Date'[Fiscal Year] = 2015, 'Salesperson'[Salesperson] = worst_salesperson ),
+            "rev15", CALCULATE ( [Revenue (Excl. Tax)], 'Date'[Fiscal Year] = 2015, 'Salesperson'[Salesperson] = worst_salesperson )
+        )
+EVALUATE
+SELECTCOLUMNS (
+    group_margins,
+    "salesperson", worst_salesperson,
+    "salesperson_gm_fy2014", worst_gm14,
+    "salesperson_gm_fy2015", worst_gm15,
+    "stock_group_name", 'Stock Group'[Stock Group],
+    "group_gm_fy2014", [g14],
+    "group_gm_fy2015", [g15],
+    "group_change_points", IF ( ISBLANK ( [g14] ) || ISBLANK ( [g15] ), BLANK (), ( [g15] - [g14] ) * 100 ),
+    "revenue_fy2015", [rev15]
+)
+ORDER BY [group_change_points], [stock_group_name]

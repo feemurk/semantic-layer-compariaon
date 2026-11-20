@@ -1,0 +1,18 @@
+expression DatabricksHost = "SLC_DATABRICKS_HOST" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: dffaa0eb-d94b-5d7a-a258-a67649e4115b
+
+expression DatabricksHttpPath = "SLC_DATABRICKS_HTTP_PATH" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 2a54250a-2c00-5c28-9185-25a995c9130c
+
+expression UnityCatalog = "slc" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: e303bd80-397b-5d63-8430-df0402f614b5
+
+expression OneLakeSourceUrl = "SLC_ONELAKE_SOURCE_URL" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 982bea5e-82e9-5a40-af4f-b41bd15c5265
+
+expression 'DirectLake - slc' =
+		let
+		    Source = AzureStorage.DataLake(OneLakeSourceUrl, [HierarchicalNavigation = true])
+		in
+		    Source
+	lineageTag: b46f66f3-90f6-5579-b8ed-7523f7e6528b

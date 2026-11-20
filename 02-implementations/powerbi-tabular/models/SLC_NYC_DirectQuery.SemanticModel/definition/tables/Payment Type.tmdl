@@ -1,0 +1,33 @@
+/// TLC payment type code and label (0 Flex Fare trip, 1 Credit card, 2 Cash, 3 No charge, 4 Dispute, 5 Unknown, 6 Voided trip).
+table 'Payment Type'
+	lineageTag: 89e8e92b-85d9-5834-8f38-81e4a6e6e1dc
+
+	/// TLC payment type code.
+	column 'Payment Type'
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: 4b21b8a1-5129-51c4-bbee-f0a25eab8f54
+		summarizeBy: none
+		sourceColumn: payment_type
+
+	/// TLC payment type code and label (0 Flex Fare trip, 1 Credit card, 2 Cash, 3 No charge, 4 Dispute, 5 Unknown, 6 Voided trip).
+	column 'Payment Type Name'
+		dataType: string
+		lineageTag: 2d9b1882-11f5-5319-b6fe-0eba28624c02
+		summarizeBy: none
+		sourceColumn: payment_type_name
+
+	partition 'Payment Type' = m
+		mode: dual
+		source =
+				let
+				    Source = Databricks.Catalogs(DatabricksHost, DatabricksHttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null, Implementation = "2.0"]),
+				    CatalogData = Source{[Name = UnityCatalog, Kind = "Database"]}[Data],
+				    SchemaData = CatalogData{[Name = "nyctaxi", Kind = "Schema"]}[Data],
+				    TableData = SchemaData{[Name = "dim_payment_type", Kind = "Table"]}[Data],
+				    Selected = Table.SelectColumns(TableData, {"payment_type", "payment_type_name"})
+				in
+				    Selected
+
+	annotation SLC_Synonyms = ["payment method", "paid by", "tender"]

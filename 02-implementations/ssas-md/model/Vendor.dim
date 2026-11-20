@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Dimension xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ID>Vendor</ID>
+  <Name>Vendor</Name>
+  <Description>TLC technology provider that recorded the trip.</Description>
+  <Source xsi:type="DataSourceViewBinding">
+    <DataSourceViewID>slc</DataSourceViewID>
+  </Source>
+  <Type>Regular</Type>
+  <UnknownMember>None</UnknownMember>
+  <Language>1033</Language>
+  <Collation>Latin1_General_CI_AS</Collation>
+  <UnknownMemberName>Unknown</UnknownMemberName>
+  <Attributes>
+    <Attribute>
+      <ID>Vendor</ID>
+      <Name>Vendor</Name>
+      <Usage>Key</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>nyc_vendor</TableID>
+            <ColumnID>vendor_id</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>nyc_vendor</TableID>
+          <ColumnID>vendor_name</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+  </Attributes>
+</Dimension>

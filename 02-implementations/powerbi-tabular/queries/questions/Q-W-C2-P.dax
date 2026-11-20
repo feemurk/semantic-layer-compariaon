@@ -1,0 +1,18 @@
+// Q-W-C2-P Days of supply at each calendar month end of 2015, company-wide: closing units at the last snapshot of the month,
+// units sold in the 91 days ending on it.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Date'[Month Start],
+        TREATAS ( { 2015 }, 'Date'[Calendar Year] ),
+        "d", [Snapshot Anchor Date],
+        "units", [Closing Stock On Hand],
+        "u91", [Units Sold 91D],
+        "dos", [Days of Supply]
+    ),
+    "month_end_date", [d],
+    "closing_units", [units],
+    "units_sold_91d", [u91],
+    "days_of_supply", [dos]
+)
+ORDER BY [month_end_date]

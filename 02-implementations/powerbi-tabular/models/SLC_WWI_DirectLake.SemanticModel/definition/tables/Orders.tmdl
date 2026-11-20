@@ -1,0 +1,115 @@
+/// WideWorldImporters order lines (fact_order), dated by order date.
+table Orders
+	lineageTag: c4c5e54f-8131-52bd-b85a-5ffe73bcf4b2
+
+	/// Sum of ordered quantity (fact_order.quantity), dated by order date.
+	measure 'Ordered Quantity' = IF ( ISCROSSFILTERED ( 'Delivery Date' ) || ISCROSSFILTERED ( 'Bill-To Customer' ), BLANK (), SUM ( Orders[quantity] ) )
+		formatString: #,0
+		displayFolder: Orders
+		lineageTag: 31b48eea-6510-5996-971c-c43ca196fc04
+		annotation SLC_MetricId = W-S2
+
+	/// Count of order lines with a backorder (fact_order.wwi_backorder_id is not null); blank when no line qualifies.
+	measure 'Backordered Order Lines' = IF ( ISCROSSFILTERED ( 'Delivery Date' ) || ISCROSSFILTERED ( 'Bill-To Customer' ), BLANK (), VAR n = COUNT ( Orders[wwi_backorder_id] ) RETURN IF ( n = 0, BLANK (), n ) )
+		formatString: #,0
+		displayFolder: Orders
+		lineageTag: 9a8107e9-2b15-5dba-b043-a0acc9b83fa5
+		annotation SLC_MetricId = B-W5
+
+	/// Order line key.
+	column order_key
+		dataType: int64
+		isHidden
+		lineageTag: 25fa16f8-e4ff-5a8e-82de-da45a4fd69ba
+		summarizeBy: none
+		sourceColumn: order_key
+
+	/// Order date (relates to Date).
+	column order_date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-MM-dd
+		lineageTag: e48ef22b-a4ac-5ee1-8e84-6ab67bc8403d
+		summarizeBy: none
+		sourceColumn: order_date
+
+	/// City surrogate key.
+	column city_key
+		dataType: int64
+		isHidden
+		lineageTag: 3ff7a518-21c5-5669-b8ff-70f59834477c
+		summarizeBy: none
+		sourceColumn: city_key
+
+	/// Customer surrogate key.
+	column customer_key
+		dataType: int64
+		isHidden
+		lineageTag: cd8c6afa-7197-5f6d-bd16-ab8b4bc50af0
+		summarizeBy: none
+		sourceColumn: customer_key
+
+	/// Stock item surrogate key.
+	column stock_item_key
+		dataType: int64
+		isHidden
+		lineageTag: 255dd3b1-87fa-5dfd-87d3-2c5ae76851bd
+		summarizeBy: none
+		sourceColumn: stock_item_key
+
+	/// Salesperson surrogate key.
+	column salesperson_key
+		dataType: int64
+		isHidden
+		lineageTag: 6b6abe1b-3096-5dcb-89eb-68fa4b76aa94
+		summarizeBy: none
+		sourceColumn: salesperson_key
+
+	/// Picker surrogate key; blank when not picked.
+	column picker_key
+		dataType: int64
+		isHidden
+		lineageTag: 2c34e4af-1f7c-57a1-8f36-79d283e8d1b5
+		summarizeBy: none
+		sourceColumn: picker_key
+
+	/// Order id.
+	column wwi_order_id
+		dataType: int64
+		isHidden
+		lineageTag: 6c8aa5e0-d4b9-56e9-b3ee-20175b37f60f
+		summarizeBy: none
+		sourceColumn: wwi_order_id
+
+	/// Backorder id; blank when the line is not backordered.
+	column wwi_backorder_id
+		dataType: int64
+		isHidden
+		lineageTag: 9fad17d4-c201-52c2-8d72-ae5a94660b11
+		summarizeBy: none
+		sourceColumn: wwi_backorder_id
+
+	/// Ordered quantity.
+	column quantity
+		dataType: int64
+		isHidden
+		lineageTag: 4b0294df-a1e0-54ea-87fc-14c669395ed4
+		summarizeBy: none
+		sourceColumn: quantity
+
+	/// Order line total excluding tax.
+	column total_excluding_tax
+		dataType: decimal
+		isHidden
+		lineageTag: 943ca29e-9a21-5d8c-a9dc-0665bdb7a45a
+		summarizeBy: none
+		sourceColumn: total_excluding_tax
+
+	partition Orders = entity
+		mode: directLake
+		source
+			entityName: fact_order
+			schemaName: wwi
+			expressionSource: 'DirectLake - slc'
+
+	annotation SLC_Synonyms = ["orders", "order lines"]

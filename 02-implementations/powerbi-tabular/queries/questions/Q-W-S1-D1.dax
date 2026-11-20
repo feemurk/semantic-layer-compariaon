@@ -1,0 +1,53 @@
+// Q-W-S1-D1 For the Sales Territory with the highest FY2015 revenue, its revenue in its peak fiscal month by State Province,
+// then by City. The territory and the month are resolved by the query, not supplied.
+DEFINE
+    VAR fy = TREATAS ( { 2015 }, 'Date'[Fiscal Year] )
+    VAR territories = SUMMARIZECOLUMNS ( 'City'[Sales Territory], fy, "rev", [Revenue (Excl. Tax)] )
+    VAR top_territory = MAXX ( TOPN ( 1, territories, [rev], DESC, 'City'[Sales Territory], ASC ), 'City'[Sales Territory] )
+    VAR months =
+        SUMMARIZECOLUMNS (
+            'Date'[Fiscal Month],
+            fy,
+            TREATAS ( { top_territory }, 'City'[Sales Territory] ),
+            "rev", [Revenue (Excl. Tax)]
+        )
+    VAR peak_month = MAXX ( TOPN ( 1, months, [rev], DESC, 'Date'[Fiscal Month], ASC ), 'Date'[Fiscal Month] )
+    VAR states =
+        SUMMARIZECOLUMNS (
+            'City'[State Province],
+            fy,
+            TREATAS ( { top_territory }, 'City'[Sales Territory] ),
+            TREATAS ( { peak_month }, 'Date'[Fiscal Month] ),
+            "rev", [Revenue (Excl. Tax)]
+        )
+    VAR cities =
+        SUMMARIZECOLUMNS (
+            'City'[State Province],
+            'City'[City],
+            fy,
+            TREATAS ( { top_territory }, 'City'[Sales Territory] ),
+            TREATAS ( { peak_month }, 'Date'[Fiscal Month] ),
+            "rev", [Revenue (Excl. Tax)]
+        )
+EVALUATE
+UNION (
+    SELECTCOLUMNS (
+        states,
+        "grain", "state",
+        "sales_territory", top_territory,
+        "fiscal_month", peak_month,
+        "state_province", 'City'[State Province],
+        "city", CONVERT ( BLANK (), STRING ),
+        "revenue", [rev]
+    ),
+    SELECTCOLUMNS (
+        cities,
+        "grain", "city",
+        "sales_territory", top_territory,
+        "fiscal_month", peak_month,
+        "state_province", 'City'[State Province],
+        "city", 'City'[City],
+        "revenue", [rev]
+    )
+)
+ORDER BY [grain] DESC, [state_province], [city]

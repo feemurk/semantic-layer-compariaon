@@ -1,0 +1,14 @@
+expression DatabricksHost = "SLC_DATABRICKS_HOST" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 878623cf-09d2-5abc-b354-f642359db615
+
+expression DatabricksHttpPath = "SLC_DATABRICKS_HTTP_PATH" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: fdd25bd9-897f-58f6-9f1b-a79dfe376a63
+
+expression UnityCatalog = "slc" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 453a12e5-9895-52bd-a426-8698123f071a
+
+expression RangeStart = #datetime(2024, 12, 1, 0, 0, 0) meta [IsParameterQuery = true, Type = "DateTime", IsParameterQueryRequired = true]
+	lineageTag: d21e85c9-4c82-5dc8-afaf-29935af282b2
+
+expression RangeEnd = #datetime(2025, 1, 1, 0, 0, 0) meta [IsParameterQuery = true, Type = "DateTime", IsParameterQueryRequired = true]
+	lineageTag: e7e5075d-e196-5729-b6d7-c92bc85ac4df

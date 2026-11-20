@@ -1,0 +1,1286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Cube xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ID>WWI</ID>
+  <Name>WWI</Name>
+  <Description>WideWorldImporters sales, orders and inventory (W-S1 to W-C2, B-W1 to B-W5).</Description>
+  <Language>1033</Language>
+  <Collation>Latin1_General_CI_AS</Collation>
+  <Dimensions>
+    <Dimension>
+      <ID>Date</ID>
+      <Name>Date</Name>
+      <Description>Shared calendar with a fiscal year starting 1 November, labeled by the year in which it ends.</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>day; period; fiscal year; FY; month; quarter</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>Date</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Delivery Date</ID>
+      <Name>Delivery Date</Name>
+      <Description>Date the invoice line was delivered (role of the Date dimension); blank for undelivered lines.</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>delivered on; ship date; delivery day</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>Date</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Customer</ID>
+      <Name>Customer</Name>
+      <Description>Customer as recorded at the time of sale.</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>client; account; store; buyer</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>Customer</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Bill To Customer</ID>
+      <Name>Bill To Customer</Name>
+      <Description>Customer responsible for payment (role of the Customer dimension).</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>bill to; billing customer; payer; head office</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>Customer</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>City</ID>
+      <Name>City</Name>
+      <Description>Delivery city as recorded at the time of sale; Sales Territory is an alternate hierarchy over State Province.</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>location; territory; sales territory; state; region</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>City</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Stock Item</ID>
+      <Name>Stock Item</Name>
+      <Description>Product as recorded at the time of sale (SCD Type 2); current attributes via the durable item id.</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>product; item; SKU; article</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>Stock Item</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Stock Group</ID>
+      <Name>Stock Group</Name>
+      <Description>Product group; an item can belong to several groups, so group totals overlap.</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>category; product group; product category; department</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>Stock Group</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Salesperson</ID>
+      <Name>Salesperson</Name>
+      <Description>Employee credited with the sale or order (role of the Employee dimension).</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>sales rep; seller; account manager; rep</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>Employee</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Picker</ID>
+      <Name>Picker</Name>
+      <Description>Employee who picked the order (role of the Employee dimension); applies to orders only.</Description>
+      <Annotations>
+        <Annotation>
+          <Name>slc:synonyms</Name>
+          <Value>warehouse picker; picked by; fulfiller</Value>
+        </Annotation>
+      </Annotations>
+      <DimensionID>Employee</DimensionID>
+    </Dimension>
+    <Dimension>
+      <ID>Inventory Access</ID>
+      <Name>Inventory Access</Name>
+      <DimensionID>Inventory Access</DimensionID>
+    </Dimension>
+  </Dimensions>
+  <CubePermissions>
+    <CubePermission>
+      <ID>SLC Analysts - WWI</ID>
+      <Name>SLC Analysts - WWI</Name>
+      <RoleID>SLC Analysts</RoleID>
+      <Read>Allowed</Read>
+    </CubePermission>
+    <CubePermission>
+      <ID>Territory Analyst - Southeast - WWI</ID>
+      <Name>Territory Analyst - Southeast - WWI</Name>
+      <RoleID>Territory Analyst - Southeast</RoleID>
+      <Read>Allowed</Read>
+      <DimensionPermissions>
+        <CubeDimensionPermission>
+          <CubeDimensionID>City</CubeDimensionID>
+          <Read>Allowed</Read>
+          <AttributePermissions>
+            <AttributePermission>
+              <AttributeID>Sales Territory</AttributeID>
+              <AllowedSet>{[City].[Sales Territory].&amp;[Southeast]}</AllowedSet>
+              <VisualTotals>1</VisualTotals>
+            </AttributePermission>
+          </AttributePermissions>
+        </CubeDimensionPermission>
+        <CubeDimensionPermission>
+          <CubeDimensionID>Inventory Access</CubeDimensionID>
+          <Read>Allowed</Read>
+          <AttributePermissions>
+            <AttributePermission>
+              <AttributeID>Access</AttributeID>
+              <AllowedSet>{}</AllowedSet>
+              <VisualTotals>1</VisualTotals>
+            </AttributePermission>
+          </AttributePermissions>
+        </CubeDimensionPermission>
+      </DimensionPermissions>
+    </CubePermission>
+  </CubePermissions>
+  <MdxScripts>
+    <MdxScript>
+      <ID>MdxScript</ID>
+      <Name>MdxScript</Name>
+      <Commands>
+        <Command>
+          <Text>/*
+  MDX calculation script of cube [WWI] (S1, SPEC § 6.3). build_model.py embeds this file in WWI.cube.
+  Stored measures: Revenue, Revenue Including Tax, Gross Profit, Units Sold (Sales); Invoice Count (Invoices,
+  distinct count); Ordered Quantity (Orders); Backordered Order Lines (Backorders); Closing Units (Stock Holdings,
+  LastNonEmpty); hidden helpers Sales Lines, Order Lines, Stock Snapshot Rows, Bridge Rows.
+*/
+CALCULATE;
+
+// W-M1: ratio of the aggregated sums at every grain; NULL when revenue is zero or empty.
+CREATE MEMBER CURRENTCUBE.[Measures].[Gross Margin %] AS
+  IIF(IsEmpty([Measures].[Revenue]) OR [Measures].[Revenue] = 0,
+      NULL,
+      [Measures].[Gross Profit] / [Measures].[Revenue]),
+  FORMAT_STRING = "0.00%",
+  NON_EMPTY_BEHAVIOR = { [Measures].[Revenue] },
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Sales';
+
+// W-C1 denominator: revenue with the Stock Group context removed. The many-to-many relationship deduplicates the
+// All member, so this equals W-S1 for the remaining context.
+CREATE MEMBER CURRENTCUBE.[Measures].[Revenue All Stock Groups] AS
+  ([Measures].[Revenue], [Stock Group].[Stock Group].[All]),
+  FORMAT_STRING = "#,##0.00",
+  VISIBLE = 0, ASSOCIATED_MEASURE_GROUP = 'Sales';
+
+// W-C1: share of the parent with the Stock Group removed; 1 at any total across groups.
+CREATE MEMBER CURRENTCUBE.[Measures].[Stock Group Revenue Share] AS
+  IIF(IsEmpty([Measures].[Revenue All Stock Groups]) OR [Measures].[Revenue All Stock Groups] = 0,
+      NULL,
+      [Measures].[Revenue] / [Measures].[Revenue All Stock Groups]),
+  FORMAT_STRING = "0.00%",
+  NON_EMPTY_BEHAVIOR = { [Measures].[Revenue] },
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Sales';
+
+// W-C2 denominator: units sold over the 91 days ending on the anchor t(P), the last snapshot date in context.
+// EXISTING evaluates the date set in the cell's own context (calendar or fiscal); the snapshot is dense, so its last
+// non-empty date is the last calendar date of the period capped at 2016-05-31. Assigning the Date attribute in Sum
+// overwrites the period attributes, so the window ignores the period's lower bound, while Stock Item and Stock Group
+// filters stay in force. A non-conformed dimension leaves Closing Units empty, which returns NULL.
+CREATE MEMBER CURRENTCUBE.[Measures].[Units Sold 91D] AS
+  IIF(IsEmpty([Measures].[Closing Units]),
+      NULL,
+      Sum(LastPeriods(91, Tail(NonEmpty(EXISTING [Date].[Date].[Date].Members,
+                                        [Measures].[Stock Snapshot Rows]), 1).Item(0).Item(0)),
+          [Measures].[Units Sold])),
+  FORMAT_STRING = "#,##0",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Stock Holdings';
+
+// W-C2: closing units divided by average daily units sold over the trailing 91 days; NULL without sales.
+CREATE MEMBER CURRENTCUBE.[Measures].[Days of Supply] AS
+  IIF(IsEmpty([Measures].[Units Sold 91D]) OR [Measures].[Units Sold 91D] = 0,
+      NULL,
+      [Measures].[Closing Units] / ([Measures].[Units Sold 91D] / 91)),
+  FORMAT_STRING = "#,##0.0",
+  NON_EMPTY_BEHAVIOR = { [Measures].[Closing Units] },
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Stock Holdings';
+
+// SPEC § 6.5: dimensions that do not apply to a metric return NULL. Stock Holdings already returns empty for the
+// unrelated Customer, Bill To Customer, City, Salesperson, Picker and Delivery Date (IgnoreUnrelatedDimensions =
+// false); Orders and Backorders likewise for Delivery Date and Bill To Customer; Sales and Invoices for Picker.
+// The calculated measures inherit those empties through their base measures.
+</Text>
+        </Command>
+      </Commands>
+      <CalculationProperties>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Gross Margin %]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Gross Profit divided by Revenue (Excl. Tax), computed from the aggregated numerator and denominator at every grain.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>margin; gross margin; GM%; margin percent; profit margin</Value>
+            </Annotation>
+          </Annotations>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Revenue All Stock Groups]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Revenue with the Stock Group context removed (deduplicated parent total of W-C1).</Description>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Stock Group Revenue Share]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Revenue of items in a stock group divided by revenue of the same context without the stock group filter. Items can belong to several groups, so shares do not add to 100%.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>category share; group share; share of revenue; revenue mix</Value>
+            </Annotation>
+          </Annotations>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Units Sold 91D]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Units sold in the 91 days ending on the last snapshot date in context (W-C2 denominator).</Description>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Days of Supply]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Description>Closing Stock On Hand divided by average daily Units Sold over the 91 days ending on the period end. Defined only by date and stock item attributes.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>DOS; days of inventory; inventory cover; stock cover; weeks of supply</Value>
+            </Annotation>
+          </Annotations>
+        </CalculationProperty>
+      </CalculationProperties>
+    </MdxScript>
+  </MdxScripts>
+  <MeasureGroups>
+    <MeasureGroup>
+      <ID>Sales</ID>
+      <Name>Sales</Name>
+      <Description>Invoice lines (fact_sale).</Description>
+      <Measures>
+        <Measure>
+          <ID>Revenue</ID>
+          <Name>Revenue</Name>
+          <Description>Sum of invoice line totals excluding tax (fact_sale.total_excluding_tax), dated by invoice date.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>revenue; sales; net sales; sales revenue; turnover; revenue excluding tax</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>Sum</AggregateFunction>
+          <DataType>Currency</DataType>
+          <Source>
+            <DataType>Currency</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>wwi_sales</TableID>
+              <ColumnID>total_excluding_tax</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Revenue Including Tax</ID>
+          <Name>Revenue Including Tax</Name>
+          <Description>Sum of invoice line totals including tax (fact_sale.total_including_tax).</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>gross revenue incl tax; revenue with tax; total including tax; invoiced amount</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>Sum</AggregateFunction>
+          <DataType>Currency</DataType>
+          <Source>
+            <DataType>Currency</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>wwi_sales</TableID>
+              <ColumnID>total_including_tax</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Gross Profit</ID>
+          <Name>Gross Profit</Name>
+          <Description>Sum of invoice line profit (fact_sale.profit).</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>profit; margin dollars; gross margin amount</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>Sum</AggregateFunction>
+          <DataType>Currency</DataType>
+          <Source>
+            <DataType>Currency</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>wwi_sales</TableID>
+              <ColumnID>profit</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Units Sold</ID>
+          <Name>Units Sold</Name>
+          <Description>Sum of invoiced quantity (fact_sale.quantity).</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>quantity sold; sold units; sales quantity; units invoiced</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>Sum</AggregateFunction>
+          <DataType>BigInt</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>wwi_sales</TableID>
+              <ColumnID>quantity</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Sales Lines</ID>
+          <Name>Sales Lines</Name>
+          <AggregateFunction>Count</AggregateFunction>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <DataSize>4</DataSize>
+            <Source xsi:type="RowBinding">
+              <TableID>wwi_sales</TableID>
+            </Source>
+          </Source>
+          <Visible>false</Visible>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <IgnoreUnrelatedDimensions>false</IgnoreUnrelatedDimensions>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>invoice_date_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Delivery Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <NullProcessing>UnknownMember</NullProcessing>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>delivery_date_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Customer</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Customer Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>customer_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Bill To Customer</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Customer Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>bill_to_customer_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>City</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>City Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>city_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Stock Item</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Stock Item Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>stock_item_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Salesperson</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Employee Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>salesperson_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="ManyToManyMeasureGroupDimension">
+          <CubeDimensionID>Stock Group</CubeDimensionID>
+          <MeasureGroupID>Stock Item Group Bridge</MeasureGroupID>
+        </Dimension>
+      </Dimensions>
+      <Partitions>
+        <Partition>
+          <ID>Sales</ID>
+          <Name>Sales</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  f.sale_key,
+  YEAR(f.invoice_date) * 10000 + MONTH(f.invoice_date) * 100 + DAY(f.invoice_date) AS invoice_date_id,
+  YEAR(f.delivery_date) * 10000 + MONTH(f.delivery_date) * 100 + DAY(f.delivery_date) AS delivery_date_id,
+  f.customer_key,
+  f.bill_to_customer_key,
+  f.city_key,
+  f.stock_item_key,
+  f.salesperson_key,
+  f.wwi_invoice_id,
+  f.quantity,
+  f.total_excluding_tax,
+  f.total_including_tax,
+  f.profit
+FROM wwi.fact_sale f</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+      </Partitions>
+    </MeasureGroup>
+    <MeasureGroup>
+      <ID>Invoices</ID>
+      <Name>Invoices</Name>
+      <Description>Distinct invoice count in its dedicated measure group (B-06).</Description>
+      <Measures>
+        <Measure>
+          <ID>Invoice Count</ID>
+          <Name>Invoice Count</Name>
+          <Description>Exact count of distinct invoices (fact_sale.wwi_invoice_id). Not additive across any dimension.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>number of invoices; invoices; distinct invoices</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>DistinctCount</AggregateFunction>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>wwi_sales</TableID>
+              <ColumnID>wwi_invoice_id</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <IgnoreUnrelatedDimensions>false</IgnoreUnrelatedDimensions>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>invoice_date_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Delivery Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <NullProcessing>UnknownMember</NullProcessing>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>delivery_date_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Customer</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Customer Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>customer_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Bill To Customer</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Customer Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>bill_to_customer_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>City</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>City Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>city_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Stock Item</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Stock Item Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>stock_item_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Salesperson</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Employee Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_sales</TableID>
+                    <ColumnID>salesperson_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="ManyToManyMeasureGroupDimension">
+          <CubeDimensionID>Stock Group</CubeDimensionID>
+          <MeasureGroupID>Stock Item Group Bridge</MeasureGroupID>
+        </Dimension>
+      </Dimensions>
+      <Partitions>
+        <Partition>
+          <ID>Invoices</ID>
+          <Name>Invoices</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  f.sale_key,
+  YEAR(f.invoice_date) * 10000 + MONTH(f.invoice_date) * 100 + DAY(f.invoice_date) AS invoice_date_id,
+  YEAR(f.delivery_date) * 10000 + MONTH(f.delivery_date) * 100 + DAY(f.delivery_date) AS delivery_date_id,
+  f.customer_key,
+  f.bill_to_customer_key,
+  f.city_key,
+  f.stock_item_key,
+  f.salesperson_key,
+  f.wwi_invoice_id,
+  f.quantity,
+  f.total_excluding_tax,
+  f.total_including_tax,
+  f.profit
+FROM wwi.fact_sale f</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+      </Partitions>
+    </MeasureGroup>
+    <MeasureGroup>
+      <ID>Orders</ID>
+      <Name>Orders</Name>
+      <Description>Order lines (fact_order), dated by order date.</Description>
+      <Measures>
+        <Measure>
+          <ID>Ordered Quantity</ID>
+          <Name>Ordered Quantity</Name>
+          <Description>Sum of ordered quantity (fact_order.quantity), dated by order date.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>units ordered; order quantity; quantity ordered; demand</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>Sum</AggregateFunction>
+          <DataType>BigInt</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>wwi_orders</TableID>
+              <ColumnID>quantity</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Order Lines</ID>
+          <Name>Order Lines</Name>
+          <AggregateFunction>Count</AggregateFunction>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <DataSize>4</DataSize>
+            <Source xsi:type="RowBinding">
+              <TableID>wwi_orders</TableID>
+            </Source>
+          </Source>
+          <Visible>false</Visible>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <IgnoreUnrelatedDimensions>false</IgnoreUnrelatedDimensions>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_orders</TableID>
+                    <ColumnID>order_date_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Customer</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Customer Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_orders</TableID>
+                    <ColumnID>customer_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>City</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>City Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_orders</TableID>
+                    <ColumnID>city_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Stock Item</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Stock Item Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_orders</TableID>
+                    <ColumnID>stock_item_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Salesperson</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Employee Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_orders</TableID>
+                    <ColumnID>salesperson_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Picker</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Employee Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <NullProcessing>UnknownMember</NullProcessing>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_orders</TableID>
+                    <ColumnID>picker_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="ManyToManyMeasureGroupDimension">
+          <CubeDimensionID>Stock Group</CubeDimensionID>
+          <MeasureGroupID>Stock Item Group Bridge</MeasureGroupID>
+        </Dimension>
+      </Dimensions>
+      <Partitions>
+        <Partition>
+          <ID>Orders</ID>
+          <Name>Orders</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  o.order_key,
+  YEAR(o.order_date) * 10000 + MONTH(o.order_date) * 100 + DAY(o.order_date) AS order_date_id,
+  o.customer_key,
+  o.city_key,
+  o.stock_item_key,
+  o.salesperson_key,
+  o.picker_key,
+  o.quantity
+FROM wwi.fact_order o</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+      </Partitions>
+    </MeasureGroup>
+    <MeasureGroup>
+      <ID>Backorders</ID>
+      <Name>Backorders</Name>
+      <Description>Order lines with a backorder id.</Description>
+      <Measures>
+        <Measure>
+          <ID>Backordered Order Lines</ID>
+          <Name>Backordered Order Lines</Name>
+          <Description>Count of order lines with a backorder (fact_order.wwi_backorder_id is not null); blank when no line qualifies.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>backorders; backordered lines; lines on backorder</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>Count</AggregateFunction>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <DataSize>4</DataSize>
+            <Source xsi:type="RowBinding">
+              <TableID>wwi_backorders</TableID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <IgnoreUnrelatedDimensions>false</IgnoreUnrelatedDimensions>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_backorders</TableID>
+                    <ColumnID>order_date_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Customer</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Customer Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_backorders</TableID>
+                    <ColumnID>customer_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>City</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>City Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_backorders</TableID>
+                    <ColumnID>city_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Stock Item</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Stock Item Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_backorders</TableID>
+                    <ColumnID>stock_item_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Salesperson</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Employee Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_backorders</TableID>
+                    <ColumnID>salesperson_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Picker</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Employee Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <NullProcessing>UnknownMember</NullProcessing>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_backorders</TableID>
+                    <ColumnID>picker_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="ManyToManyMeasureGroupDimension">
+          <CubeDimensionID>Stock Group</CubeDimensionID>
+          <MeasureGroupID>Stock Item Group Bridge</MeasureGroupID>
+        </Dimension>
+      </Dimensions>
+      <Partitions>
+        <Partition>
+          <ID>Backorders</ID>
+          <Name>Backorders</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  o.order_key,
+  YEAR(o.order_date) * 10000 + MONTH(o.order_date) * 100 + DAY(o.order_date) AS order_date_id,
+  o.customer_key,
+  o.city_key,
+  o.stock_item_key,
+  o.salesperson_key,
+  o.picker_key
+FROM wwi.fact_order o
+WHERE o.wwi_backorder_id IS NOT NULL</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+      </Partitions>
+    </MeasureGroup>
+    <MeasureGroup>
+      <ID>Stock Holdings</ID>
+      <Name>Stock Holdings</Name>
+      <Description>Dense daily stock snapshot (fact_stock_holding_daily).</Description>
+      <Measures>
+        <Measure>
+          <ID>Closing Units</ID>
+          <Name>Closing Units</Name>
+          <Description>Units on hand on the last day of the period (semi-additive); summed across stock items and stock groups.</Description>
+          <Annotations>
+            <Annotation>
+              <Name>slc:synonyms</Name>
+              <Value>stock on hand; inventory; closing inventory; ending inventory; units in stock</Value>
+            </Annotation>
+          </Annotations>
+          <AggregateFunction>LastNonEmpty</AggregateFunction>
+          <DataType>BigInt</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <NullProcessing>Preserve</NullProcessing>
+            <Source xsi:type="ColumnBinding">
+              <TableID>wwi_stock_holding</TableID>
+              <ColumnID>quantity_on_hand</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Stock Snapshot Rows</ID>
+          <Name>Stock Snapshot Rows</Name>
+          <AggregateFunction>Count</AggregateFunction>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <DataSize>4</DataSize>
+            <Source xsi:type="RowBinding">
+              <TableID>wwi_stock_holding</TableID>
+            </Source>
+          </Source>
+          <Visible>false</Visible>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <IgnoreUnrelatedDimensions>false</IgnoreUnrelatedDimensions>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_stock_holding</TableID>
+                    <ColumnID>snapshot_date_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Stock Item</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Stock Item Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_stock_holding</TableID>
+                    <ColumnID>stock_item_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Inventory Access</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Access</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_stock_holding</TableID>
+                    <ColumnID>access_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="ManyToManyMeasureGroupDimension">
+          <CubeDimensionID>Stock Group</CubeDimensionID>
+          <MeasureGroupID>Stock Item Group Bridge</MeasureGroupID>
+        </Dimension>
+      </Dimensions>
+      <Partitions>
+        <Partition>
+          <ID>Stock Holdings</ID>
+          <Name>Stock Holdings</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  YEAR(h.snapshot_date) * 10000 + MONTH(h.snapshot_date) * 100 + DAY(h.snapshot_date) AS snapshot_date_id,
+  h.stock_item_key,
+  h.wwi_stock_item_id,
+  h.quantity_on_hand,
+  1 AS access_key
+FROM wwi.fact_stock_holding_daily h</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+      </Partitions>
+    </MeasureGroup>
+    <MeasureGroup>
+      <ID>Stock Item Group Bridge</ID>
+      <Name>Stock Item Group Bridge</Name>
+      <Description>Intermediate measure group of the Stock Group many-to-many relationship.</Description>
+      <Measures>
+        <Measure>
+          <ID>Bridge Rows</ID>
+          <Name>Bridge Rows</Name>
+          <AggregateFunction>Count</AggregateFunction>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <DataSize>4</DataSize>
+            <Source xsi:type="RowBinding">
+              <TableID>wwi_stock_item_group</TableID>
+            </Source>
+          </Source>
+          <Visible>false</Visible>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <IgnoreUnrelatedDimensions>false</IgnoreUnrelatedDimensions>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Stock Item</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>WWI Stock Item ID</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_stock_item_group</TableID>
+                    <ColumnID>wwi_stock_item_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Stock Group</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Stock Group</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>wwi_stock_item_group</TableID>
+                    <ColumnID>stock_group_id</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+      </Dimensions>
+      <Partitions>
+        <Partition>
+          <ID>Stock Item Group Bridge</ID>
+          <Name>Stock Item Group Bridge</Name>
+          <Source xsi:type="QueryBinding">
+            <DataSourceID>slc_adapter</DataSourceID>
+            <QueryDefinition>SELECT
+  b.wwi_stock_item_id,
+  b.stock_group_id
+FROM wwi.bridge_stock_item_group b</QueryDefinition>
+          </Source>
+          <StorageMode>Molap</StorageMode>
+        </Partition>
+      </Partitions>
+    </MeasureGroup>
+  </MeasureGroups>
+  <Source>
+    <DataSourceViewID>slc</DataSourceViewID>
+  </Source>
+</Cube>

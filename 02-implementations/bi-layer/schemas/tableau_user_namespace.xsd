@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Stand-in for the http://www.tableausoftware.com/xml/user namespace, which twb_2026.3.0.xsd imports without a
+     schemaLocation and Tableau does not publish. It declares the one component the official schema references,
+     UserAttributes-AG, as "any user: attribute, not validated"; everything else is validated by the official XSD. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.tableausoftware.com/xml/user">
+  <xs:attributeGroup name="UserAttributes-AG">
+    <xs:anyAttribute namespace="##targetNamespace" processContents="skip"/>
+  </xs:attributeGroup>
+</xs:schema>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>slc</ID>
+  <Name>slc</Name>
+  <Description>Enterprise semantic layer comparison study, stack S1 (SSAS Multidimensional, SPEC § 3.1).</Description>
+  <Language>1033</Language>
+  <Collation>Latin1_General_CI_AS</Collation>
+  <DataSourceImpersonationInfo>
+    <ImpersonationMode>Default</ImpersonationMode>
+  </DataSourceImpersonationInfo>
+</Database>

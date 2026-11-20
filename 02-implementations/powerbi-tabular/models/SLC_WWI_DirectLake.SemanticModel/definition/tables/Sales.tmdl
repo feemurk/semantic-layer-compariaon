@@ -1,0 +1,187 @@
+/// WideWorldImporters invoice lines (fact_sale), dated by invoice date.
+table Sales
+	lineageTag: abb3c058-a606-5fcc-884d-7e36f19fb4f9
+
+	/// Sum of invoice line totals excluding tax (fact_sale.total_excluding_tax), dated by invoice date.
+	measure 'Revenue (Excl. Tax)' = IF ( ISCROSSFILTERED ( 'Picker' ), BLANK (), SUM ( Sales[total_excluding_tax] ) )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Sales
+		lineageTag: cee3d653-b459-5f98-8a4d-e3dfc76ea994
+		annotation SLC_MetricId = W-S1
+
+	/// Sum of invoice line totals including tax (fact_sale.total_including_tax).
+	measure 'Revenue Including Tax' = IF ( ISCROSSFILTERED ( 'Picker' ), BLANK (), SUM ( Sales[total_including_tax] ) )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Sales
+		lineageTag: 5dcc557f-b1bd-5dbe-958d-6887d5db5171
+		annotation SLC_MetricId = B-W1
+
+	/// Sum of invoice line profit (fact_sale.profit).
+	measure 'Gross Profit' = IF ( ISCROSSFILTERED ( 'Picker' ), BLANK (), SUM ( Sales[profit] ) )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Sales
+		lineageTag: a2c852a2-0f3e-5d4c-9acd-d7830f62e277
+		annotation SLC_MetricId = B-W2
+
+	/// Sum of invoiced quantity (fact_sale.quantity).
+	measure 'Units Sold' = IF ( ISCROSSFILTERED ( 'Picker' ), BLANK (), SUM ( Sales[quantity] ) )
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: 8e9fcbeb-9644-55a5-b3af-0616566d2e51
+		annotation SLC_MetricId = B-W3
+
+	/// Exact count of distinct invoices (fact_sale.wwi_invoice_id). Not additive across any dimension.
+	measure 'Invoice Count' = IF ( ISCROSSFILTERED ( 'Picker' ), BLANK (), DISTINCTCOUNT ( Sales[wwi_invoice_id] ) )
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: 8f83f976-d6c9-5c62-9a1f-971db6af1a42
+		annotation SLC_MetricId = B-W4
+
+	/// Gross Profit divided by Revenue (Excl. Tax), computed from the aggregated numerator and denominator at every grain.
+	measure 'Gross Margin %' = DIVIDE ( [Gross Profit], [Revenue (Excl. Tax)] )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Sales
+		lineageTag: 9e970a4c-0bce-5949-bc9d-8e04517db94d
+		annotation SLC_MetricId = W-M1
+
+	/// Revenue of items in a stock group divided by revenue of the same context without the stock group filter. Items can belong to several groups, so shares do not add to 100%.
+	measure 'Stock Group Revenue Share' =
+			DIVIDE (
+			    [Revenue (Excl. Tax)],
+			    CALCULATE ( [Revenue (Excl. Tax)], REMOVEFILTERS ( 'Stock Group' ), REMOVEFILTERS ( 'Stock Item Group' ) )
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Sales
+		lineageTag: fdc85ca9-1676-5055-bdce-0329a9f8a12a
+		annotation SLC_MetricId = W-C1
+
+	/// Invoice line key.
+	column sale_key
+		dataType: int64
+		isHidden
+		lineageTag: 886f6628-ec08-573d-a719-bc4637151c33
+		summarizeBy: none
+		sourceColumn: sale_key
+
+	/// Invoice date (relates to Date).
+	column invoice_date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-MM-dd
+		lineageTag: a0b9ebf0-eecb-5cd9-8ec9-fabc96351a85
+		summarizeBy: none
+		sourceColumn: invoice_date
+
+	/// Delivery date; blank when undelivered.
+	column delivery_date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-MM-dd
+		lineageTag: e3fc86cb-7edf-542c-b8a8-4b9e28c84fe6
+		summarizeBy: none
+		sourceColumn: delivery_date
+
+	/// City surrogate key.
+	column city_key
+		dataType: int64
+		isHidden
+		lineageTag: 699d080c-aa56-5202-afd1-d62d451ad937
+		summarizeBy: none
+		sourceColumn: city_key
+
+	/// Customer surrogate key.
+	column customer_key
+		dataType: int64
+		isHidden
+		lineageTag: ab09364e-f296-55e0-8487-2805b8884392
+		summarizeBy: none
+		sourceColumn: customer_key
+
+	/// Bill-to customer surrogate key.
+	column bill_to_customer_key
+		dataType: int64
+		isHidden
+		lineageTag: 35bfb175-fd37-5147-bdac-2ae66cbb3719
+		summarizeBy: none
+		sourceColumn: bill_to_customer_key
+
+	/// Stock item surrogate key.
+	column stock_item_key
+		dataType: int64
+		isHidden
+		lineageTag: fe3c4c67-cb5a-5e33-bd5c-bd3d652f524d
+		summarizeBy: none
+		sourceColumn: stock_item_key
+
+	/// Salesperson surrogate key.
+	column salesperson_key
+		dataType: int64
+		isHidden
+		lineageTag: b7271983-531f-53e6-b978-2e1724d1e340
+		summarizeBy: none
+		sourceColumn: salesperson_key
+
+	/// Invoice id.
+	column wwi_invoice_id
+		dataType: int64
+		isHidden
+		lineageTag: ae0b22a1-1856-5e5b-a971-411e30ca2aca
+		summarizeBy: none
+		sourceColumn: wwi_invoice_id
+
+	/// Invoiced quantity.
+	column quantity
+		dataType: int64
+		isHidden
+		lineageTag: 6294e6db-4375-5155-8825-03d63d4ca8e8
+		summarizeBy: none
+		sourceColumn: quantity
+
+	/// Unit price.
+	column unit_price
+		dataType: decimal
+		isHidden
+		lineageTag: 0c3af771-d053-5f0e-a93f-8b318e4ad249
+		summarizeBy: none
+		sourceColumn: unit_price
+
+	/// Line total excluding tax.
+	column total_excluding_tax
+		dataType: decimal
+		isHidden
+		lineageTag: 540a7112-5bf2-5886-934c-6749fb040996
+		summarizeBy: none
+		sourceColumn: total_excluding_tax
+
+	/// Tax amount.
+	column tax_amount
+		dataType: decimal
+		isHidden
+		lineageTag: 2929caed-d3aa-5bad-b21f-d53a43b6ae96
+		summarizeBy: none
+		sourceColumn: tax_amount
+
+	/// Line profit.
+	column profit
+		dataType: decimal
+		isHidden
+		lineageTag: 978ce333-f241-5801-b7c7-f76db8f081c1
+		summarizeBy: none
+		sourceColumn: profit
+
+	/// Line total including tax.
+	column total_including_tax
+		dataType: decimal
+		isHidden
+		lineageTag: 96689264-730f-5b7c-ae97-191ede87dcbb
+		summarizeBy: none
+		sourceColumn: total_including_tax
+
+	partition Sales = entity
+		mode: directLake
+		source
+			entityName: fact_sale
+			schemaName: wwi
+			expressionSource: 'DirectLake - slc'
+
+	annotation SLC_Synonyms = ["sales", "invoices", "invoice lines"]

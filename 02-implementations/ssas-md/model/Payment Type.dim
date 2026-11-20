@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Dimension xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ID>Payment Type</ID>
+  <Name>Payment Type</Name>
+  <Description>TLC payment type code and label.</Description>
+  <Source xsi:type="DataSourceViewBinding">
+    <DataSourceViewID>slc</DataSourceViewID>
+  </Source>
+  <Type>Regular</Type>
+  <UnknownMember>None</UnknownMember>
+  <Language>1033</Language>
+  <Collation>Latin1_General_CI_AS</Collation>
+  <UnknownMemberName>Unknown</UnknownMemberName>
+  <Attributes>
+    <Attribute>
+      <ID>Payment Type Code</ID>
+      <Name>Payment Type Code</Name>
+      <Usage>Key</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>nyc_payment_type</TableID>
+            <ColumnID>payment_type</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>nyc_payment_type</TableID>
+          <ColumnID>payment_type_code_name</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Payment Type</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Payment Type</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Payment Type</ID>
+      <Name>Payment Type</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>nyc_payment_type</TableID>
+            <ColumnID>payment_type</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>nyc_payment_type</TableID>
+          <ColumnID>payment_type_name</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+  </Attributes>
+</Dimension>

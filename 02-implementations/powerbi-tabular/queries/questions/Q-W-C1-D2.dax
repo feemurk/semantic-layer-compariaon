@@ -1,0 +1,16 @@
+// Q-W-C1-D2 Stock group revenue share within each Sales Territory for FY2015 (denominator: the territory's deduplicated revenue).
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'City'[Sales Territory],
+        'Stock Group'[Stock Group],
+        TREATAS ( { 2015 }, 'Date'[Fiscal Year] ),
+        "rev", [Revenue (Excl. Tax)],
+        "share", [Stock Group Revenue Share]
+    ),
+    "sales_territory", 'City'[Sales Territory],
+    "stock_group_name", 'Stock Group'[Stock Group],
+    "revenue", [rev],
+    "share_of_territory", [share]
+)
+ORDER BY [sales_territory], [stock_group_name]

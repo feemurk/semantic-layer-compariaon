@@ -1,0 +1,21 @@
+// Q-W-C1-D3 Stock group shares FY2014 vs FY2015, the change in share points, and the group that gained the most (ties: name).
+DEFINE
+    VAR base = SUMMARIZECOLUMNS ( 'Stock Group'[Stock Group], TREATAS ( { 2014, 2015 }, 'Date'[Fiscal Year] ), "rev", [Revenue (Excl. Tax)] )
+    VAR shares =
+        ADDCOLUMNS (
+            base,
+            "s14", CALCULATE ( [Stock Group Revenue Share], 'Date'[Fiscal Year] = 2014 ),
+            "s15", CALCULATE ( [Stock Group Revenue Share], 'Date'[Fiscal Year] = 2015 )
+        )
+    VAR changes = ADDCOLUMNS ( shares, "chg", IF ( ISBLANK ( [s14] ) || ISBLANK ( [s15] ), BLANK (), ( [s15] - [s14] ) * 100 ) )
+    VAR top_gainer = MAXX ( TOPN ( 1, changes, [chg], DESC, 'Stock Group'[Stock Group], ASC ), 'Stock Group'[Stock Group] )
+EVALUATE
+SELECTCOLUMNS (
+    changes,
+    "stock_group_name", 'Stock Group'[Stock Group],
+    "share_fy2014", [s14],
+    "share_fy2015", [s15],
+    "change_points", [chg],
+    "is_top_gainer", 'Stock Group'[Stock Group] = top_gainer
+)
+ORDER BY [stock_group_name]

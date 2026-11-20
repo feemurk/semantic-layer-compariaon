@@ -1,0 +1,107 @@
+/// Product as recorded at the time of sale (SCD Type 2); current attributes via the durable item id.
+table 'Stock Item'
+	lineageTag: 34b94d20-56bf-5cf5-ac9c-e64862ad6d39
+
+	/// Surrogate key (SCD2 version).
+	column 'Stock Item Key'
+		dataType: int64
+		isKey
+		isHidden
+		lineageTag: d476ff2f-b1ee-5d72-a3b9-2031555cf723
+		summarizeBy: none
+		sourceColumn: stock_item_key
+
+	/// Durable stock item id.
+	column 'WWI Stock Item ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 0384212d-8b3a-5418-8398-1c5d5a9d124f
+		summarizeBy: none
+		sourceColumn: wwi_stock_item_id
+
+	/// Stock item name as recorded at the time of sale.
+	column 'Stock Item'
+		dataType: string
+		lineageTag: 97a12d7f-fc80-57a6-9273-41c2a429eef5
+		summarizeBy: none
+		sourceColumn: stock_item
+
+	/// Brand.
+	column Brand
+		dataType: string
+		lineageTag: a244f266-389b-517d-a1e1-d281c0f44f89
+		summarizeBy: none
+		sourceColumn: brand
+
+	/// Color as recorded at the time of sale (as-was).
+	column Color
+		dataType: string
+		lineageTag: e2c7344f-5bc6-5b51-a58a-1aea598b4f20
+		summarizeBy: none
+		sourceColumn: color
+
+	/// Size.
+	column Size
+		dataType: string
+		lineageTag: ce9dc8ec-25ec-52f9-8a28-6091c324b37a
+		summarizeBy: none
+		sourceColumn: size
+
+	/// Selling package.
+	column 'Selling Package'
+		dataType: string
+		lineageTag: 429c0f25-11d0-5909-a5a7-87f48dac0615
+		summarizeBy: none
+		sourceColumn: selling_package
+
+	/// True for chiller (refrigerated) items.
+	column 'Is Chiller Stock'
+		dataType: boolean
+		lineageTag: e6afbb06-6f56-5672-8e86-f18df8daf7a5
+		summarizeBy: none
+		sourceColumn: is_chiller_stock
+
+	/// List unit price of the version.
+	column 'Unit Price'
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 30c25671-3176-5fd2-ae39-bd1e9fd0c909
+		summarizeBy: none
+		sourceColumn: unit_price
+
+	/// Version start.
+	column 'Valid From'
+		dataType: dateTime
+		formatString: yyyy-MM-dd HH:mm:ss
+		lineageTag: 7832f4e4-6acd-5081-a834-c20d73d44f5a
+		summarizeBy: none
+		sourceColumn: valid_from
+
+	/// Version end.
+	column 'Valid To'
+		dataType: dateTime
+		formatString: yyyy-MM-dd HH:mm:ss
+		lineageTag: 21ee795c-a435-54a9-97b0-6c6921c13a26
+		summarizeBy: none
+		sourceColumn: valid_to
+
+	/// True for the current version of the item.
+	column 'Is Current Version'
+		dataType: boolean
+		lineageTag: 7b34d2bd-49f0-50df-bef1-fc78c42952f5
+		summarizeBy: none
+		sourceColumn: is_current
+
+	partition 'Stock Item' = m
+		mode: dual
+		source =
+				let
+				    Source = Databricks.Catalogs(DatabricksHost, DatabricksHttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null, Implementation = "2.0"]),
+				    CatalogData = Source{[Name = UnityCatalog, Kind = "Database"]}[Data],
+				    SchemaData = CatalogData{[Name = "wwi", Kind = "Schema"]}[Data],
+				    TableData = SchemaData{[Name = "dim_stock_item", Kind = "Table"]}[Data],
+				    Selected = Table.SelectColumns(TableData, {"stock_item_key", "wwi_stock_item_id", "stock_item", "brand", "color", "size", "selling_package", "is_chiller_stock", "unit_price", "valid_from", "valid_to", "is_current"})
+				in
+				    Selected
+
+	annotation SLC_Synonyms = ["product", "item", "SKU", "article"]

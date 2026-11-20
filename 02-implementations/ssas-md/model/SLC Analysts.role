@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Role xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>SLC Analysts</ID>
+  <Name>SLC Analysts</Name>
+  <Description>Unrestricted read on both cubes (E2, E7 lanes).</Description>
+  <Members>
+    <Member>
+      <Name>SLC\slc_analysts</Name>
+    </Member>
+  </Members>
+</Role>

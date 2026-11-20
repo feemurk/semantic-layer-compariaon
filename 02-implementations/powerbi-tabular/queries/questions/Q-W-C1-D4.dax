@@ -1,0 +1,22 @@
+// Q-W-C1-D4 FY2015: the sum of stock group revenues (fan-out across overlapping groups), total revenue (deduplicated), the
+// overlap, the overlap rebuilt from items in two or more groups ((k - 1) x revenue), and revenue of items in no group.
+DEFINE
+    VAR fy = TREATAS ( { 2015 }, 'Date'[Fiscal Year] )
+    VAR groups = SUMMARIZECOLUMNS ( 'Stock Group'[Stock Group], fy, "rev", [Revenue (Excl. Tax)] )
+    VAR items =
+        ADDCOLUMNS (
+            SUMMARIZECOLUMNS ( 'Stock Item'[WWI Stock Item ID], fy, "rev", [Revenue (Excl. Tax)] ),
+            "k",
+                VAR id = 'Stock Item'[WWI Stock Item ID]
+                RETURN COUNTROWS ( FILTER ( 'Stock Item Group', 'Stock Item Group'[wwi_stock_item_id] = id ) ) + 0
+        )
+    VAR sum_of_groups = SUMX ( groups, [rev] )
+    VAR total_revenue = CALCULATE ( [Revenue (Excl. Tax)], fy )
+EVALUATE
+ROW (
+    "sum_of_group_revenue", sum_of_groups,
+    "total_revenue", total_revenue,
+    "overlap_revenue", sum_of_groups - total_revenue,
+    "overlap_from_multi_group_items", SUMX ( FILTER ( items, [k] >= 2 ), [rev] * ( [k] - 1 ) ) + 0,
+    "revenue_without_group", SUMX ( FILTER ( items, [k] = 0 ), [rev] ) + 0
+)

@@ -1,0 +1,50 @@
+/// Customer as recorded at the time of sale.
+table Customer
+	lineageTag: 618c1b9e-597d-5c35-8250-17cfa48e2cae
+
+	/// Surrogate key (SCD2 version).
+	column 'Customer Key'
+		dataType: int64
+		isKey
+		isHidden
+		lineageTag: f97abe49-53cf-5bf7-8328-104ad6b20c1a
+		summarizeBy: none
+		sourceColumn: customer_key
+
+	/// Durable customer id.
+	column 'WWI Customer ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: a151e69f-85b9-5c4c-831c-5269074eeeec
+		summarizeBy: none
+		sourceColumn: wwi_customer_id
+
+	/// Customer name as recorded at the time of sale.
+	column Customer
+		dataType: string
+		lineageTag: 1ab703ab-f145-5f32-9db9-8c6822d9927e
+		summarizeBy: none
+		sourceColumn: customer
+
+	/// Customer category as recorded at the time of sale.
+	column 'Customer Category'
+		dataType: string
+		lineageTag: a5a32174-730b-54e4-a16d-bc509b8fc8dc
+		summarizeBy: none
+		sourceColumn: category
+
+	/// Buying group as recorded at the time of sale.
+	column 'Buying Group'
+		dataType: string
+		lineageTag: 14f4bc77-e7cf-5fb8-a3a4-27c5c130b55b
+		summarizeBy: none
+		sourceColumn: buying_group
+
+	partition Customer = entity
+		mode: directLake
+		source
+			entityName: dim_customer
+			schemaName: wwi
+			expressionSource: 'DirectLake - slc'
+
+	annotation SLC_Synonyms = ["client", "account", "store", "buyer"]

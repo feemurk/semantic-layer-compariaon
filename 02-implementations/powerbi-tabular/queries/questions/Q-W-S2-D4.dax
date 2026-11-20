@@ -1,0 +1,18 @@
+// Q-W-S2-D4 Backordered order lines in 2015 by salesperson and stock group. salesperson_total_lines removes the stock group
+// filter, so each line counts once; is_top_salesperson marks the salesperson with the most lines (ties: name).
+DEFINE
+    VAR y2015 = TREATAS ( { 2015 }, 'Date'[Calendar Year] )
+    VAR base = SUMMARIZECOLUMNS ( 'Salesperson'[Salesperson], 'Stock Group'[Stock Group], y2015, "bo", [Backordered Order Lines] )
+    VAR totals = SUMMARIZECOLUMNS ( 'Salesperson'[Salesperson], y2015, "total", [Backordered Order Lines] )
+    VAR top_salesperson = MAXX ( TOPN ( 1, totals, [total], DESC, 'Salesperson'[Salesperson], ASC ), 'Salesperson'[Salesperson] )
+EVALUATE
+SELECTCOLUMNS (
+    base,
+    "salesperson", 'Salesperson'[Salesperson],
+    "stock_group_name", 'Stock Group'[Stock Group],
+    "backordered_lines", [bo],
+    "salesperson_total_lines",
+        CALCULATE ( [Backordered Order Lines], 'Date'[Calendar Year] = 2015, REMOVEFILTERS ( 'Stock Group' ) ),
+    "is_top_salesperson", 'Salesperson'[Salesperson] = top_salesperson
+)
+ORDER BY [salesperson], [stock_group_name]

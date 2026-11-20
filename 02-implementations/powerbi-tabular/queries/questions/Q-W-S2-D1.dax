@@ -1,0 +1,34 @@
+// Q-W-S2-D1 For the 2015 month with the largest gap between ordered quantity and units sold, ordered quantity by stock item.
+DEFINE
+    VAR months =
+        FILTER (
+            SUMMARIZECOLUMNS (
+                'Date'[Month Start],
+                TREATAS ( { 2015 }, 'Date'[Calendar Year] ),
+                "oq", [Ordered Quantity],
+                "us", [Units Sold]
+            ),
+            NOT ISBLANK ( [oq] ) && NOT ISBLANK ( [us] )
+        )
+    VAR gap = TOPN ( 1, months, ABS ( [oq] - [us] ), DESC, 'Date'[Month Start], ASC )
+    VAR gap_month = MAXX ( gap, 'Date'[Month Start] )
+    VAR gap_ordered = MAXX ( gap, [oq] )
+    VAR gap_sold = MAXX ( gap, [us] )
+    VAR items =
+        SUMMARIZECOLUMNS (
+            'Stock Item'[WWI Stock Item ID],
+            'Stock Item'[Stock Item],
+            TREATAS ( { gap_month }, 'Date'[Month Start] ),
+            "oq", [Ordered Quantity]
+        )
+EVALUATE
+SELECTCOLUMNS (
+    items,
+    "month_start_date", gap_month,
+    "month_ordered_quantity", gap_ordered,
+    "month_units_sold", gap_sold,
+    "wwi_stock_item_id", 'Stock Item'[WWI Stock Item ID],
+    "stock_item", 'Stock Item'[Stock Item],
+    "ordered_quantity", [oq]
+)
+ORDER BY [ordered_quantity] DESC, [wwi_stock_item_id]

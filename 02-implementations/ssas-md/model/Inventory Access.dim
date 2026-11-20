@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Dimension xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ID>Inventory Access</ID>
+  <Name>Inventory Access</Name>
+  <Description>Security device: related only to Stock Holdings; roles without inventory access allow none of its members with visual totals.</Description>
+  <Source xsi:type="DataSourceViewBinding">
+    <DataSourceViewID>slc</DataSourceViewID>
+  </Source>
+  <Type>Regular</Type>
+  <UnknownMember>None</UnknownMember>
+  <Language>1033</Language>
+  <Collation>Latin1_General_CI_AS</Collation>
+  <UnknownMemberName>Unknown</UnknownMemberName>
+  <Attributes>
+    <Attribute>
+      <ID>Access</ID>
+      <Name>Access</Name>
+      <Usage>Key</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_inventory_access</TableID>
+            <ColumnID>access_key</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_inventory_access</TableID>
+          <ColumnID>access_name</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+  </Attributes>
+</Dimension>

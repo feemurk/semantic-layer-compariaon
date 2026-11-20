@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Dimension xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ID>Customer</ID>
+  <Name>Customer</Name>
+  <Description>Customer as recorded at the time of sale. Role-played as Customer and Bill To Customer.</Description>
+  <Source xsi:type="DataSourceViewBinding">
+    <DataSourceViewID>slc</DataSourceViewID>
+  </Source>
+  <Type>Regular</Type>
+  <UnknownMember>None</UnknownMember>
+  <Language>1033</Language>
+  <Collation>Latin1_General_CI_AS</Collation>
+  <UnknownMemberName>Unknown</UnknownMemberName>
+  <Attributes>
+    <Attribute>
+      <ID>Customer Key</ID>
+      <Name>Customer Key</Name>
+      <Usage>Key</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_customer</TableID>
+            <ColumnID>customer_key</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_customer</TableID>
+          <ColumnID>customer</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Customer</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Customer</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Key</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Customer</ID>
+      <Name>Customer</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_customer</TableID>
+            <ColumnID>customer</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_customer</TableID>
+          <ColumnID>customer</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Category</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Category</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Buying Group</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Buying Group</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Category</ID>
+      <Name>Category</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_customer</TableID>
+            <ColumnID>category</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_customer</TableID>
+          <ColumnID>category</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Buying Group</ID>
+      <Name>Buying Group</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_customer</TableID>
+            <ColumnID>buying_group</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_customer</TableID>
+          <ColumnID>buying_group</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+  </Attributes>
+</Dimension>

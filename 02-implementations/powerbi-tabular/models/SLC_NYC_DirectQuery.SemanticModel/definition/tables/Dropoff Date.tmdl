@@ -1,0 +1,106 @@
+/// Date the trip ended (role of the Date dimension); differs from pickup date for trips crossing midnight.
+table 'Dropoff Date'
+	lineageTag: 6ad08244-e6b0-5b6a-9b3d-75556a548db6
+
+	/// Calendar date of the trip dropoff.
+	column 'Dropoff Date'
+		dataType: dateTime
+		isKey
+		formatString: yyyy-MM-dd
+		lineageTag: 24e5412a-80aa-54c3-b2d6-1b72c44618a9
+		summarizeBy: none
+		sourceColumn: date_key
+
+	/// Calendar year.
+	column 'Dropoff Calendar Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: 886764c1-8f78-5947-9c59-60bd72a32200
+		summarizeBy: none
+		sourceColumn: calendar_year
+
+	/// Calendar quarter 1-4.
+	column 'Dropoff Calendar Quarter'
+		dataType: int64
+		formatString: 0
+		lineageTag: 35daaa9a-4b56-59cc-8287-1294c17d47b3
+		summarizeBy: none
+		sourceColumn: calendar_quarter
+
+	/// Calendar month 1-12.
+	column 'Dropoff Calendar Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: 105e2c38-148f-5b35-a6bf-f5bbd78af4d2
+		summarizeBy: none
+		sourceColumn: calendar_month
+
+	/// Month name.
+	column 'Dropoff Month Name'
+		dataType: string
+		lineageTag: 34423f20-2e1a-5c06-af8d-04527d9ef15f
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: 'Dropoff Calendar Month'
+
+	/// First day of the calendar month.
+	column 'Dropoff Month Start'
+		dataType: dateTime
+		formatString: yyyy-MM-dd
+		lineageTag: f7c229a8-9527-506c-ab3b-0b1b7e213813
+		summarizeBy: none
+		sourceColumn: month_start_date
+
+	/// Day of the month.
+	column 'Dropoff Day of Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: 688b7518-e533-51fb-8a82-7bcda1f5f8b5
+		summarizeBy: none
+		sourceColumn: day_of_month
+
+	/// Day of the year.
+	column 'Dropoff Day of Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: dc9726ce-8d57-5fc3-8163-37b871af3378
+		summarizeBy: none
+		sourceColumn: day_of_year
+
+	/// ISO day of week, Monday = 1.
+	column 'Dropoff Day of Week'
+		dataType: int64
+		formatString: 0
+		lineageTag: af741b9c-1817-5114-b973-d96df953645b
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+	/// Day name.
+	column 'Dropoff Day Name'
+		dataType: string
+		lineageTag: 107507d3-b6de-5f75-9a78-86f1cede6d9a
+		summarizeBy: none
+		sourceColumn: day_name
+		sortByColumn: 'Dropoff Day of Week'
+
+	/// ISO week number.
+	column 'Dropoff ISO Week'
+		dataType: int64
+		formatString: 0
+		lineageTag: aa30c0ea-d0e7-501e-9cb8-fd3b9ab67a28
+		summarizeBy: none
+		sourceColumn: iso_week_number
+
+	partition 'Dropoff Date' = m
+		mode: dual
+		source =
+				let
+				    Source = Databricks.Catalogs(DatabricksHost, DatabricksHttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null, Implementation = "2.0"]),
+				    CatalogData = Source{[Name = UnityCatalog, Kind = "Database"]}[Data],
+				    SchemaData = CatalogData{[Name = "nyctaxi", Kind = "Schema"]}[Data],
+				    TableData = SchemaData{[Name = "dim_date", Kind = "Table"]}[Data],
+				    Selected = Table.SelectColumns(TableData, {"date_key", "calendar_year", "calendar_quarter", "calendar_month", "month_name", "month_start_date", "day_of_month", "day_of_year", "day_of_week", "day_name", "iso_week_number"})
+				in
+				    Selected
+
+	annotation SLC_Synonyms = ["dropoff day", "trip end date", "arrival date"]

@@ -1,0 +1,14 @@
+// Q-W-M2-P Closing stock on hand (units) at each fiscal month end of FY2015 (last snapshot date of each fiscal month).
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Date'[Fiscal Month],
+        TREATAS ( { 2015 }, 'Date'[Fiscal Year] ),
+        "d", [Snapshot Anchor Date],
+        "units", [Closing Stock On Hand]
+    ),
+    "fiscal_month", 'Date'[Fiscal Month],
+    "month_end_date", [d],
+    "closing_units", [units]
+)
+ORDER BY [fiscal_month]

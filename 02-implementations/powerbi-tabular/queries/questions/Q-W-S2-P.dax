@@ -1,0 +1,15 @@
+// Q-W-S2-P Ordered quantity (Orders, by order date) and revenue excl. tax (Sales, by invoice date) per calendar month of 2015
+// under one shared Date selection.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Date'[Month Start],
+        TREATAS ( { 2015 }, 'Date'[Calendar Year] ),
+        "oq", [Ordered Quantity],
+        "rev", [Revenue (Excl. Tax)]
+    ),
+    "month_start_date", 'Date'[Month Start],
+    "ordered_quantity", [oq],
+    "revenue", [rev]
+)
+ORDER BY [month_start_date]

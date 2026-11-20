@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Dimension xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ID>Zone</ID>
+  <Name>Zone</Name>
+  <Description>TLC taxi zone. Role-played as Pickup Zone and Dropoff Zone.</Description>
+  <Source xsi:type="DataSourceViewBinding">
+    <DataSourceViewID>slc</DataSourceViewID>
+  </Source>
+  <Type>Regular</Type>
+  <UnknownMember>None</UnknownMember>
+  <Language>1033</Language>
+  <Collation>Latin1_General_CI_AS</Collation>
+  <UnknownMemberName>Unknown</UnknownMemberName>
+  <Attributes>
+    <Attribute>
+      <ID>Zone</ID>
+      <Name>Zone</Name>
+      <Usage>Key</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>nyc_zone</TableID>
+            <ColumnID>location_id</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>nyc_zone</TableID>
+          <ColumnID>zone</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Location ID</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Location ID</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Borough</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Borough</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Service Zone</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Service Zone</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Location ID</ID>
+      <Name>Location ID</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>nyc_zone</TableID>
+            <ColumnID>location_id</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>nyc_zone</TableID>
+          <ColumnID>location_id_name</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Borough</ID>
+      <Name>Borough</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>nyc_zone</TableID>
+            <ColumnID>borough</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>nyc_zone</TableID>
+          <ColumnID>borough</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Service Zone</ID>
+      <Name>Service Zone</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>nyc_zone</TableID>
+            <ColumnID>service_zone</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>nyc_zone</TableID>
+          <ColumnID>service_zone</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+  </Attributes>
+  <Hierarchies>
+    <Hierarchy>
+      <ID>Zones</ID>
+      <Name>Zones</Name>
+      <Levels>
+        <Level>
+          <ID>Borough</ID>
+          <Name>Borough</Name>
+          <SourceAttributeID>Borough</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>Zone</ID>
+          <Name>Zone</Name>
+          <SourceAttributeID>Zone</SourceAttributeID>
+        </Level>
+      </Levels>
+    </Hierarchy>
+  </Hierarchies>
+</Dimension>

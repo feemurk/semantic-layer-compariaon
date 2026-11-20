@@ -1,0 +1,60 @@
+/*
+  MDX calculation script of cube [WWI] (S1, SPEC § 6.3). build_model.py embeds this file in WWI.cube.
+  Stored measures: Revenue, Revenue Including Tax, Gross Profit, Units Sold (Sales); Invoice Count (Invoices,
+  distinct count); Ordered Quantity (Orders); Backordered Order Lines (Backorders); Closing Units (Stock Holdings,
+  LastNonEmpty); hidden helpers Sales Lines, Order Lines, Stock Snapshot Rows, Bridge Rows.
+*/
+CALCULATE;
+
+// W-M1: ratio of the aggregated sums at every grain; NULL when revenue is zero or empty.
+CREATE MEMBER CURRENTCUBE.[Measures].[Gross Margin %] AS
+  IIF(IsEmpty([Measures].[Revenue]) OR [Measures].[Revenue] = 0,
+      NULL,
+      [Measures].[Gross Profit] / [Measures].[Revenue]),
+  FORMAT_STRING = "0.00%",
+  NON_EMPTY_BEHAVIOR = { [Measures].[Revenue] },
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Sales';
+
+// W-C1 denominator: revenue with the Stock Group context removed. The many-to-many relationship deduplicates the
+// All member, so this equals W-S1 for the remaining context.
+CREATE MEMBER CURRENTCUBE.[Measures].[Revenue All Stock Groups] AS
+  ([Measures].[Revenue], [Stock Group].[Stock Group].[All]),
+  FORMAT_STRING = "#,##0.00",
+  VISIBLE = 0, ASSOCIATED_MEASURE_GROUP = 'Sales';
+
+// W-C1: share of the parent with the Stock Group removed; 1 at any total across groups.
+CREATE MEMBER CURRENTCUBE.[Measures].[Stock Group Revenue Share] AS
+  IIF(IsEmpty([Measures].[Revenue All Stock Groups]) OR [Measures].[Revenue All Stock Groups] = 0,
+      NULL,
+      [Measures].[Revenue] / [Measures].[Revenue All Stock Groups]),
+  FORMAT_STRING = "0.00%",
+  NON_EMPTY_BEHAVIOR = { [Measures].[Revenue] },
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Sales';
+
+// W-C2 denominator: units sold over the 91 days ending on the anchor t(P), the last snapshot date in context.
+// EXISTING evaluates the date set in the cell's own context (calendar or fiscal); the snapshot is dense, so its last
+// non-empty date is the last calendar date of the period capped at 2016-05-31. Assigning the Date attribute in Sum
+// overwrites the period attributes, so the window ignores the period's lower bound, while Stock Item and Stock Group
+// filters stay in force. A non-conformed dimension leaves Closing Units empty, which returns NULL.
+CREATE MEMBER CURRENTCUBE.[Measures].[Units Sold 91D] AS
+  IIF(IsEmpty([Measures].[Closing Units]),
+      NULL,
+      Sum(LastPeriods(91, Tail(NonEmpty(EXISTING [Date].[Date].[Date].Members,
+                                        [Measures].[Stock Snapshot Rows]), 1).Item(0).Item(0)),
+          [Measures].[Units Sold])),
+  FORMAT_STRING = "#,##0",
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Stock Holdings';
+
+// W-C2: closing units divided by average daily units sold over the trailing 91 days; NULL without sales.
+CREATE MEMBER CURRENTCUBE.[Measures].[Days of Supply] AS
+  IIF(IsEmpty([Measures].[Units Sold 91D]) OR [Measures].[Units Sold 91D] = 0,
+      NULL,
+      [Measures].[Closing Units] / ([Measures].[Units Sold 91D] / 91)),
+  FORMAT_STRING = "#,##0.0",
+  NON_EMPTY_BEHAVIOR = { [Measures].[Closing Units] },
+  VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Stock Holdings';
+
+// SPEC § 6.5: dimensions that do not apply to a metric return NULL. Stock Holdings already returns empty for the
+// unrelated Customer, Bill To Customer, City, Salesperson, Picker and Delivery Date (IgnoreUnrelatedDimensions =
+// false); Orders and Backorders likewise for Delivery Date and Bill To Customer; Sales and Invoices for Picker.
+// The calculated measures inherit those empties through their base measures.

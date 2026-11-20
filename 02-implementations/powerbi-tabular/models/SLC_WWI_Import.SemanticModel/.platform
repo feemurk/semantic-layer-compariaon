@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "SLC_WWI_Import",
+    "description": "WideWorldImporters semantic model of the semantic layer comparison study (SPEC \u00a7 3.1 S2). Storage mode variant: import."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "93b60eb9-b197-55e7-8053-64f6bdb88c16"
+  }
+}

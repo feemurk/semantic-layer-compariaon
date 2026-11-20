@@ -1,0 +1,25 @@
+// Q-W-S1-D3 FY2015 vs FY2014 revenue by Buying Group and Customer Category (as-was customer attributes).
+DEFINE
+    VAR base =
+        SUMMARIZECOLUMNS (
+            'Customer'[Buying Group],
+            'Customer'[Customer Category],
+            TREATAS ( { 2014, 2015 }, 'Date'[Fiscal Year] ),
+            "rev", [Revenue (Excl. Tax)]
+        )
+EVALUATE
+SELECTCOLUMNS (
+    base,
+    "buying_group", 'Customer'[Buying Group],
+    "customer_category", 'Customer'[Customer Category],
+    "revenue_fy2014", CALCULATE ( [Revenue (Excl. Tax)], 'Date'[Fiscal Year] = 2014 ),
+    "revenue_fy2015", CALCULATE ( [Revenue (Excl. Tax)], 'Date'[Fiscal Year] = 2015 ),
+    "change_pct",
+        VAR ratio =
+            DIVIDE (
+                CALCULATE ( [Revenue (Excl. Tax)], 'Date'[Fiscal Year] = 2015 ),
+                CALCULATE ( [Revenue (Excl. Tax)], 'Date'[Fiscal Year] = 2014 )
+            )
+        RETURN IF ( ISBLANK ( ratio ), BLANK (), ratio - 1 )
+)
+ORDER BY [buying_group], [customer_category]

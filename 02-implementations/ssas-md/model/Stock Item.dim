@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Dimension xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ID>Stock Item</ID>
+  <Name>Stock Item</Name>
+  <Description>Product as recorded at the time of sale (SCD Type 2). Color is as-was; Current Color is as-is through the durable WWI Stock Item ID.</Description>
+  <Source xsi:type="DataSourceViewBinding">
+    <DataSourceViewID>slc</DataSourceViewID>
+  </Source>
+  <Type>Regular</Type>
+  <UnknownMember>None</UnknownMember>
+  <Language>1033</Language>
+  <Collation>Latin1_General_CI_AS</Collation>
+  <UnknownMemberName>Unknown</UnknownMemberName>
+  <Attributes>
+    <Attribute>
+      <ID>Stock Item Key</ID>
+      <Name>Stock Item Key</Name>
+      <Usage>Key</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_stock_item</TableID>
+            <ColumnID>stock_item_key</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_stock_item</TableID>
+          <ColumnID>stock_item</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>WWI Stock Item ID</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>WWI Stock Item ID</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Color</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Color</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Brand</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Brand</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Size</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Size</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Key</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>WWI Stock Item ID</ID>
+      <Name>WWI Stock Item ID</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_stock_item</TableID>
+            <ColumnID>wwi_stock_item_id</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_stock_item</TableID>
+          <ColumnID>wwi_stock_item_id_name</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Stock Item</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Stock Item</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Current Color</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Current Color</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Selling Package</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Selling Package</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Is Chiller Stock</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Is Chiller Stock</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Balance Basis</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Balance Basis</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Stock Item</ID>
+      <Name>Stock Item</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_stock_item</TableID>
+            <ColumnID>stock_item</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_stock_item</TableID>
+          <ColumnID>stock_item</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Color</ID>
+      <Name>Color</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_stock_item</TableID>
+            <ColumnID>color</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_stock_item</TableID>
+          <ColumnID>color</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Current Color</ID>
+      <Name>Current Color</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_stock_item</TableID>
+            <ColumnID>current_color</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_stock_item</TableID>
+          <ColumnID>current_color</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Brand</ID>
+      <Name>Brand</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_stock_item</TableID>
+            <ColumnID>brand</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_stock_item</TableID>
+          <ColumnID>brand</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Size</ID>
+      <Name>Size</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_stock_item</TableID>
+            <ColumnID>size</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_stock_item</TableID>
+          <ColumnID>size</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Selling Package</ID>
+      <Name>Selling Package</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_stock_item</TableID>
+            <ColumnID>selling_package</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_stock_item</TableID>
+          <ColumnID>selling_package</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Is Chiller Stock</ID>
+      <Name>Is Chiller Stock</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_stock_item</TableID>
+            <ColumnID>is_chiller_stock</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_stock_item</TableID>
+          <ColumnID>is_chiller_stock</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Balance Basis</ID>
+      <Name>Balance Basis</Name>
+      <Usage>Regular</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>255</DataSize>
+          <NullProcessing>ZeroOrBlank</NullProcessing>
+          <Source xsi:type="ColumnBinding">
+            <TableID>wwi_stock_item</TableID>
+            <ColumnID>balance_basis</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>255</DataSize>
+        <NullProcessing>ZeroOrBlank</NullProcessing>
+        <Source xsi:type="ColumnBinding">
+          <TableID>wwi_stock_item</TableID>
+          <ColumnID>balance_basis</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+  </Attributes>
+</Dimension>

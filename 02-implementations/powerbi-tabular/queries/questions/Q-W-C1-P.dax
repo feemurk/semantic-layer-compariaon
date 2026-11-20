@@ -1,0 +1,22 @@
+// Q-W-C1-P Revenue share by stock group for FY2015, with a total row equal to total revenue (share 1, not the sum of shares).
+DEFINE
+    VAR fy = TREATAS ( { 2015 }, 'Date'[Fiscal Year] )
+    VAR groups =
+        SUMMARIZECOLUMNS ( 'Stock Group'[Stock Group], fy, "rev", [Revenue (Excl. Tax)], "share", [Stock Group Revenue Share] )
+EVALUATE
+UNION (
+    SELECTCOLUMNS (
+        groups,
+        "grain", "group",
+        "stock_group_name", 'Stock Group'[Stock Group],
+        "revenue", [rev],
+        "share", [share]
+    ),
+    ROW (
+        "grain", "total",
+        "stock_group_name", CONVERT ( BLANK (), STRING ),
+        "revenue", CALCULATE ( [Revenue (Excl. Tax)], fy ),
+        "share", CALCULATE ( [Stock Group Revenue Share], fy )
+    )
+)
+ORDER BY [grain], [stock_group_name]

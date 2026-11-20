@@ -1,0 +1,31 @@
+// Q-W-S1-D2 For the Sales Territory with the highest FY2015 revenue, the 10 stock items with the most FY2015 revenue, each
+// item's share of the territory's revenue and the combined share of the 10.
+DEFINE
+    VAR fy = TREATAS ( { 2015 }, 'Date'[Fiscal Year] )
+    VAR territories = SUMMARIZECOLUMNS ( 'City'[Sales Territory], fy, "rev", [Revenue (Excl. Tax)] )
+    VAR top_territory = MAXX ( TOPN ( 1, territories, [rev], DESC, 'City'[Sales Territory], ASC ), 'City'[Sales Territory] )
+    VAR territory_revenue = CALCULATE ( [Revenue (Excl. Tax)], fy, 'City'[Sales Territory] = top_territory )
+    VAR items =
+        SUMMARIZECOLUMNS (
+            'Stock Item'[WWI Stock Item ID],
+            'Stock Item'[Stock Item],
+            fy,
+            TREATAS ( { top_territory }, 'City'[Sales Territory] ),
+            "rev", [Revenue (Excl. Tax)]
+        )
+    VAR ranked =
+        ADDCOLUMNS ( items, "rank_no", ROWNUMBER ( items, ORDERBY ( [rev], DESC, 'Stock Item'[WWI Stock Item ID], ASC ) ) )
+    VAR top10 = FILTER ( ranked, [rank_no] <= 10 )
+    VAR combined_share = DIVIDE ( SUMX ( top10, [rev] ), territory_revenue )
+EVALUATE
+SELECTCOLUMNS (
+    top10,
+    "sales_territory", top_territory,
+    "rank_no", [rank_no],
+    "wwi_stock_item_id", 'Stock Item'[WWI Stock Item ID],
+    "stock_item", 'Stock Item'[Stock Item],
+    "revenue", [rev],
+    "share_of_territory", DIVIDE ( [rev], territory_revenue ),
+    "top10_combined_share", combined_share
+)
+ORDER BY [rank_no]

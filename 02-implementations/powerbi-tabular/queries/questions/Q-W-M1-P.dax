@@ -1,0 +1,18 @@
+// Q-W-M1-P Gross margin % by Customer Category by fiscal quarter for FY2015 (ratio of sums at every grain).
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Customer'[Customer Category],
+        'Date'[Fiscal Quarter],
+        TREATAS ( { 2015 }, 'Date'[Fiscal Year] ),
+        "rev", [Revenue (Excl. Tax)],
+        "gp", [Gross Profit],
+        "gm", [Gross Margin %]
+    ),
+    "customer_category", 'Customer'[Customer Category],
+    "fiscal_quarter", 'Date'[Fiscal Quarter],
+    "revenue", [rev],
+    "profit", [gp],
+    "gross_margin_pct", [gm]
+)
+ORDER BY [customer_category], [fiscal_quarter]

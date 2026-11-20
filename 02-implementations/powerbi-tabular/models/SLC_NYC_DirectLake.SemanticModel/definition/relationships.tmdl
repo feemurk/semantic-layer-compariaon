@@ -1,0 +1,19 @@
+relationship 4578bab5-6a3a-56d8-b151-f2cbc9378273
+	fromColumn: Trips.pickup_date
+	toColumn: 'Pickup Date'.'Pickup Date'
+
+relationship 64f25c58-ad4c-5086-84ae-3556d31d6e36
+	fromColumn: Trips.dropoff_date
+	toColumn: 'Dropoff Date'.'Dropoff Date'
+
+relationship 6fb05a35-0bb6-5174-b518-dcad15f3ae7e
+	fromColumn: Trips.pu_location_id
+	toColumn: 'Pickup Zone'.'Pickup Location ID'
+
+relationship 2b9db57f-2150-51c4-9511-f759ae6e1f73
+	fromColumn: Trips.do_location_id
+	toColumn: 'Dropoff Zone'.'Dropoff Location ID'
+
+relationship b10f5be4-dfba-527e-923c-49a85325f5f0
+	fromColumn: Trips.payment_type
+	toColumn: 'Payment Type'.'Payment Type'

@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DataSourceView xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <ID>slc</ID>
+  <Name>slc</Name>
+  <DataSourceID>slc_adapter</DataSourceID>
+  <Schema>
+    <xs:schema id="slc">
+      <xs:element name="slc" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+        <xs:complexType>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="wwi_date" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="wwi_date" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  YEAR(d.date_key) * 10000 + MONTH(d.date_key) * 100 + DAY(d.date_key) AS date_id,&#10;  CAST(d.date_key AS CHAR(10)) AS date_name,&#10;  YEAR(d.date_key) * 100 + MONTH(d.date_key) AS month_id,&#10;  CAST(d.month_start_date AS CHAR(10)) AS month_name,&#10;  CAST((SELECT MAX(e.date_key) FROM wwi.dim_date e WHERE e.month_start_date = d.month_start_date) AS CHAR(10))&#10;    AS month_end_name,&#10;  d.calendar_month AS month_of_year,&#10;  CAST(d.calendar_month AS VARCHAR(2)) AS month_of_year_name,&#10;  CAST(d.calendar_year AS INTEGER) * 10 + d.calendar_quarter AS quarter_id,&#10;  CONCAT(CAST(d.calendar_year AS VARCHAR(4)), ' Q', CAST(d.calendar_quarter AS VARCHAR(1))) AS quarter_name,&#10;  CAST((SELECT MAX(e.date_key) FROM wwi.dim_date e&#10;        WHERE e.calendar_year = d.calendar_year AND e.calendar_quarter = d.calendar_quarter) AS CHAR(10))&#10;    AS quarter_end_name,&#10;  d.calendar_quarter AS quarter_of_year,&#10;  CAST(d.calendar_quarter AS VARCHAR(1)) AS quarter_of_year_name,&#10;  d.calendar_year,&#10;  CAST(d.calendar_year AS VARCHAR(4)) AS calendar_year_name,&#10;  d.fiscal_period_index AS fiscal_month_id,&#10;  CONCAT('FY', CAST(d.fiscal_year AS VARCHAR(4)), ' M', CAST(d.fiscal_month AS VARCHAR(2))) AS fiscal_month_name,&#10;  d.fiscal_month AS fiscal_month_of_year,&#10;  CAST(d.fiscal_month AS VARCHAR(2)) AS fiscal_month_of_year_name,&#10;  CAST(d.fiscal_year AS INTEGER) * 10 + d.fiscal_quarter AS fiscal_quarter_id,&#10;  CONCAT('FY', CAST(d.fiscal_year AS VARCHAR(4)), ' Q', CAST(d.fiscal_quarter AS VARCHAR(1))) AS fiscal_quarter_name,&#10;  d.fiscal_quarter AS fiscal_quarter_of_year,&#10;  CAST(d.fiscal_quarter AS VARCHAR(1)) AS fiscal_quarter_of_year_name,&#10;  d.fiscal_year,&#10;  CAST(d.fiscal_year AS VARCHAR(4)) AS fiscal_year_name&#10;FROM wwi.dim_date d" msprop:DbTableName="wwi_date">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="date_id" type="xs:int" />
+                  <xs:element name="date_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="month_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="month_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="month_end_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="month_of_year" minOccurs="0" type="xs:unsignedByte" />
+                  <xs:element name="month_of_year_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="quarter_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="quarter_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="quarter_end_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="quarter_of_year" minOccurs="0" type="xs:unsignedByte" />
+                  <xs:element name="quarter_of_year_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="calendar_year" minOccurs="0" type="xs:short" />
+                  <xs:element name="calendar_year_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="fiscal_month_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="fiscal_month_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="fiscal_month_of_year" minOccurs="0" type="xs:unsignedByte" />
+                  <xs:element name="fiscal_month_of_year_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="fiscal_quarter_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="fiscal_quarter_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="fiscal_quarter_of_year" minOccurs="0" type="xs:unsignedByte" />
+                  <xs:element name="fiscal_quarter_of_year_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="fiscal_year" minOccurs="0" type="xs:short" />
+                  <xs:element name="fiscal_year_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="wwi_customer" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="wwi_customer" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  c.customer_key,&#10;  c.customer,&#10;  c.category,&#10;  c.buying_group&#10;FROM wwi.dim_customer c" msprop:DbTableName="wwi_customer">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="customer_key" type="xs:int" />
+                  <xs:element name="customer" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="category" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="buying_group" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="wwi_city" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="wwi_city" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  c.city_key,&#10;  c.city,&#10;  c.state_province,&#10;  c.country,&#10;  c.continent,&#10;  c.sales_territory&#10;FROM wwi.dim_city c" msprop:DbTableName="wwi_city">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="city_key" type="xs:int" />
+                  <xs:element name="city" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="state_province" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="country" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="continent" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="sales_territory" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="wwi_stock_item" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="wwi_stock_item" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  s.stock_item_key,&#10;  s.wwi_stock_item_id,&#10;  CAST(s.wwi_stock_item_id AS VARCHAR(10)) AS wwi_stock_item_id_name,&#10;  s.stock_item,&#10;  s.color,&#10;  c.color AS current_color,&#10;  s.brand,&#10;  s.size,&#10;  s.selling_package,&#10;  CASE WHEN s.is_chiller_stock = 1 THEN 'true' ELSE 'false' END AS is_chiller_stock,&#10;  b.balance_basis&#10;FROM wwi.dim_stock_item s&#10;LEFT JOIN wwi.dim_stock_item c&#10;  ON c.wwi_stock_item_id = s.wwi_stock_item_id AND c.is_current = 1&#10;LEFT JOIN (&#10;  SELECT h.wwi_stock_item_id, MAX(h.balance_basis) AS balance_basis&#10;  FROM wwi.fact_stock_holding_daily h&#10;  GROUP BY h.wwi_stock_item_id&#10;) b ON b.wwi_stock_item_id = s.wwi_stock_item_id" msprop:DbTableName="wwi_stock_item">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="stock_item_key" type="xs:int" />
+                  <xs:element name="wwi_stock_item_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="wwi_stock_item_id_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="stock_item" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="color" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="current_color" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="brand" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="size" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="selling_package" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="is_chiller_stock" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="balance_basis" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="wwi_stock_group" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="wwi_stock_group" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  g.stock_group_id,&#10;  g.stock_group_name&#10;FROM wwi.dim_stock_group g" msprop:DbTableName="wwi_stock_group">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="stock_group_id" type="xs:int" />
+                  <xs:element name="stock_group_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="wwi_employee" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="wwi_employee" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  e.employee_key,&#10;  e.employee&#10;FROM wwi.dim_employee e" msprop:DbTableName="wwi_employee">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="employee_key" type="xs:int" />
+                  <xs:element name="employee" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="wwi_inventory_access" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="wwi_inventory_access" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  1 AS access_key,&#10;  'Granted' AS access_name" msprop:DbTableName="wwi_inventory_access">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="access_key" type="xs:int" />
+                  <xs:element name="access_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="wwi_sales" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="wwi_sales" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  f.sale_key,&#10;  YEAR(f.invoice_date) * 10000 + MONTH(f.invoice_date) * 100 + DAY(f.invoice_date) AS invoice_date_id,&#10;  YEAR(f.delivery_date) * 10000 + MONTH(f.delivery_date) * 100 + DAY(f.delivery_date) AS delivery_date_id,&#10;  f.customer_key,&#10;  f.bill_to_customer_key,&#10;  f.city_key,&#10;  f.stock_item_key,&#10;  f.salesperson_key,&#10;  f.wwi_invoice_id,&#10;  f.quantity,&#10;  f.total_excluding_tax,&#10;  f.total_including_tax,&#10;  f.profit&#10;FROM wwi.fact_sale f" msprop:DbTableName="wwi_sales">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="sale_key" type="xs:long" />
+                  <xs:element name="invoice_date_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="delivery_date_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="customer_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="bill_to_customer_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="city_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="stock_item_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="salesperson_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="wwi_invoice_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="quantity" minOccurs="0" type="xs:int" />
+                  <xs:element name="total_excluding_tax" minOccurs="0" type="xs:decimal" />
+                  <xs:element name="total_including_tax" minOccurs="0" type="xs:decimal" />
+                  <xs:element name="profit" minOccurs="0" type="xs:decimal" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="wwi_orders" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="wwi_orders" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  o.order_key,&#10;  YEAR(o.order_date) * 10000 + MONTH(o.order_date) * 100 + DAY(o.order_date) AS order_date_id,&#10;  o.customer_key,&#10;  o.city_key,&#10;  o.stock_item_key,&#10;  o.salesperson_key,&#10;  o.picker_key,&#10;  o.quantity&#10;FROM wwi.fact_order o" msprop:DbTableName="wwi_orders">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="order_key" type="xs:long" />
+                  <xs:element name="order_date_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="customer_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="city_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="stock_item_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="salesperson_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="picker_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="quantity" minOccurs="0" type="xs:int" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="wwi_backorders" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="wwi_backorders" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  o.order_key,&#10;  YEAR(o.order_date) * 10000 + MONTH(o.order_date) * 100 + DAY(o.order_date) AS order_date_id,&#10;  o.customer_key,&#10;  o.city_key,&#10;  o.stock_item_key,&#10;  o.salesperson_key,&#10;  o.picker_key&#10;FROM wwi.fact_order o&#10;WHERE o.wwi_backorder_id IS NOT NULL" msprop:DbTableName="wwi_backorders">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="order_key" type="xs:long" />
+                  <xs:element name="order_date_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="customer_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="city_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="stock_item_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="salesperson_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="picker_key" minOccurs="0" type="xs:int" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="wwi_stock_holding" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="wwi_stock_holding" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  YEAR(h.snapshot_date) * 10000 + MONTH(h.snapshot_date) * 100 + DAY(h.snapshot_date) AS snapshot_date_id,&#10;  h.stock_item_key,&#10;  h.wwi_stock_item_id,&#10;  h.quantity_on_hand,&#10;  1 AS access_key&#10;FROM wwi.fact_stock_holding_daily h" msprop:DbTableName="wwi_stock_holding">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="snapshot_date_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="stock_item_key" minOccurs="0" type="xs:int" />
+                  <xs:element name="wwi_stock_item_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="quantity_on_hand" minOccurs="0" type="xs:int" />
+                  <xs:element name="access_key" minOccurs="0" type="xs:int" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="wwi_stock_item_group" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="wwi_stock_item_group" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  b.wwi_stock_item_id,&#10;  b.stock_group_id&#10;FROM wwi.bridge_stock_item_group b" msprop:DbTableName="wwi_stock_item_group">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="wwi_stock_item_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="stock_group_id" minOccurs="0" type="xs:int" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="nyc_date" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="nyc_date" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  YEAR(d.date_key) * 10000 + MONTH(d.date_key) * 100 + DAY(d.date_key) AS date_id,&#10;  CAST(d.date_key AS CHAR(10)) AS date_name,&#10;  YEAR(d.date_key) * 100 + MONTH(d.date_key) AS month_id,&#10;  CAST(d.month_start_date AS CHAR(10)) AS month_name,&#10;  CAST((SELECT MAX(e.date_key) FROM nyctaxi.dim_date e WHERE e.month_start_date = d.month_start_date) AS CHAR(10))&#10;    AS month_end_name,&#10;  d.calendar_month AS month_of_year,&#10;  CAST(d.calendar_month AS VARCHAR(2)) AS month_of_year_name,&#10;  CAST(d.calendar_year AS INTEGER) * 10 + d.calendar_quarter AS quarter_id,&#10;  CAST((SELECT MIN(e.date_key) FROM nyctaxi.dim_date e&#10;        WHERE e.calendar_year = d.calendar_year AND e.calendar_quarter = d.calendar_quarter) AS CHAR(10))&#10;    AS quarter_name,&#10;  d.calendar_year,&#10;  CAST(d.calendar_year AS VARCHAR(4)) AS calendar_year_name,&#10;  d.day_of_week,&#10;  CAST(d.day_of_week AS VARCHAR(1)) AS day_of_week_name,&#10;  d.day_name,&#10;  d.day_of_month,&#10;  CAST(d.day_of_month AS VARCHAR(2)) AS day_of_month_name,&#10;  d.day_of_year,&#10;  CAST(d.day_of_year AS VARCHAR(3)) AS day_of_year_name,&#10;  CASE&#10;    WHEN d.calendar_year - 1 &lt; (SELECT MIN(e.calendar_year) FROM nyctaxi.dim_date e) THEN NULL&#10;    WHEN d.calendar_month = 2 AND d.day_of_month = 29 THEN (CAST(d.calendar_year AS INTEGER) - 1) * 10000 + 228&#10;    ELSE (CAST(d.calendar_year AS INTEGER) - 1) * 10000 + d.calendar_month * 100 + d.day_of_month&#10;  END AS stly_date_id,&#10;  CAST(CASE&#10;    WHEN d.calendar_year - 1 &lt; (SELECT MIN(e.calendar_year) FROM nyctaxi.dim_date e) THEN NULL&#10;    WHEN d.calendar_month = 2 AND d.day_of_month = 29 THEN (CAST(d.calendar_year AS INTEGER) - 1) * 10000 + 228&#10;    ELSE (CAST(d.calendar_year AS INTEGER) - 1) * 10000 + d.calendar_month * 100 + d.day_of_month&#10;  END AS VARCHAR(8)) AS stly_date_id_name,&#10;  CASE WHEN d.calendar_year BETWEEN 2023 AND 2024 THEN 1 ELSE 0 END AS in_source_window,&#10;  CASE WHEN d.calendar_year BETWEEN 2023 AND 2024 THEN 'true' ELSE 'false' END AS in_source_window_name&#10;FROM nyctaxi.dim_date d" msprop:DbTableName="nyc_date">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="date_id" type="xs:int" />
+                  <xs:element name="date_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="month_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="month_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="month_end_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="month_of_year" minOccurs="0" type="xs:unsignedByte" />
+                  <xs:element name="month_of_year_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="quarter_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="quarter_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="calendar_year" minOccurs="0" type="xs:short" />
+                  <xs:element name="calendar_year_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="day_of_week" minOccurs="0" type="xs:unsignedByte" />
+                  <xs:element name="day_of_week_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="day_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="day_of_month" minOccurs="0" type="xs:unsignedByte" />
+                  <xs:element name="day_of_month_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="day_of_year" minOccurs="0" type="xs:short" />
+                  <xs:element name="day_of_year_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="stly_date_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="stly_date_id_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="in_source_window" minOccurs="0" type="xs:int" />
+                  <xs:element name="in_source_window_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="nyc_zone" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="nyc_zone" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  z.location_id,&#10;  CAST(z.location_id AS VARCHAR(5)) AS location_id_name,&#10;  z.zone,&#10;  z.borough,&#10;  z.service_zone&#10;FROM nyctaxi.dim_zone z" msprop:DbTableName="nyc_zone">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="location_id" type="xs:int" />
+                  <xs:element name="location_id_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="zone" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="borough" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="service_zone" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="nyc_payment_type" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="nyc_payment_type" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  p.payment_type,&#10;  CAST(p.payment_type AS VARCHAR(2)) AS payment_type_code_name,&#10;  p.payment_type_name&#10;FROM nyctaxi.dim_payment_type p" msprop:DbTableName="nyc_payment_type">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="payment_type" type="xs:int" />
+                  <xs:element name="payment_type_code_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="payment_type_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="nyc_vendor" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="nyc_vendor" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT DISTINCT&#10;  t.vendor_id,&#10;  CAST(t.vendor_id AS VARCHAR(5)) AS vendor_name&#10;FROM nyctaxi.fact_trip t" msprop:DbTableName="nyc_vendor">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="vendor_id" type="xs:int" />
+                  <xs:element name="vendor_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="nyc_pickup_hour" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="nyc_pickup_hour" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT DISTINCT&#10;  t.pickup_hour,&#10;  CAST(t.pickup_hour AS VARCHAR(2)) AS pickup_hour_name&#10;FROM nyctaxi.fact_trip t" msprop:DbTableName="nyc_pickup_hour">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="pickup_hour" type="xs:unsignedByte" />
+                  <xs:element name="pickup_hour_name" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="nyc_trips" msprop:TableType="View" msprop:IsLogical="True" msprop:FriendlyName="nyc_trips" msprop:QueryBuilder="GenericQueryBuilder" msprop:QueryDefinition="SELECT&#10;  t.trip_id,&#10;  YEAR(t.pickup_date) * 10000 + MONTH(t.pickup_date) * 100 + DAY(t.pickup_date) AS pickup_date_id,&#10;  YEAR(t.dropoff_date) * 10000 + MONTH(t.dropoff_date) * 100 + DAY(t.dropoff_date) AS dropoff_date_id,&#10;  t.pickup_hour,&#10;  t.pu_location_id,&#10;  t.do_location_id,&#10;  t.payment_type,&#10;  t.vendor_id,&#10;  t.od_pair_id,&#10;  t.trip_distance,&#10;  t.fare_amount,&#10;  t.tip_amount,&#10;  t.tolls_amount,&#10;  t.total_amount,&#10;  CASE WHEN t.payment_type = 1 THEN t.tip_amount ELSE 0 END AS card_tip,&#10;  CASE WHEN t.payment_type = 1 THEN 1 ELSE 0 END AS card_trip&#10;FROM nyctaxi.fact_trip t" msprop:DbTableName="nyc_trips">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="trip_id" type="xs:long" />
+                  <xs:element name="pickup_date_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="dropoff_date_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="pickup_hour" minOccurs="0" type="xs:unsignedByte" />
+                  <xs:element name="pu_location_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="do_location_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="payment_type" minOccurs="0" type="xs:int" />
+                  <xs:element name="vendor_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="od_pair_id" minOccurs="0" type="xs:int" />
+                  <xs:element name="trip_distance" minOccurs="0" type="xs:decimal" />
+                  <xs:element name="fare_amount" minOccurs="0" type="xs:decimal" />
+                  <xs:element name="tip_amount" minOccurs="0" type="xs:decimal" />
+                  <xs:element name="tolls_amount" minOccurs="0" type="xs:decimal" />
+                  <xs:element name="total_amount" minOccurs="0" type="xs:decimal" />
+                  <xs:element name="card_tip" minOccurs="0" type="xs:decimal" />
+                  <xs:element name="card_trip" minOccurs="0" type="xs:int" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+        </xs:complexType>
+        <xs:unique name="pk_wwi_date" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//wwi_date" />
+          <xs:field xpath="date_id" />
+        </xs:unique>
+        <xs:unique name="pk_wwi_customer" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//wwi_customer" />
+          <xs:field xpath="customer_key" />
+        </xs:unique>
+        <xs:unique name="pk_wwi_city" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//wwi_city" />
+          <xs:field xpath="city_key" />
+        </xs:unique>
+        <xs:unique name="pk_wwi_stock_item" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//wwi_stock_item" />
+          <xs:field xpath="stock_item_key" />
+        </xs:unique>
+        <xs:unique name="pk_wwi_stock_group" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//wwi_stock_group" />
+          <xs:field xpath="stock_group_id" />
+        </xs:unique>
+        <xs:unique name="pk_wwi_employee" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//wwi_employee" />
+          <xs:field xpath="employee_key" />
+        </xs:unique>
+        <xs:unique name="pk_wwi_inventory_access" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//wwi_inventory_access" />
+          <xs:field xpath="access_key" />
+        </xs:unique>
+        <xs:unique name="pk_nyc_date" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//nyc_date" />
+          <xs:field xpath="date_id" />
+        </xs:unique>
+        <xs:unique name="pk_nyc_zone" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//nyc_zone" />
+          <xs:field xpath="location_id" />
+        </xs:unique>
+        <xs:unique name="pk_nyc_payment_type" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//nyc_payment_type" />
+          <xs:field xpath="payment_type" />
+        </xs:unique>
+        <xs:unique name="pk_nyc_vendor" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//nyc_vendor" />
+          <xs:field xpath="vendor_id" />
+        </xs:unique>
+        <xs:unique name="pk_nyc_pickup_hour" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//nyc_pickup_hour" />
+          <xs:field xpath="pickup_hour" />
+        </xs:unique>
+      </xs:element>
+    </xs:schema>
+    <slc />
+  </Schema>
+</DataSourceView>

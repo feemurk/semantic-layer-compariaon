@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "SLC_NYC_Import",
+    "description": "NYC Yellow Taxi semantic model of the semantic layer comparison study (SPEC \u00a7 3.1 S2). Storage mode variant: import."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "23de7ec3-beec-539b-9200-cf27cad8cbb5"
+  }
+}

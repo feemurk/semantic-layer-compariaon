@@ -1,0 +1,112 @@
+/// Daily stock on hand per stock item (derived snapshot). Semi-additive: sum across items, last value across time.
+table 'Stock Holding'
+	lineageTag: f2d59e17-82c6-534f-83b2-19b362c8b757
+
+	/// d* of SPEC W-M2: the last snapshot date in the period, over all stock items.
+	measure 'Snapshot Anchor Date' =
+			CALCULATE (
+			    MAX ( 'Stock Holding'[snapshot_date] ),
+			    REMOVEFILTERS ( 'Stock Item' ),
+			    REMOVEFILTERS ( 'Stock Item (Current)' ),
+			    REMOVEFILTERS ( 'Stock Item Group' ),
+			    REMOVEFILTERS ( 'Stock Group' )
+			)
+		formatString: yyyy-MM-dd
+		displayFolder: Stock
+		isHidden
+		lineageTag: d4aa461b-58a4-5891-9ad6-8bb32cecd04c
+
+	/// Units on hand on the last day of the period (semi-additive); summed across stock items and stock groups.
+	measure 'Closing Stock On Hand' =
+			IF ( ISCROSSFILTERED ( 'Delivery Date' ) || ISCROSSFILTERED ( 'Customer' ) || ISCROSSFILTERED ( 'Bill-To Customer' ) || ISCROSSFILTERED ( 'City' ) || ISCROSSFILTERED ( 'Salesperson' ) || ISCROSSFILTERED ( 'Picker' ), BLANK (), VAR d = [Snapshot Anchor Date]
+			RETURN
+			    IF (
+			        ISBLANK ( d ),
+			        BLANK (),
+			        CALCULATE ( SUM ( 'Stock Holding'[quantity_on_hand] ), REMOVEFILTERS ( 'Date' ), 'Date'[Date] = d )
+			    ) )
+		formatString: #,0
+		displayFolder: Stock
+		lineageTag: 3408e922-7f94-5d44-b0ef-39d2e8995c5f
+		annotation SLC_MetricId = W-M2
+
+	/// Units sold in the 91 days ending on the closing snapshot date (invoice dates t-90 to t), for the stock items and groups in context.
+	measure 'Units Sold 91D' =
+			IF ( ISCROSSFILTERED ( 'Delivery Date' ) || ISCROSSFILTERED ( 'Customer' ) || ISCROSSFILTERED ( 'Bill-To Customer' ) || ISCROSSFILTERED ( 'City' ) || ISCROSSFILTERED ( 'Salesperson' ) || ISCROSSFILTERED ( 'Picker' ), BLANK (), VAR d = [Snapshot Anchor Date]
+			RETURN
+			    IF (
+			        ISBLANK ( d ),
+			        BLANK (),
+			        CALCULATE (
+			            SUM ( Sales[quantity] ),
+			            REMOVEFILTERS ( 'Date' ),
+			            DATESBETWEEN ( 'Date'[Date], d - 90, d )
+			        )
+			    ) )
+		formatString: #,0
+		displayFolder: Stock
+		lineageTag: 5ec0ca3d-b26f-5fb9-8163-05732225e793
+
+	/// Closing Stock On Hand divided by average daily Units Sold over the 91 days ending on the period end. Defined only by date and stock item attributes.
+	measure 'Days of Supply' =
+			VAR oh = [Closing Stock On Hand]
+			VAR u = [Units Sold 91D]
+			RETURN IF ( ISBLANK ( oh ), BLANK (), DIVIDE ( oh * 91.0, u ) )
+		formatString: #,0.0
+		displayFolder: Stock
+		lineageTag: 8bcf7191-e9a9-5021-9d90-241b43c47309
+		annotation SLC_MetricId = W-C2
+
+	/// Snapshot date (relates to Date).
+	column snapshot_date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-MM-dd
+		lineageTag: 8f01294e-a1de-5733-b47e-8b34c0749360
+		summarizeBy: none
+		sourceColumn: snapshot_date
+
+	/// Durable stock item id.
+	column wwi_stock_item_id
+		dataType: int64
+		isHidden
+		lineageTag: 81d2fb36-0211-53f4-8cfd-abad89857098
+		summarizeBy: none
+		sourceColumn: wwi_stock_item_id
+
+	/// Stock item version valid on the snapshot date.
+	column stock_item_key
+		dataType: int64
+		isHidden
+		lineageTag: 3243d6e0-e5fb-55c0-8803-259078398661
+		summarizeBy: none
+		sourceColumn: stock_item_key
+
+	/// Units on hand at end of day.
+	column quantity_on_hand
+		dataType: int64
+		isHidden
+		lineageTag: d2077a8c-f221-5409-bcef-2208b9e9d71e
+		summarizeBy: none
+		sourceColumn: quantity_on_hand
+
+	/// holding_backcast or flow_min_opening (SPEC § 5.3 rule 6).
+	column 'Balance Basis'
+		dataType: string
+		lineageTag: f1ec4af9-ce0f-51d9-8ac7-19ba353ae798
+		summarizeBy: none
+		sourceColumn: balance_basis
+
+	partition 'Stock Holding' = m
+		mode: import
+		source =
+				let
+				    Source = Databricks.Catalogs(DatabricksHost, DatabricksHttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null, Implementation = "2.0"]),
+				    CatalogData = Source{[Name = UnityCatalog, Kind = "Database"]}[Data],
+				    SchemaData = CatalogData{[Name = "wwi", Kind = "Schema"]}[Data],
+				    TableData = SchemaData{[Name = "fact_stock_holding_daily", Kind = "Table"]}[Data],
+				    Selected = Table.SelectColumns(TableData, {"snapshot_date", "wwi_stock_item_id", "stock_item_key", "quantity_on_hand", "balance_basis"})
+				in
+				    Selected
+
+	annotation SLC_Synonyms = ["stock", "inventory", "stock on hand"]

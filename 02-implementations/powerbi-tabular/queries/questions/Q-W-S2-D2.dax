@@ -1,0 +1,20 @@
+// Q-W-S2-D2 For the month of Q-W-S2-D1, ordered quantity by picker (Picker role; order lines without a picker form the blank member).
+DEFINE
+    VAR months =
+        FILTER (
+            SUMMARIZECOLUMNS (
+                'Date'[Month Start],
+                TREATAS ( { 2015 }, 'Date'[Calendar Year] ),
+                "oq", [Ordered Quantity],
+                "us", [Units Sold]
+            ),
+            NOT ISBLANK ( [oq] ) && NOT ISBLANK ( [us] )
+        )
+    VAR gap = TOPN ( 1, months, ABS ( [oq] - [us] ), DESC, 'Date'[Month Start], ASC )
+    VAR gap_month = MAXX ( gap, 'Date'[Month Start] )
+    VAR gap_ordered = MAXX ( gap, [oq] )
+    VAR gap_sold = MAXX ( gap, [us] )
+    VAR pickers = SUMMARIZECOLUMNS ( 'Picker'[Picker], TREATAS ( { gap_month }, 'Date'[Month Start] ), "oq", [Ordered Quantity] )
+EVALUATE
+SELECTCOLUMNS ( pickers, "month_start_date", gap_month, "picker", 'Picker'[Picker], "ordered_quantity", [oq] )
+ORDER BY [ordered_quantity] DESC, [picker]

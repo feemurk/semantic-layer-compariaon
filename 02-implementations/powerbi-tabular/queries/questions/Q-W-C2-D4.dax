@@ -1,0 +1,13 @@
+// Q-W-C2-D4 Days of supply by Sales Territory at 2015-12-31, for every territory with sales. Stock holdings carry no city, so
+// [Days of Supply] returns blank for every territory by design (the measure blanks any non-conformed dimension); the reason
+// column states why.
+DEFINE
+    VAR territories = SUMMARIZECOLUMNS ( 'City'[Sales Territory], "__sales", [Units Sold] )
+EVALUATE
+SELECTCOLUMNS (
+    territories,
+    "sales_territory", 'City'[Sales Territory],
+    "days_of_supply", CALCULATE ( [Days of Supply], 'Date'[Date] = DATE ( 2015, 12, 31 ) ),
+    "reason", "non-conformed dimension: stock holdings carry no city"
+)
+ORDER BY [sales_territory]

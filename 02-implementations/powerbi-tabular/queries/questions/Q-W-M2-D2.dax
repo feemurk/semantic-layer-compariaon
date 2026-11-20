@@ -1,0 +1,26 @@
+// Q-W-M2-D2 For the stock group with the most units at FY2015 end (ties: name), the 10 stock items with the highest closing
+// stock (ties: item id).
+DEFINE
+    VAR fy_end = TREATAS ( { DATE ( 2015, 10, 31 ) }, 'Date'[Date] )
+    VAR groups = SUMMARIZECOLUMNS ( 'Stock Group'[Stock Group], fy_end, "units", [Closing Stock On Hand] )
+    VAR top_group = MAXX ( TOPN ( 1, groups, [units], DESC, 'Stock Group'[Stock Group], ASC ), 'Stock Group'[Stock Group] )
+    VAR items =
+        SUMMARIZECOLUMNS (
+            'Stock Item'[WWI Stock Item ID],
+            'Stock Item'[Stock Item],
+            fy_end,
+            TREATAS ( { top_group }, 'Stock Group'[Stock Group] ),
+            "units", [Closing Stock On Hand]
+        )
+    VAR ranked =
+        ADDCOLUMNS ( items, "rank_no", ROWNUMBER ( items, ORDERBY ( [units], DESC, 'Stock Item'[WWI Stock Item ID], ASC ) ) )
+EVALUATE
+SELECTCOLUMNS (
+    FILTER ( ranked, [rank_no] <= 10 ),
+    "stock_group_name", top_group,
+    "rank_no", [rank_no],
+    "wwi_stock_item_id", 'Stock Item'[WWI Stock Item ID],
+    "stock_item", 'Stock Item'[Stock Item],
+    "closing_units", [units]
+)
+ORDER BY [rank_no]

@@ -1,0 +1,8 @@
+expression DatabricksHost = "SLC_DATABRICKS_HOST" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 878623cf-09d2-5abc-b354-f642359db615
+
+expression DatabricksHttpPath = "SLC_DATABRICKS_HTTP_PATH" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: fdd25bd9-897f-58f6-9f1b-a79dfe376a63
+
+expression UnityCatalog = "slc" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 453a12e5-9895-52bd-a426-8698123f071a

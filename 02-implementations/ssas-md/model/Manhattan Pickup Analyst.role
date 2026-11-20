@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Role xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>Manhattan Pickup Analyst</ID>
+  <Name>Manhattan Pickup Analyst</Name>
+  <Description>SPEC § 10: trips restricted to Manhattan pickup zones; the dropoff role is unrestricted.</Description>
+  <Members>
+    <Member>
+      <Name>SLC\slc_pickup_manhattan</Name>
+    </Member>
+  </Members>
+</Role>

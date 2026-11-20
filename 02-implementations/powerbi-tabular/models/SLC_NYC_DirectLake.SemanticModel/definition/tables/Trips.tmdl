@@ -1,0 +1,329 @@
+/// NYC Yellow Taxi valid trips, 2023-2024 pickups (fact_trip).
+table Trips
+	lineageTag: ef99722f-6506-5bf4-86f1-c07adab5657d
+
+	/// Count of valid Yellow Taxi trips (fact_trip rows).
+	measure 'Trip Count' = COUNTROWS ( Trips )
+		formatString: #,0
+		displayFolder: Trips
+		lineageTag: 06c0d16e-a056-5413-9b9e-f4c2904e6e53
+		annotation SLC_MetricId = B-N1
+
+	/// Sum of trip distance in miles (fact_trip.trip_distance).
+	measure 'Total Trip Distance' = SUM ( Trips[trip_distance] )
+		formatString: #,0.00
+		displayFolder: Trips
+		lineageTag: 82d2cdd8-d7d3-5f02-a4c4-733e69f80523
+		annotation SLC_MetricId = B-N2
+
+	/// Sum of metered fares (fact_trip.fare_amount), excluding tips, tolls and surcharges.
+	measure 'Fare Amount' = SUM ( Trips[fare_amount] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Trips
+		lineageTag: 450b5282-16dd-5254-903b-362f9f6c014b
+		annotation SLC_MetricId = B-N3
+
+	/// Sum of recorded tips across all payment types (fact_trip.tip_amount). TLC records tips only for card payments.
+	measure 'Tip Amount (All Payment Types)' = SUM ( Trips[tip_amount] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Trips
+		lineageTag: acef065b-58c9-5d58-9cfb-e4ebfd82d715
+		annotation SLC_MetricId = B-N4
+
+	/// Sum of tolls (fact_trip.tolls_amount).
+	measure 'Tolls Amount' = SUM ( Trips[tolls_amount] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Trips
+		lineageTag: c0ae52b0-4b3e-5700-94ce-b8526f613f80
+		annotation SLC_MetricId = B-N5
+
+	/// Sum of total amount charged (fact_trip.total_amount).
+	measure 'Gross Trip Revenue' = SUM ( Trips[total_amount] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Trips
+		lineageTag: 3a2fb8b6-b6c0-51af-b480-2d6ad1ea6e20
+		annotation SLC_MetricId = N-S1
+
+	/// Sum of tips on credit card trips (payment type 1); blank for other payment types.
+	measure 'Card Tips' = CALCULATE ( SUM ( Trips[tip_amount] ), KEEPFILTERS ( Trips[payment_type] = 1 ) )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Trips
+		lineageTag: 3fdee6f7-1ce3-5307-be5d-cdd8615d72d4
+		annotation SLC_MetricId = N-S2
+
+	/// Exact count of distinct pickup zone to dropoff zone pairs. Additive across zone and borough of either role; not additive across time, payment type, vendor or hour.
+	measure 'Distinct OD Pairs' = DISTINCTCOUNT ( Trips[od_pair_id] )
+		formatString: #,0
+		displayFolder: Trips
+		lineageTag: e4a99f95-5303-503a-88c2-dc715a9fdcc8
+		annotation SLC_MetricId = N-M1
+
+	/// Fare Amount divided by Total Trip Distance, computed from the aggregated sums at every grain.
+	measure 'Fare per Mile' = DIVIDE ( [Fare Amount], [Total Trip Distance] )
+		formatString: #,0.00
+		displayFolder: Trips
+		lineageTag: d59edc1b-aad2-575b-926f-36e586c310e4
+		annotation SLC_MetricId = N-M2
+
+	/// t(P) of SPEC § 6.1: the last calendar date of the pickup period in context, capped at 2024-12-31.
+	measure 'Pickup Anchor Date' =
+			VAR lo = MIN ( 'Pickup Date'[Pickup Date] )
+			VAR hi = MAX ( 'Pickup Date'[Pickup Date] )
+			VAR t = MIN ( hi, DATE ( 2024, 12, 31 ) )
+			RETURN IF ( ISBLANK ( hi ) || t < lo, BLANK (), t )
+		formatString: yyyy-MM-dd
+		displayFolder: Time Intelligence
+		isHidden
+		lineageTag: 21a055d3-1cf8-5e69-a642-c39d7597586b
+
+	/// Gross Trip Revenue from 1 January of the anchor year to the anchor date (last calendar day of the pickup period, capped at 2024-12-31).
+	measure 'Revenue YTD' =
+			IF (
+			    ISCROSSFILTERED ( 'Dropoff Date' ),
+			    BLANK (),
+			    VAR t = [Pickup Anchor Date]
+			    RETURN
+			        IF ( ISBLANK ( t ), BLANK (), CALCULATE ( [Gross Trip Revenue], REMOVEFILTERS ( 'Pickup Date' ), DATESBETWEEN ( 'Pickup Date'[Pickup Date], DATE ( YEAR ( t ), 1, 1 ), t ) ) )
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Time Intelligence
+		lineageTag: 077d47d4-5fc8-5884-bf08-aadf7d776af8
+		annotation SLC_MetricId = N-C1
+
+	/// Revenue YTD for the same period one year earlier; 29 February maps to 28 February.
+	measure 'Revenue STLY YTD' =
+			IF (
+			    ISCROSSFILTERED ( 'Dropoff Date' ),
+			    BLANK (),
+			    VAR t = [Pickup Anchor Date]
+			    RETURN
+			        IF ( ISBLANK ( t ), BLANK (), CALCULATE ( [Gross Trip Revenue], REMOVEFILTERS ( 'Pickup Date' ), DATESBETWEEN ( 'Pickup Date'[Pickup Date], DATE ( YEAR ( t ) - 1, 1, 1 ), EDATE ( t, -12 ) ) ) )
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Time Intelligence
+		lineageTag: f7a83d1d-e2f3-55b3-8a0b-0a1dfdf662f4
+
+	/// (Revenue YTD - Revenue STLY YTD) / Revenue STLY YTD; blank for 2023 anchors.
+	measure 'Revenue YoY % vs STLY' =
+			VAR y = [Revenue YTD]
+			VAR s = [Revenue STLY YTD]
+			RETURN IF ( ISBLANK ( y ) || ISBLANK ( s ), BLANK (), DIVIDE ( y - s, s ) )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Time Intelligence
+		lineageTag: 54438e4f-b8e6-5b1c-ad66-fa24532c25be
+
+	/// Trips from the first day of the anchor month to the anchor date.
+	measure 'Trips MTD' =
+			IF (
+			    ISCROSSFILTERED ( 'Dropoff Date' ),
+			    BLANK (),
+			    VAR t = [Pickup Anchor Date]
+			    RETURN
+			        IF ( ISBLANK ( t ), BLANK (), CALCULATE ( [Trip Count], REMOVEFILTERS ( 'Pickup Date' ), DATESBETWEEN ( 'Pickup Date'[Pickup Date], DATE ( YEAR ( t ), MONTH ( t ), 1 ), t ) ) )
+			)
+		formatString: #,0
+		displayFolder: Time Intelligence
+		lineageTag: a249fedf-f3c5-524d-9c38-f5bcabfd85ed
+
+	/// Trips from 1 January of the anchor year to the anchor date.
+	measure 'Trips YTD' =
+			IF (
+			    ISCROSSFILTERED ( 'Dropoff Date' ),
+			    BLANK (),
+			    VAR t = [Pickup Anchor Date]
+			    RETURN
+			        IF ( ISBLANK ( t ), BLANK (), CALCULATE ( [Trip Count], REMOVEFILTERS ( 'Pickup Date' ), DATESBETWEEN ( 'Pickup Date'[Pickup Date], DATE ( YEAR ( t ), 1, 1 ), t ) ) )
+			)
+		formatString: #,0
+		displayFolder: Time Intelligence
+		lineageTag: 841ee9b7-434c-5cf6-aad8-7d5d3a809e75
+
+	/// Calendar days elapsed in the anchor month (day of month of the anchor date).
+	measure 'Days Elapsed in Month' =
+			IF (
+			    ISCROSSFILTERED ( 'Dropoff Date' ),
+			    BLANK (),
+			    VAR t = [Pickup Anchor Date]
+			    RETURN
+			        IF ( ISBLANK ( t ), BLANK (), DAY ( t ) )
+			)
+		formatString: 0
+		displayFolder: Time Intelligence
+		lineageTag: 8431eb55-cd5d-5955-81b6-c49c381f848e
+
+	/// Calendar days elapsed in the anchor year (day of year of the anchor date).
+	measure 'Days Elapsed in Year' =
+			IF (
+			    ISCROSSFILTERED ( 'Dropoff Date' ),
+			    BLANK (),
+			    VAR t = [Pickup Anchor Date]
+			    RETURN
+			        IF ( ISBLANK ( t ), BLANK (), INT ( t - DATE ( YEAR ( t ), 1, 1 ) ) + 1 )
+			)
+		formatString: 0
+		displayFolder: Time Intelligence
+		lineageTag: 0fff4ecc-49e3-5550-8222-2e9922774b0c
+
+	/// Average daily trips month-to-date divided by average daily trips year-to-date, using calendar days elapsed. Above 1 means the month is running ahead of the year's pace.
+	measure 'MTD-to-YTD Daily Pace Index' =
+			VAR m = [Trips MTD]
+			VAR y = [Trips YTD]
+			RETURN
+			    IF (
+			        ISBLANK ( y ),
+			        BLANK (),
+			        DIVIDE ( DIVIDE ( m + 0, [Days Elapsed in Month] ), DIVIDE ( y, [Days Elapsed in Year] ) )
+			    )
+		formatString: 0.000
+		displayFolder: Time Intelligence
+		lineageTag: 3057af54-8ae4-5ef0-8b1a-84eb9138d205
+		annotation SLC_MetricId = N-C2
+
+	/// Deterministic trip surrogate.
+	column trip_id
+		dataType: int64
+		isHidden
+		lineageTag: 86738fc9-4fa5-5784-9d8e-54c9453bb06f
+		summarizeBy: none
+		sourceColumn: trip_id
+
+	/// TLC technology provider id that recorded the trip.
+	column 'Vendor ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: abc4e877-43f8-526e-a8a2-65915d45d26a
+		summarizeBy: none
+		sourceColumn: vendor_id
+
+	/// Pickup timestamp (incremental refresh column).
+	column pickup_ts
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-MM-dd HH:mm:ss
+		lineageTag: e2f67e3c-aa59-5da9-a242-5dc5e2768086
+		summarizeBy: none
+		sourceColumn: pickup_ts
+
+	/// Dropoff timestamp.
+	column dropoff_ts
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-MM-dd HH:mm:ss
+		lineageTag: cae22d97-855f-5405-829c-bab308428590
+		summarizeBy: none
+		sourceColumn: dropoff_ts
+
+	/// Pickup date (relates to Pickup Date).
+	column pickup_date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-MM-dd
+		lineageTag: 34c5e4bd-3331-5339-8cb0-5ecfeb008462
+		summarizeBy: none
+		sourceColumn: pickup_date
+
+	/// Dropoff date (relates to Dropoff Date).
+	column dropoff_date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-MM-dd
+		lineageTag: 918dc923-8d62-5dfd-8c6d-68eef2907fe4
+		summarizeBy: none
+		sourceColumn: dropoff_date
+
+	/// Hour of day the trip started, 0-23.
+	column 'Pickup Hour'
+		dataType: int64
+		formatString: 0
+		lineageTag: e23bc0ed-bb0c-596c-8938-a20186ffdb66
+		summarizeBy: none
+		sourceColumn: pickup_hour
+
+	/// Pickup location id.
+	column pu_location_id
+		dataType: int64
+		isHidden
+		lineageTag: 234b2061-9ad7-538e-98dc-8ce349a27b84
+		summarizeBy: none
+		sourceColumn: pu_location_id
+
+	/// Dropoff location id.
+	column do_location_id
+		dataType: int64
+		isHidden
+		lineageTag: 92a8c600-bc54-5850-aeb1-7bf513ca17bd
+		summarizeBy: none
+		sourceColumn: do_location_id
+
+	/// pu_location_id * 1000 + do_location_id.
+	column od_pair_id
+		dataType: int64
+		isHidden
+		lineageTag: 973f6120-a785-52cb-b238-a3e382e3266b
+		summarizeBy: none
+		sourceColumn: od_pair_id
+
+	/// Passenger count (NULL for payment type 0).
+	column passenger_count
+		dataType: int64
+		isHidden
+		lineageTag: 03b569e9-e5ad-51dd-8491-9d4fc79eb120
+		summarizeBy: none
+		sourceColumn: passenger_count
+
+	/// Trip distance in miles.
+	column trip_distance
+		dataType: decimal
+		isHidden
+		lineageTag: c65d59c5-610a-50a9-9145-eb90cfcf4b90
+		summarizeBy: none
+		sourceColumn: trip_distance
+
+	/// Payment type code.
+	column payment_type
+		dataType: int64
+		isHidden
+		lineageTag: 4bdd721a-9630-52ed-9f24-5724a853eabe
+		summarizeBy: none
+		sourceColumn: payment_type
+
+	/// Metered fare.
+	column fare_amount
+		dataType: decimal
+		isHidden
+		lineageTag: a6eb3952-11d2-5d22-90c4-91cea9693145
+		summarizeBy: none
+		sourceColumn: fare_amount
+
+	/// Tip amount.
+	column tip_amount
+		dataType: decimal
+		isHidden
+		lineageTag: cd135437-0d7f-5588-9df0-9639e724a1c0
+		summarizeBy: none
+		sourceColumn: tip_amount
+
+	/// Tolls.
+	column tolls_amount
+		dataType: decimal
+		isHidden
+		lineageTag: 2e7eda7e-43c3-561e-b370-45e39b6eb5a9
+		summarizeBy: none
+		sourceColumn: tolls_amount
+
+	/// Total amount charged.
+	column total_amount
+		dataType: decimal
+		isHidden
+		lineageTag: 2403bcc8-9bb1-5674-bec0-dd3aefa4d888
+		summarizeBy: none
+		sourceColumn: total_amount
+
+	partition Trips = entity
+		mode: directLake
+		source
+			entityName: fact_trip
+			schemaName: nyctaxi
+			expressionSource: 'DirectLake - slc'
+
+	annotation SLC_Synonyms = ["trips", "rides", "taxi trips"]

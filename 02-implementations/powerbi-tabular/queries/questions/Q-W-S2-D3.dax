@@ -1,0 +1,25 @@
+// Q-W-S2-D3 Ordered quantity by selling package by calendar quarter, 2014 vs 2015.
+DEFINE
+    VAR base =
+        SUMMARIZECOLUMNS (
+            'Stock Item'[Selling Package],
+            'Date'[Calendar Quarter],
+            TREATAS ( { 2014, 2015 }, 'Date'[Calendar Year] ),
+            "oq", [Ordered Quantity]
+        )
+EVALUATE
+SELECTCOLUMNS (
+    base,
+    "selling_package", 'Stock Item'[Selling Package],
+    "calendar_quarter", 'Date'[Calendar Quarter],
+    "ordered_quantity_2014", CALCULATE ( [Ordered Quantity], 'Date'[Calendar Year] = 2014 ),
+    "ordered_quantity_2015", CALCULATE ( [Ordered Quantity], 'Date'[Calendar Year] = 2015 ),
+    "change_pct",
+        VAR ratio =
+            DIVIDE (
+                CALCULATE ( [Ordered Quantity], 'Date'[Calendar Year] = 2015 ),
+                CALCULATE ( [Ordered Quantity], 'Date'[Calendar Year] = 2014 )
+            )
+        RETURN IF ( ISBLANK ( ratio ), BLANK (), ratio - 1 )
+)
+ORDER BY [selling_package], [calendar_quarter]

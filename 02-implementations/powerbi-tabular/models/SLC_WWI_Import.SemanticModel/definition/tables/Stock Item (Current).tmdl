@@ -1,0 +1,56 @@
+/// Current version of each stock item, for as-is attribution of facts recorded against older versions (SPEC § 5.3 rule 4).
+table 'Stock Item (Current)'
+	lineageTag: dac9565d-5eb9-5c71-8367-d2fd79f3827f
+
+	/// Durable stock item id.
+	column 'Current WWI Stock Item ID'
+		dataType: int64
+		isKey
+		isHidden
+		formatString: 0
+		lineageTag: 2f8bea2e-16a8-5aba-bb7a-d48b02959edb
+		summarizeBy: none
+		sourceColumn: wwi_stock_item_id
+
+	/// Stock item name in its current version (as-is).
+	column 'Current Stock Item'
+		dataType: string
+		lineageTag: d6b98166-8a01-54cf-9fad-24f0da2dc19a
+		summarizeBy: none
+		sourceColumn: stock_item
+
+	/// Color in the item's current version (as-is).
+	column 'Current Color'
+		dataType: string
+		lineageTag: 51249e63-0180-5847-9a44-e8d70a2699d6
+		summarizeBy: none
+		sourceColumn: color
+
+	/// Selling package in the item's current version (as-is).
+	column 'Current Selling Package'
+		dataType: string
+		lineageTag: fe82d4d4-edd4-5433-b86d-0cbed9e4af5e
+		summarizeBy: none
+		sourceColumn: selling_package
+
+	/// Brand in the item's current version (as-is).
+	column 'Current Brand'
+		dataType: string
+		lineageTag: 2d2006bc-d6e6-5b74-8fa1-9684b04ae30f
+		summarizeBy: none
+		sourceColumn: brand
+
+	partition 'Stock Item (Current)' = m
+		mode: import
+		source =
+				let
+				    Source = Databricks.Catalogs(DatabricksHost, DatabricksHttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null, Implementation = "2.0"]),
+				    CatalogData = Source{[Name = UnityCatalog, Kind = "Database"]}[Data],
+				    SchemaData = CatalogData{[Name = "wwi", Kind = "Schema"]}[Data],
+				    TableData = SchemaData{[Name = "dim_stock_item", Kind = "Table"]}[Data],
+				    Filtered = Table.SelectRows(TableData, each [is_current] = true),
+				    Selected = Table.SelectColumns(Filtered, {"wwi_stock_item_id", "stock_item", "color", "selling_package", "brand"})
+				in
+				    Selected
+
+	annotation SLC_Synonyms = ["current product", "item today", "as-is item"]

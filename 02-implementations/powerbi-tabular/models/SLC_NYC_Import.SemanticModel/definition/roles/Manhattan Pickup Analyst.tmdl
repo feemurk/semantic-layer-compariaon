@@ -1,0 +1,7 @@
+/// SPEC § 10: trips restricted to pickups in Manhattan; the Dropoff Zone role stays unrestricted for browsing. Members: Microsoft Entra group slc_pickup_manhattan (assigned in the service).
+role 'Manhattan Pickup Analyst'
+	modelPermission: read
+
+	tablePermission 'Pickup Zone' = 'Pickup Zone'[Pickup Borough] = "Manhattan"
+
+	annotation SLC_EntraGroup = slc_pickup_manhattan
