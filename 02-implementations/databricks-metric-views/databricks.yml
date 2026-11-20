@@ -1,0 +1,28 @@
+# Unity Catalog metric views for the semantic layer comparison study (SPEC § 3.1 S4).
+# Declarative Automation Bundle. Deploys after the slc-platform bundle has built B0 in catalog slc.
+# Targets select the profile (SPEC § 10, boundary B-01); the two are mutually exclusive on one workspace.
+bundle:
+  name: slc-metric-views
+
+include:
+  - resources/*.yml
+
+# The reconcile job compares against the oracle's expected answers, which live outside this bundle root.
+sync:
+  paths:
+    - .
+    - ../../01-spec/oracle
+
+variables:
+  profile:
+    description: Metric view profile. governed = ABAC row filters, no materialization; accelerated = materialized, no ABAC.
+    default: governed
+
+targets:
+  governed:
+    default: true
+    variables:
+      profile: governed
+  accelerated:
+    variables:
+      profile: accelerated

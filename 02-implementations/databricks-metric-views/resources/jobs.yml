@@ -1,0 +1,52 @@
+resources:
+  jobs:
+    # Deploy the metric views and the profile's security objects, then reconcile against the oracle.
+    slc_metric_views_deploy:
+      name: slc-metric-views-deploy-${var.profile}
+      max_concurrent_runs: 1
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: '6'
+      tasks:
+        - task_key: deploy
+          environment_key: default
+          spark_python_task:
+            python_file: ../jobs/deploy.py
+            parameters: [--profile, '${var.profile}']
+        - task_key: reconcile
+          depends_on: [{ task_key: deploy }]
+          environment_key: default
+          spark_python_task:
+            python_file: ../jobs/reconcile.py
+            parameters: [--profile, '${var.profile}']
+
+    # Re-run E1 reconciliation and sequential timings against the deployed views.
+    slc_metric_views_reconcile:
+      name: slc-metric-views-reconcile-${var.profile}
+      max_concurrent_runs: 1
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: '6'
+      tasks:
+        - task_key: reconcile
+          environment_key: default
+          spark_python_task:
+            python_file: ../jobs/reconcile.py
+            parameters: [--profile, '${var.profile}']
+
+    # CI promotion gate (SPEC E5): the P question subset must match the oracle exactly.
+    slc_metric_views_gate:
+      name: slc-metric-views-gate-${var.profile}
+      max_concurrent_runs: 1
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: '6'
+      tasks:
+        - task_key: reconcile_subset
+          environment_key: default
+          spark_python_task:
+            python_file: ../jobs/reconcile.py
+            parameters: [--profile, '${var.profile}', --select, 'Q-*-P', --repeat, '1', --fail-on-mismatch]

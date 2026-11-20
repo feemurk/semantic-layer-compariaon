@@ -2,9 +2,9 @@
 
 | Field | Value |
 |---|---|
-| Version | 1.2 |
+| Version | 1.3 |
 | State | LOCKED |
-| Locked on | 2026-11-19 (v1.0); amended 2026-11-19 (v1.1, v1.2, § 16) |
+| Locked on | 2026-11-19 (v1.0); amended 2026-11-19 (v1.1, v1.2) and 2026-11-20 (v1.3), § 16 |
 | Governs | Phases 1–3 and `04-deliverables/` |
 | Change control | § 16. No scope change without a version bump and a changelog entry. |
 
@@ -428,6 +428,8 @@ Confirmed or rejected in Phase 3.
 | B-04 | SSAS Multidimensional has no native natural-language assistant; it is reachable by agents only through the common harness. | Hypothesis |
 | B-05 | Tableau has no built-in semi-additive aggregation; W-M2 needs LOD or table calculation logic. | Hypothesis |
 | B-06 | SSAS Multidimensional distinct counts (B-W4, N-M1) require a dedicated measure group per distinct count measure. | Hypothesis |
+| B-07 | Metric view window measures anchor a coarser group on the last order value with data in that group, not the calendar end of the period; period-to-date and same-period-last-year values differ from calendar-anchored definitions for members without activity on the period's last day (N-C1, N-C2). | Hypothesis (V-30) |
+| B-08 | Metric views reach dimension members only through fact rows (the source is the fact, joins are left outer lookups); members without facts in scope are absent from results. | Documented (V-03) |
 
 ---
 
@@ -565,7 +567,7 @@ Vendor capability claims this spec relies on. `Pending` entries are verified aga
 | V-13 | Power BI calendar-based time intelligence, hybrid tables with real-time DirectQuery partition, Copilot AI instructions and verified answers | Pending | — |
 | V-14 | Tableau multi-fact relationships, VizQL Data Service, Tableau Agent over Published Data Sources | Pending | — |
 | V-15 | GitHub Copilot agent mode MCP server support | Pending | — |
-| V-16 | Unity Catalog ABAC policies and row filters as applied to the § 10 scenario | Pending | — |
+| V-16 | Unity Catalog ABAC policies as applied to the § 10 scenario: schema-level `CREATE POLICY ... ROW FILTER ... TO principals FOR TABLES WHEN has_tag_value(...) MATCH COLUMNS ... USING COLUMNS (...)`; governed tags applied to target objects are a prerequisite; `DROP POLICY name ON SCHEMA` has no `IF EXISTS`; row filters cannot reference tables with their own active row filters | Verified | https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/policies |
 | V-17 | Fabric Git integration with TMDL and `fabric-cicd` deployment | Pending | — |
 | V-18 | Lakeflow pipelines Python API is `pyspark.pipelines` (`dp`); `@dp.materialized_view` and `@dp.table` accept `schema` DDL with primary and foreign keys, `cluster_by`, and `private` | Verified | https://docs.databricks.com/aws/en/ldp/developer/python-ref |
 | V-19 | Auto Loader on Parquet picks the widest type across files; schema hints make the reader read as the hinted type and rescue mismatches into `_rescued_data`; case-mismatched names are rescued unless `readerCaseSensitive` is false. Spark 4.3 fails reading INT64 as DOUBLE (reproduced on TLC 2023-01/2023-02) | Verified | https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema |
@@ -576,6 +578,13 @@ Vendor capability claims this spec relies on. `Pending` entries are verified aga
 | V-24 | Lakeflow Connect bronze tables keep SQL Server column names, including spaces (gold transforms reference e.g. `` `Sale Key` ``) | Pending | — |
 | V-25 | TLC Yellow Taxi data dictionary labels payment type 0 as "Flex Fare trip" | Pending | — |
 | V-26 | `DELETE` on a streaming table that an Auto Loader flow writes to (freshness replay `prepare`) | Pending | — |
+| V-27 | A principal with `SELECT` on a metric view can query it; the view reads its sources with its owner's privileges; materialized metric views cannot be owned by a group | Verified | https://docs.databricks.com/aws/en/uc-semantics/metric-views/manage |
+| V-28 | ABAC row filter policies on a metric view's source tables evaluate the querying principal (not the view owner) when queried through the metric view | Pending | — |
+| V-29 | Window `offset` accepts dated values (`-1 year`, DBR 18.1+) and yields NULL when the shifted frame falls outside the data; `trailing`/`leading` default to `exclusive`; `refresh_policy` values `auto`, `incremental`, `incremental strict`, `full` | Verified | https://docs.databricks.com/aws/en/uc-semantics/metric-views/yaml-reference |
+| V-30 | A window measure queried at a coarser grain than its `order` field is evaluated at the last order value with data in each group (`semiadditive: last`) | Pending | — |
+| V-31 | Query `WHERE` filters on a metric view apply before window measures are evaluated, so a filter on the order field truncates the window | Pending | — |
+| V-32 | Bundle `sync.paths` may include paths outside the bundle root; the sync root moves to the common ancestor and keeps the folder structure | Verified | https://docs.databricks.com/aws/en/dev-tools/bundles/sharing |
+| V-33 | GitHub Actions deploy bundles with `databricks/setup-cli` and workload identity federation (`DATABRICKS_AUTH_TYPE: github-oidc`, `id-token: write`) | Verified | https://docs.databricks.com/aws/en/dev-tools/ci-cd/github |
 
 ---
 
@@ -609,3 +618,4 @@ Amendments require: a version bump in the header, a changelog row, an updated `s
 | 1.0 | 2026-11-19 | Initial locked specification. |
 | 1.1 | 2026-11-19 | Phase 2 platform build corrections from profiling the real sources (restored WideWorldImporters on SQL Server 2025; 24 TLC months). § 4: clustered columnstore index removal before change tracking, landing normalization for TLC type drift, dimensions-before-facts pipelines, bundle rename. § 5.1 and § 5.3 rule 6: back-cast snapshot with flow fallback and `balance_basis`, because 9 items' movement history cannot be reconciled with current holdings. § 5.3 rule 4 and `Q-W-S1-D4`: SCD2 probe moved from customer category (no history in source) to stock item color; single current row per durable key despite 4,612 duplicated open-ended city rows. § 5.4: NYC calendar extended to 2025 for dropoff dates. § 5.2: `passenger_count` marked NULL (5,400,588 source rows, all payment type 0). § 14: V-18 to V-26. |
 | 1.2 | 2026-11-19 | Question bank corrections found by running the correctness oracle on the real-data B0. Q-N-M1-D1: distinct OD pairs are exactly additive across pickup borough, because the pair determines its pickup zone and borough, so the non-additivity probe moves to payment type. Q-W-M1-D3 and Q-W-S2-D3: chiller items sell only from 2016-01-02, so the FY2014/FY2015 and 2014/2015 comparisons move from the chiller flag to selling package. Q-W-M2-D4: no stock item is at zero on any 2015 month end (minimum 7,196 units), so the question asks for the 10 lowest month-end balances. |
+| 1.3 | 2026-11-20 | Phase 2 S4 (metric views) findings. § 8.1: B-07 (window anchor on the last date with data, not the calendar period end) and B-08 (members reachable only through facts). § 14: V-16 verified; V-27 to V-33 added (metric view permissions, ABAC through metric views, window offset and refresh policy, anchor and filter-before-window semantics, bundle sync outside the root, GitHub Actions federation). |

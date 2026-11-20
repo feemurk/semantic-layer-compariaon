@@ -1,0 +1,80 @@
+# SPEC E5 for S4: lint -> deploy to test -> refresh -> oracle reconciliation subset -> promote, on every push.
+# Authentication: workload identity federation (https://docs.databricks.com/aws/en/dev-tools/ci-cd/github, checked
+# 2026-11-20). GitHub environments `test` and `prod` each hold the variable DATABRICKS_HOST and the secret
+# DATABRICKS_CLIENT_ID of a service principal with a GitHub Actions federation policy for that environment.
+name: s4-metric-views
+
+on:
+  push:
+    paths:
+      - 02-implementations/databricks-metric-views/**
+      - 01-spec/oracle/expected/**
+      - 01-spec/glossary.yaml
+      - scripts/test_databricks_metric_views.py
+      - .github/workflows/s4-metric-views.yml
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: s4-metric-views-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: pip install -r scripts/requirements-test.txt
+      - run: python 02-implementations/databricks-metric-views/build_metric_views.py --check
+      - run: python 02-implementations/databricks-metric-views/build_reconciliation_queries.py --check
+      - run: python scripts/test_databricks_metric_views.py
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    environment: test
+    defaults:
+      run:
+        working-directory: 02-implementations/databricks-metric-views
+    env:
+      DATABRICKS_AUTH_TYPE: github-oidc
+      DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+      DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+      DATABRICKS_BUNDLE_TARGET: governed
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - run: databricks bundle validate
+      - run: databricks bundle deploy
+      - run: databricks bundle run slc_metric_views_deploy
+      - run: databricks bundle run slc_metric_views_gate
+
+  promote:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: prod
+    defaults:
+      run:
+        working-directory: 02-implementations/databricks-metric-views
+    env:
+      DATABRICKS_AUTH_TYPE: github-oidc
+      DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+      DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+      DATABRICKS_BUNDLE_TARGET: governed
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - run: databricks bundle deploy
+      - run: databricks bundle run slc_metric_views_deploy
+      - run: databricks bundle run slc_metric_views_gate
