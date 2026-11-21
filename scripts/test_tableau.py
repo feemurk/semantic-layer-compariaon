@@ -268,7 +268,8 @@ EXTRACT_BLOCK = ("<extract count='-1' enabled='true' object-id='' units='records
 
 
 def with_extract(text: str) -> str:
-    return text.replace("<object-graph>", EXTRACT_BLOCK + "<object-graph>", 1)
+    """Insert an extract the way Tableau stores one: after the columns, before the data source filters."""
+    return text.replace("<filter ", EXTRACT_BLOCK + "<filter ", 1)
 
 
 class DeploymentTests(unittest.TestCase):
@@ -431,9 +432,9 @@ class FixtureEmulationTests(unittest.TestCase):
         self.assertEqual(failures, {})
 
     def test_tampered_plans_are_detected(self):
-        s = copy.deepcopy(QUESTIONS["Q-W-S1-D2"])
-        s["assemble"] = s["assemble"].replace("ORDER BY i.revenue DESC", "ORDER BY i.revenue ASC")
-        self.assertFalse(self.run_spec("questions", s).matches)
+        s = copy.deepcopy(QUESTIONS["Q-W-S2-P"])
+        s["assemble"] = s["assemble"].replace("FROM months m LEFT JOIN q", "FROM months m JOIN q")
+        self.assertFalse(self.run_spec("questions", s).matches)  # fixture months without facts drop out
         s = copy.deepcopy(QUESTIONS["Q-N-S2-D4"])
         s["assemble"] = s["assemble"].replace("FROM codes c LEFT JOIN q", "FROM codes c JOIN q")
         self.assertFalse(self.run_spec("questions", s).matches)

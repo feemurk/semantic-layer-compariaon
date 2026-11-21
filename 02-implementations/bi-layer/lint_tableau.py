@@ -210,8 +210,8 @@ def validate_query(spec: dict, where: str = "query") -> list[str]:
     fields = ds.fields()
     captions = set(fields)
     aliases = []
-    for f in spec["query"]["fields"]:
-        cap = f["fieldCaption"]
+    for f in spec["query"].get("fields", []):
+        cap = f.get("fieldCaption", "")
         aliases.append(f.get("fieldAlias"))
         if "calculation" in f:
             problems += lint_formula(f["calculation"], captions, f"{where}: calculation {cap}")
