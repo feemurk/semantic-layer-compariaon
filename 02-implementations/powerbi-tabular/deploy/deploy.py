@@ -19,9 +19,6 @@ import sys
 import time
 from pathlib import Path
 
-import requests
-from azure.identity import DefaultAzureCredential
-
 HERE = Path(__file__).resolve().parent
 MODELS = HERE.parent / "models"
 PBI = "https://api.powerbi.com/v1.0/myorg"
@@ -54,7 +51,7 @@ def publish(environment: str, workspace_id: str, names: list[str], credential) -
     publish_all_items(workspace, items_to_include=[f"{n}.SemanticModel" for n in names])
 
 
-def dataset_ids(session: requests.Session, workspace_id: str, names: list[str]) -> dict[str, str]:
+def dataset_ids(session, workspace_id: str, names: list[str]) -> dict[str, str]:
     r = session.get(f"{PBI}/groups/{workspace_id}/datasets", timeout=60)
     r.raise_for_status()
     found = {d["name"]: d["id"] for d in r.json()["value"]}
@@ -64,7 +61,7 @@ def dataset_ids(session: requests.Session, workspace_id: str, names: list[str]) 
     return {n: found[n] for n in names}
 
 
-def refresh(session: requests.Session, workspace_id: str, name: str, dataset_id: str, timeout_s: int) -> str:
+def refresh(session, workspace_id: str, name: str, dataset_id: str, timeout_s: int) -> str:
     url = f"{PBI}/groups/{workspace_id}/datasets/{dataset_id}/refreshes"
     r = session.post(url, json={"type": "full", "commitMode": "transactional", "applyRefreshPolicy": True}, timeout=60)
     if r.status_code not in (200, 202):
@@ -89,6 +86,9 @@ def main() -> None:
     parser.add_argument("--refresh-timeout", type=int, default=7200, help="seconds per model")
     parser.add_argument("--skip-refresh", action="store_true")
     args = parser.parse_args()
+
+    import requests
+    from azure.identity import DefaultAzureCredential
 
     names = model_names(args.variants)
     credential = DefaultAzureCredential()

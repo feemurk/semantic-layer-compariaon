@@ -1,0 +1,112 @@
+[
+  {
+    "ID": "SLC_MEASURE_DESCRIPTION",
+    "Name": "Every visible measure has a description.",
+    "Category": "SLC study conventions",
+    "Description": "Every visible measure has a description. Evaluated natively by lint_model.check_model in CI; this file carries the same rules for Tabular Editor's Best Practice Analyzer.",
+    "Severity": 2,
+    "Scope": "Measure",
+    "Expression": "not IsHidden and string.IsNullOrWhitespace(Description)",
+    "CompatibilityLevel": 1604
+  },
+  {
+    "ID": "SLC_MEASURE_FORMAT",
+    "Name": "Every measure has a format string.",
+    "Category": "SLC study conventions",
+    "Description": "Every measure has a format string. Evaluated natively by lint_model.check_model in CI; this file carries the same rules for Tabular Editor's Best Practice Analyzer.",
+    "Severity": 2,
+    "Scope": "Measure",
+    "Expression": "string.IsNullOrWhitespace(FormatString)",
+    "CompatibilityLevel": 1604
+  },
+  {
+    "ID": "SLC_DIVIDE",
+    "Name": "Measures use DIVIDE instead of the '/' operator.",
+    "Category": "SLC study conventions",
+    "Description": "Measures use DIVIDE instead of the '/' operator. Evaluated natively by lint_model.check_model in CI; this file carries the same rules for Tabular Editor's Best Practice Analyzer.",
+    "Severity": 2,
+    "Scope": "Measure",
+    "Expression": "RegEx.IsMatch(Expression, \"\\\\]\\\\s*\\\\/(?!\\\\/)(?!\\\\*)\")",
+    "CompatibilityLevel": 1604
+  },
+  {
+    "ID": "SLC_NO_IFERROR",
+    "Name": "Measures do not use IFERROR or ISERROR.",
+    "Category": "SLC study conventions",
+    "Description": "Measures do not use IFERROR or ISERROR. Evaluated natively by lint_model.check_model in CI; this file carries the same rules for Tabular Editor's Best Practice Analyzer.",
+    "Severity": 2,
+    "Scope": "Measure",
+    "Expression": "RegEx.IsMatch(Expression, \"(?i)\\\\b(IFERROR|ISERROR)\\\\s*\\\\(\")",
+    "CompatibilityLevel": 1604
+  },
+  {
+    "ID": "SLC_FACT_COLUMNS_HIDDEN",
+    "Name": "Fact key and numeric columns are hidden; facts are reached through measures.",
+    "Category": "SLC study conventions",
+    "Description": "Fact key and numeric columns are hidden; facts are reached through measures. Evaluated natively by lint_model.check_model in CI; this file carries the same rules for Tabular Editor's Best Practice Analyzer.",
+    "Severity": 2,
+    "Scope": "DataColumn",
+    "Expression": "not IsHidden and Table.Measures.Count > 0 and Table.DataCategory <> \"Time\" and (DataType = DataType.Int64 or DataType = DataType.Decimal or DataType = DataType.Double or DataType = DataType.DateTime) and Name <> \"Vendor ID\" and Name <> \"Pickup Hour\"",
+    "CompatibilityLevel": 1604
+  },
+  {
+    "ID": "SLC_SUMMARIZE_NONE",
+    "Name": "Every column has summarizeBy none (no implicit measures).",
+    "Category": "SLC study conventions",
+    "Description": "Every column has summarizeBy none (no implicit measures). Evaluated natively by lint_model.check_model in CI; this file carries the same rules for Tabular Editor's Best Practice Analyzer.",
+    "Severity": 2,
+    "Scope": "DataColumn",
+    "Expression": "SummarizeBy <> AggregateFunction.None",
+    "CompatibilityLevel": 1604
+  },
+  {
+    "ID": "SLC_NO_CALCULATED_COLUMNS",
+    "Name": "Every column maps to a source column (no calculated columns; Direct Lake compatible).",
+    "Category": "SLC study conventions",
+    "Description": "Every column maps to a source column (no calculated columns; Direct Lake compatible). Evaluated natively by lint_model.check_model in CI; this file carries the same rules for Tabular Editor's Best Practice Analyzer.",
+    "Severity": 3,
+    "Scope": "CalculatedColumn",
+    "Expression": "true",
+    "CompatibilityLevel": 1604
+  },
+  {
+    "ID": "SLC_DATE_TABLE",
+    "Name": "Date dimensions used by time intelligence are marked as date tables.",
+    "Category": "SLC study conventions",
+    "Description": "Date dimensions used by time intelligence are marked as date tables. Evaluated natively by lint_model.check_model in CI; this file carries the same rules for Tabular Editor's Best Practice Analyzer.",
+    "Severity": 3,
+    "Scope": "Model",
+    "Expression": "not Tables.Any(DataCategory = \"Time\")",
+    "CompatibilityLevel": 1604
+  },
+  {
+    "ID": "SLC_NO_BIDIRECTIONAL",
+    "Name": "No bidirectional relationships.",
+    "Category": "SLC study conventions",
+    "Description": "No bidirectional relationships. Evaluated natively by lint_model.check_model in CI; this file carries the same rules for Tabular Editor's Best Practice Analyzer.",
+    "Severity": 3,
+    "Scope": "Relationship",
+    "Expression": "CrossFilteringBehavior = CrossFilteringBehavior.BothDirections",
+    "CompatibilityLevel": 1604
+  },
+  {
+    "ID": "SLC_RELATIONSHIP_TYPES",
+    "Name": "Related columns have the same data type.",
+    "Category": "SLC study conventions",
+    "Description": "Related columns have the same data type. Evaluated natively by lint_model.check_model in CI; this file carries the same rules for Tabular Editor's Best Practice Analyzer.",
+    "Severity": 3,
+    "Scope": "Relationship",
+    "Expression": "FromColumn.DataType <> ToColumn.DataType",
+    "CompatibilityLevel": 1604
+  },
+  {
+    "ID": "SLC_DISCOURAGE_IMPLICIT",
+    "Name": "The model discourages implicit measures.",
+    "Category": "SLC study conventions",
+    "Description": "The model discourages implicit measures. Evaluated natively by lint_model.check_model in CI; this file carries the same rules for Tabular Editor's Best Practice Analyzer.",
+    "Severity": 2,
+    "Scope": "Model",
+    "Expression": "not DiscourageImplicitMeasures",
+    "CompatibilityLevel": 1604
+  }
+]

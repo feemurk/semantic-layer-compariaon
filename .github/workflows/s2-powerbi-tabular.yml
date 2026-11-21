@@ -1,0 +1,99 @@
+# SPEC E5 for S2: lint (TMDL, DAX, BPA rules) -> deploy to test with fabric-cicd -> refresh (incremental policy,
+# Direct Lake framing) -> oracle reconciliation subset over XMLA -> promote, on every push.
+# GitHub environments `test` and `prod` hold:
+#   variables  FABRIC_WORKSPACE_ID, FABRIC_WORKSPACE_NAME, AZURE_CLIENT_ID, AZURE_TENANT_ID, SLC_DATABRICKS_HOST,
+#              SLC_DATABRICKS_HTTP_PATH, SLC_ONELAKE_SOURCE_URL, SLC_DATABRICKS_CONNECTION_ID, SLC_ONELAKE_CONNECTION_ID
+#   secret     XMLA_CLIENT_SECRET (service principal secret for the XMLA connection string; the XMLA endpoint documents
+#              app:<appId>@<tenantId> with a secret, and executeQueries refuses service principals on RLS models)
+name: s2-powerbi-tabular
+
+on:
+  push:
+    paths:
+      - 02-implementations/powerbi-tabular/**
+      - 01-spec/oracle/expected/**
+      - 01-spec/glossary.yaml
+      - scripts/test_powerbi_tabular.py
+      - .github/workflows/s2-powerbi-tabular.yml
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: s2-powerbi-tabular-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install -r scripts/requirements-test.txt
+      - run: python 02-implementations/powerbi-tabular/build_model.py --check
+      - run: python 02-implementations/powerbi-tabular/build_reconciliation_queries.py --check
+      - run: python 02-implementations/powerbi-tabular/lint_model.py
+      - run: python scripts/test_powerbi_tabular.py
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    environment: test
+    env:
+      SLC_DATABRICKS_HOST: ${{ vars.SLC_DATABRICKS_HOST }}
+      SLC_DATABRICKS_HTTP_PATH: ${{ vars.SLC_DATABRICKS_HTTP_PATH }}
+      SLC_ONELAKE_SOURCE_URL: ${{ vars.SLC_ONELAKE_SOURCE_URL }}
+      SLC_DATABRICKS_CONNECTION_ID: ${{ vars.SLC_DATABRICKS_CONNECTION_ID }}
+      SLC_ONELAKE_CONNECTION_ID: ${{ vars.SLC_ONELAKE_CONNECTION_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
+      - run: pip install -r 02-implementations/powerbi-tabular/deploy/requirements.txt
+      - run: python 02-implementations/powerbi-tabular/deploy/deploy.py --environment test --workspace-id ${{ vars.FABRIC_WORKSPACE_ID }}
+      - name: Reconcile predefined questions (gate)
+        env:
+          XMLA_CLIENT_SECRET: ${{ secrets.XMLA_CLIENT_SECRET }}
+        run: |
+          for model in SLC_WWI_Import SLC_NYC_Import SLC_WWI_DirectLake SLC_NYC_DirectLake; do
+            export SLC_XMLA_CONNECTION_STRING="Data Source=powerbi://api.powerbi.com/v1.0/myorg/${{ vars.FABRIC_WORKSPACE_NAME }};Initial Catalog=${model};User ID=app:${{ vars.AZURE_CLIENT_ID }}@${{ vars.AZURE_TENANT_ID }};Password=${XMLA_CLIENT_SECRET}"
+            python 02-implementations/powerbi-tabular/deploy/reconcile.py --transport xmla --dataset "${model}" \
+              --select 'Q-*-P' --repeat 1 --fail-on-mismatch
+          done
+
+  promote:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: prod
+    env:
+      SLC_DATABRICKS_HOST: ${{ vars.SLC_DATABRICKS_HOST }}
+      SLC_DATABRICKS_HTTP_PATH: ${{ vars.SLC_DATABRICKS_HTTP_PATH }}
+      SLC_ONELAKE_SOURCE_URL: ${{ vars.SLC_ONELAKE_SOURCE_URL }}
+      SLC_DATABRICKS_CONNECTION_ID: ${{ vars.SLC_DATABRICKS_CONNECTION_ID }}
+      SLC_ONELAKE_CONNECTION_ID: ${{ vars.SLC_ONELAKE_CONNECTION_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
+      - run: pip install -r 02-implementations/powerbi-tabular/deploy/requirements.txt
+      - run: python 02-implementations/powerbi-tabular/deploy/deploy.py --environment prod --workspace-id ${{ vars.FABRIC_WORKSPACE_ID }}
