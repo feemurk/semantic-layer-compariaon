@@ -2,9 +2,9 @@
 
 | Field | Value |
 |---|---|
-| Version | 1.4 |
+| Version | 1.5 |
 | State | LOCKED |
-| Locked on | 2026-11-19 (v1.0); amended 2026-11-19 (v1.1, v1.2) 2026-11-20 (v1.3) and 2026-11-21 (v1.4), § 16 |
+| Locked on | 2026-11-19 (v1.0); amended 2026-11-19 (v1.1, v1.2) 2026-11-20 (v1.3) and 2026-11-21 (v1.4, v1.5), § 16 |
 | Governs | Phases 1–3 and `04-deliverables/` |
 | Change control | § 16. No scope change without a version bump and a changelog entry. |
 
@@ -442,6 +442,36 @@ Confirmed or rejected in Phase 3.
 | B-18 | Tableau has no synonym property; synonyms are appended to descriptions, and only the first 150 characters are indexed by Tableau Agent. | Documented (V-14) |
 | B-19 | Tableau multi-fact data sources repeat measures over unrelated dimensions, so stock holdings (W-M2, W-C2) are a separate Published Data Source. | Documented (V-14) |
 
+### 8.2 Evidence levels and projected evaluation
+
+The scorecard is produced in two modes. **Measured** applies § 8 as written: every stack is deployed and its suites run (§ 9). **Projected** is a reasoned evaluation made without deployed environments, from the documentation, the local evidence in this repository, and the design of each implementation. A projected scorecard is labeled `Projected` in every table and deliverable that shows it. It never replaces a measured result: once a cell is measured, the measured value supersedes the projected one, and the difference between them is recorded.
+
+Every projected cell (E1–E9 × S1–S4) carries a rating, an evidence level, a confidence, and the citations behind them.
+
+| Rating | Meaning |
+|---|---|
+| Meets | The pass criterion of § 8 is expected to hold as specified |
+| Meets with workaround | Expected to hold only through an adjacent component or pattern; the cell names the B- entry and its cost |
+| Partial | Holds for a stated subset; the cell names the failing cells, questions, or lanes |
+| Does not meet | Expected to fail the criterion; the cell names the mechanism |
+| Not assessable | The evidence cannot support a rating; the cell states what a measured run must show |
+
+| Level | Basis | Maximum confidence |
+|---|---|---|
+| Measured | Run on the deployed stack against the oracle (§ 9) | High |
+| Locally verified | Executed in this repository: test suites, emulators, oracle fixtures or the local B0; the cell states what the local run cannot prove | High |
+| Documented | A `Verified` § 14 entry states the capability or limit | Medium |
+| Design inference | Follows from the implementation's definitions and code, never executed against the product | Low |
+| Unknown | No credible basis; implies `Not assessable` | — |
+
+Rules:
+
+1. A cell's evidence level is the weakest level among the claims its rating depends on, and its confidence cannot exceed that level's maximum.
+2. A cell that depends on a `Pending` § 14 entry cites it and is capped at Low confidence.
+3. E3, E4 and E7 are measurements. Their projected cells give an expected range with the reasoning behind it, are capped at Medium confidence, and are rated no higher than `Meets with workaround` unless their evidence level is `Measured`.
+4. Marketing Claims Register entries (§ 2.1) receive projected verdicts: `Supported`, `Refuted`, `Refuted with cost` (the claim fails, but only through a named workaround with a stated cost), or `Inconclusive`. Each verdict cites the E-cells it rests on.
+5. Each projected cell lists the observation in a measured run that would confirm it or overturn it.
+
 ---
 
 ## 9. Correctness Oracle and Reconciliation
@@ -536,7 +566,7 @@ Priority order is fixed: code pack → architecture reference → executive deck
 | `01-spec/oracle/` | Oracle SQL, fixtures, expected answers | 2 |
 | `02-implementations/platform/` | Asset Bundle, Lakeflow pipelines, replay simulator, data rules § 5.3 | 2 |
 | `02-implementations/agent-harness/` | Four MCP servers, evaluation runner | 2 |
-| `03-boundaries-ocm/` | Evaluation scorecard (E1–E9), Marketing Claims Register verdicts, boundary analysis, enablement modules | 3 |
+| `03-boundaries-ocm/` | Evaluation scorecard (E1–E9, projected per § 8.2, then measured), Marketing Claims Register verdicts, boundary analysis, enablement modules | 3 |
 
 Every directory under `02-implementations/` follows CLAUDE.md § 6 (architectural guide plus standalone code files).
 
@@ -551,6 +581,8 @@ Every directory under `02-implementations/` follows CLAUDE.md § 6 (architectura
 | 2 | Oracle and question bank expected answers | Oracle fixture suite passes on DuckDB; expected answers generated on B0 |
 | 2 | S1–S4 implementations | E1 and E2 reconciliation suites pass per stack; E5 and E6 pipelines run green |
 | 2 | Agent harness | Harness contract tests pass for all four MCP servers |
+| 3 | Projected evaluation scorecard E1–E9 (§ 8.2) | Every E1–E9 × S1–S4 cell carries a rating, evidence level, confidence and citations, and states its confirming or overturning observation; `scripts/test_scorecard.py` passes |
+| 3 | Projected claims verdicts MC-01 to MC-08 (§ 8.2) | Every MC entry has a projected verdict citing its E-cells |
 | 3 | Evaluation scorecard E1–E9 | All dimensions measured for all stacks |
 | 3 | Claims register verdicts and boundary analysis | Every MC and B entry has a verdict with linked evidence |
 | 3 | OCM enablement modules | Each module maps to at least one MC entry and reproduces its evidence |
@@ -651,3 +683,4 @@ Amendments require: a version bump in the header, a changelog row, an updated `s
 | 1.2 | 2026-11-19 | Question bank corrections found by running the correctness oracle on the real-data B0. Q-N-M1-D1: distinct OD pairs are exactly additive across pickup borough, because the pair determines its pickup zone and borough, so the non-additivity probe moves to payment type. Q-W-M1-D3 and Q-W-S2-D3: chiller items sell only from 2016-01-02, so the FY2014/FY2015 and 2014/2015 comparisons move from the chiller flag to selling package. Q-W-M2-D4: no stock item is at zero on any 2015 month end (minimum 7,196 units), so the question asks for the 10 lowest month-end balances. |
 | 1.3 | 2026-11-20 | Phase 2 S4 (metric views) findings. § 8.1: B-07 (window anchor on the last date with data, not the calendar period end) and B-08 (members reachable only through facts). § 14: V-16 verified; V-27 to V-33 added (metric view permissions, ABAC through metric views, window offset and refresh policy, anchor and filter-before-window semantics, bundle sync outside the root, GitHub Actions federation). |
 | 1.4 | 2026-11-21 | Phase 2 S1, S2, S3 findings. V-11 failed verification: multidimensional models do not support ODBC data sources and ROLAP needs SQL Server, so § 3.1 S1 connectivity becomes a SQL Server 2025 PolyBase adapter. § 14: V-11, V-12, V-13, V-14, V-17 verified; V-34 to V-53 added. § 8.1: B-09 to B-19 added. |
+| 1.5 | 2026-11-21 | § 8.2 adds the projected evaluation mode: a rating scale, evidence levels (Measured, Locally verified, Documented, Design inference, Unknown) with confidence caps, and rules for projected cells and claims verdicts, so the study can be evaluated without deployed environments. Measured results supersede projected ones. § 12.1 and § 13 add the projected scorecard and verdicts as Phase 3 deliverables ahead of the measured scorecard. |
