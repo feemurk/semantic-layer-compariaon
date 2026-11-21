@@ -42,7 +42,10 @@
    "values": {
     "W-C1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C1": "ratio"
+   }
   },
   {
    "grain": "total_all_groups",
@@ -69,7 +72,10 @@
    "values": {
     "W-C1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C1": "ratio"
+   }
   },
   {
    "grain": "year_stock_group",
@@ -109,7 +115,10 @@
    "values": {
     "W-C1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C1": "ratio"
+   }
   },
   {
    "grain": "year_all_groups",
@@ -143,7 +152,10 @@
    "values": {
     "W-C1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C1": "ratio"
+   }
   },
   {
    "grain": "fiscal_year_stock_group",
@@ -183,7 +195,10 @@
    "values": {
     "W-C1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C1": "ratio"
+   }
   },
   {
    "grain": "year_sales_territory_stock_group",
@@ -229,7 +244,10 @@
    "values": {
     "W-C1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C1": "ratio"
+   }
   },
   {
    "grain": "year_customer_category_stock_group",
@@ -275,7 +293,10 @@
    "values": {
     "W-C1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C1": "ratio"
+   }
   }
  ]
 }

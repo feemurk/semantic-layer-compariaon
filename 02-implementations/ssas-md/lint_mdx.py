@@ -356,7 +356,7 @@ def _set_bodies(code: str, rows: str) -> list[str]:
     return bodies
 
 
-BRANCH = re.compile(r"^//\s*@branch\s+grain=(\S+)\s+rows=(\S*)\s+values=(\S+)\s*$", re.M)
+BRANCH = re.compile(r"^//\s*@branch\s+grain=(\S+)\s+rows=(.*?)\s+values=(.+?)\s*$", re.M)
 
 
 def split_branches(text: str) -> list[tuple[str, list[str], list[tuple[str, str]], str]]:
@@ -368,9 +368,9 @@ def split_branches(text: str) -> list[tuple[str, list[str], list[tuple[str, str]
         stmt = text[m.end():end].strip()
         rows = [r for r in m.group(2).split(";") if r]
         values = []
-        for v in m.group(3).split(","):
-            label, _, measure = v.partition(":")
-            values.append((label, measure))
+        for v in re.split(r",(?=[A-Z]-[A-Z0-9])", m.group(3)):
+            label, sep, rest = v.partition(":[Measures]")
+            values.append((label, "[Measures]" + rest if sep else ""))
         out.append((m.group(1), rows, values, stmt))
     return out
 

@@ -135,24 +135,16 @@
       </formatted-text>
     </desc>
   </column>
-  <column caption="Closing Stock Encoded" datatype="real" name="[x_qoh_encoded]" role="measure" type="quantitative" hidden="true">
-    <calculation class="tableau" formula="DATEDIFF('day', #2000-01-01#, [stk_snapshot_date]) * 10000000000 + {INCLUDE [stk_snapshot_date] : SUM([stk_quantity_on_hand])}" />
+  <column caption="Period End Snapshot Date" datatype="date" name="[x_period_end]" role="dimension" type="ordinal" hidden="true">
+    <calculation class="tableau" formula="{EXCLUDE [si_wwi_stock_item_id], [si_stock_item], [si_brand], [si_color], [si_size], [si_selling_package], [si_is_chiller_stock], [csi_stock_item], [csi_color], [sg_stock_group_name], [stk_balance_basis] : MAX([stk_snapshot_date])}" />
     <desc>
       <formatted-text>
-        <run>Day index times 1e10 plus the context's quantity on hand that day; MAX selects the last day.</run>
-      </formatted-text>
-    </desc>
-  </column>
-  <column caption="Units Sold 91 Days Encoded" datatype="real" name="[x_u91_encoded]" role="measure" type="quantitative" hidden="true">
-    <calculation class="tableau" formula="DATEDIFF('day', #2000-01-01#, [stk_snapshot_date]) * 10000000000 + ZN({INCLUDE [stk_snapshot_date] : SUM([stk_units_sold_91d])})" />
-    <desc>
-      <formatted-text>
-        <run>Day index times 1e10 plus the context's trailing 91-day units that day; MAX selects the last day.</run>
+        <run>Last snapshot date of the period in context, ignoring item and group attributes in the view.</run>
       </formatted-text>
     </desc>
   </column>
   <column caption="Closing Stock On Hand" datatype="real" name="[m_closing_stock]" role="measure" type="quantitative" default-format="n#,##0">
-    <calculation class="tableau" formula="MAX([x_qoh_encoded]) - MAX(DATEDIFF('day', #2000-01-01#, [stk_snapshot_date])) * 10000000000" />
+    <calculation class="tableau" formula="SUM(IF [stk_snapshot_date] = [x_period_end] THEN [stk_quantity_on_hand] END)" />
     <desc>
       <formatted-text>
         <run>Units on hand on the last day of the period (semi-additive); summed across stock items and stock groups. Value on the last snapshot date of the period in context. Also called: stock on hand, inventory, closing inventory, ending inventory, units in stock.</run>
@@ -160,7 +152,7 @@
     </desc>
   </column>
   <column caption="Units Sold Trailing 91 Days" datatype="real" name="[m_units_sold_91d]" role="measure" type="quantitative" default-format="n#,##0">
-    <calculation class="tableau" formula="IIF(MAX([x_u91_encoded]) - MAX(DATEDIFF('day', #2000-01-01#, [stk_snapshot_date])) * 10000000000 = 0, NULL, MAX([x_u91_encoded]) - MAX(DATEDIFF('day', #2000-01-01#, [stk_snapshot_date])) * 10000000000)" />
+    <calculation class="tableau" formula="SUM(IF [stk_snapshot_date] = [x_period_end] THEN [stk_units_sold_91d] END)" />
     <desc>
       <formatted-text>
         <run>Units sold in the 91 days ending on the last snapshot date of the period, for the items in context; blank when no unit sold.</run>
@@ -184,7 +176,7 @@
     </desc>
   </column>
   <column caption="Closing Snapshot Date" datatype="date" name="[m_closing_date]" role="measure" type="quantitative">
-    <calculation class="tableau" formula="MAX([stk_snapshot_date])" />
+    <calculation class="tableau" formula="MAX([x_period_end])" />
     <desc>
       <formatted-text>
         <run>Last snapshot date of the period in context (the date closing stock is taken on).</run>

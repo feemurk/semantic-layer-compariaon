@@ -1301,25 +1301,15 @@
     "metric_id": null,
     "description": "Product group; an item can belong to several groups, so group totals overlap. Also called: category, product group, product category, department."
    },
-   "Closing Stock Encoded": {
-    "name": "x_qoh_encoded",
+   "Period End Snapshot Date": {
+    "name": "x_period_end",
     "kind": "calculation",
-    "datatype": "real",
-    "role": "measure",
+    "datatype": "date",
+    "role": "dimension",
     "hidden": true,
-    "formula": "DATEDIFF('day', #2000-01-01#, [stk_snapshot_date]) * 10000000000 + {INCLUDE [stk_snapshot_date] : SUM([stk_quantity_on_hand])}",
+    "formula": "{EXCLUDE [si_wwi_stock_item_id], [si_stock_item], [si_brand], [si_color], [si_size], [si_selling_package], [si_is_chiller_stock], [csi_stock_item], [csi_color], [sg_stock_group_name], [stk_balance_basis] : MAX([stk_snapshot_date])}",
     "metric_id": null,
-    "description": "Day index times 1e10 plus the context's quantity on hand that day; MAX selects the last day."
-   },
-   "Units Sold 91 Days Encoded": {
-    "name": "x_u91_encoded",
-    "kind": "calculation",
-    "datatype": "real",
-    "role": "measure",
-    "hidden": true,
-    "formula": "DATEDIFF('day', #2000-01-01#, [stk_snapshot_date]) * 10000000000 + ZN({INCLUDE [stk_snapshot_date] : SUM([stk_units_sold_91d])})",
-    "metric_id": null,
-    "description": "Day index times 1e10 plus the context's trailing 91-day units that day; MAX selects the last day."
+    "description": "Last snapshot date of the period in context, ignoring item and group attributes in the view."
    },
    "Closing Stock On Hand": {
     "name": "m_closing_stock",
@@ -1327,7 +1317,7 @@
     "datatype": "real",
     "role": "measure",
     "hidden": false,
-    "formula": "MAX([x_qoh_encoded]) - MAX(DATEDIFF('day', #2000-01-01#, [stk_snapshot_date])) * 10000000000",
+    "formula": "SUM(IF [stk_snapshot_date] = [x_period_end] THEN [stk_quantity_on_hand] END)",
     "metric_id": "W-M2",
     "description": "Units on hand on the last day of the period (semi-additive); summed across stock items and stock groups. Value on the last snapshot date of the period in context. Also called: stock on hand, inventory, closing inventory, ending inventory, units in stock."
    },
@@ -1337,7 +1327,7 @@
     "datatype": "real",
     "role": "measure",
     "hidden": false,
-    "formula": "IIF(MAX([x_u91_encoded]) - MAX(DATEDIFF('day', #2000-01-01#, [stk_snapshot_date])) * 10000000000 = 0, NULL, MAX([x_u91_encoded]) - MAX(DATEDIFF('day', #2000-01-01#, [stk_snapshot_date])) * 10000000000)",
+    "formula": "SUM(IF [stk_snapshot_date] = [x_period_end] THEN [stk_units_sold_91d] END)",
     "metric_id": null,
     "description": "Units sold in the 91 days ending on the last snapshot date of the period, for the items in context; blank when no unit sold."
    },
@@ -1367,7 +1357,7 @@
     "datatype": "date",
     "role": "measure",
     "hidden": false,
-    "formula": "MAX([stk_snapshot_date])",
+    "formula": "MAX([x_period_end])",
     "metric_id": null,
     "description": "Last snapshot date of the period in context (the date closing stock is taken on)."
    },

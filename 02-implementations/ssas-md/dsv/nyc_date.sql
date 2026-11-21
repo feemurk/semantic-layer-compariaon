@@ -26,12 +26,12 @@ SELECT
   CASE
     WHEN d.calendar_year - 1 < (SELECT MIN(e.calendar_year) FROM nyctaxi.dim_date e) THEN NULL
     WHEN d.calendar_month = 2 AND d.day_of_month = 29 THEN (CAST(d.calendar_year AS INTEGER) - 1) * 10000 + 228
-    ELSE (CAST(d.calendar_year AS INTEGER) - 1) * 10000 + d.calendar_month * 100 + d.day_of_month
+    ELSE (CAST(d.calendar_year AS INTEGER) - 1) * 10000 + CAST(d.calendar_month AS INTEGER) * 100 + d.day_of_month
   END AS stly_date_id,
   CAST(CASE
     WHEN d.calendar_year - 1 < (SELECT MIN(e.calendar_year) FROM nyctaxi.dim_date e) THEN NULL
     WHEN d.calendar_month = 2 AND d.day_of_month = 29 THEN (CAST(d.calendar_year AS INTEGER) - 1) * 10000 + 228
-    ELSE (CAST(d.calendar_year AS INTEGER) - 1) * 10000 + d.calendar_month * 100 + d.day_of_month
+    ELSE (CAST(d.calendar_year AS INTEGER) - 1) * 10000 + CAST(d.calendar_month AS INTEGER) * 100 + d.day_of_month
   END AS VARCHAR(8)) AS stly_date_id_name,
   CASE WHEN d.calendar_year BETWEEN 2023 AND 2024 THEN 1 ELSE 0 END AS in_source_window,
   CASE WHEN d.calendar_year BETWEEN 2023 AND 2024 THEN 'true' ELSE 'false' END AS in_source_window_name

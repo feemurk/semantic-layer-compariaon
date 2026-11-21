@@ -2978,6 +2978,11 @@
     "N-C1:ytd_revenue": "v0",
     "N-C1:stly_ytd_revenue": "v1",
     "N-C1:yoy_pct": "v2"
+   },
+   "value_kinds": {
+    "N-C1:ytd_revenue": "money",
+    "N-C1:stly_ytd_revenue": "money",
+    "N-C1:yoy_pct": "ratio"
    }
   },
   {
@@ -3120,6 +3125,11 @@
     "N-C1:ytd_revenue": "v0",
     "N-C1:stly_ytd_revenue": "v1",
     "N-C1:yoy_pct": "v2"
+   },
+   "value_kinds": {
+    "N-C1:ytd_revenue": "money",
+    "N-C1:stly_ytd_revenue": "money",
+    "N-C1:yoy_pct": "ratio"
    }
   },
   {
@@ -3174,6 +3184,11 @@
     "N-C1:ytd_revenue": "v0",
     "N-C1:stly_ytd_revenue": "v1",
     "N-C1:yoy_pct": "v2"
+   },
+   "value_kinds": {
+    "N-C1:ytd_revenue": "money",
+    "N-C1:stly_ytd_revenue": "money",
+    "N-C1:yoy_pct": "ratio"
    }
   },
   {
@@ -3222,6 +3237,11 @@
     "N-C1:ytd_revenue": "v0",
     "N-C1:stly_ytd_revenue": "v1",
     "N-C1:yoy_pct": "v2"
+   },
+   "value_kinds": {
+    "N-C1:ytd_revenue": "money",
+    "N-C1:stly_ytd_revenue": "money",
+    "N-C1:yoy_pct": "ratio"
    }
   },
   {
@@ -3370,6 +3390,11 @@
     "N-C1:ytd_revenue": "v0",
     "N-C1:stly_ytd_revenue": "v1",
     "N-C1:yoy_pct": "v2"
+   },
+   "value_kinds": {
+    "N-C1:ytd_revenue": "money",
+    "N-C1:stly_ytd_revenue": "money",
+    "N-C1:yoy_pct": "ratio"
    }
   },
   {
@@ -3518,6 +3543,11 @@
     "N-C1:ytd_revenue": "v0",
     "N-C1:stly_ytd_revenue": "v1",
     "N-C1:yoy_pct": "v2"
+   },
+   "value_kinds": {
+    "N-C1:ytd_revenue": "money",
+    "N-C1:stly_ytd_revenue": "money",
+    "N-C1:yoy_pct": "ratio"
    }
   },
   {
@@ -3666,6 +3696,11 @@
     "N-C1:ytd_revenue": "v0",
     "N-C1:stly_ytd_revenue": "v1",
     "N-C1:yoy_pct": "v2"
+   },
+   "value_kinds": {
+    "N-C1:ytd_revenue": "money",
+    "N-C1:stly_ytd_revenue": "money",
+    "N-C1:yoy_pct": "ratio"
    }
   },
   {
@@ -3814,6 +3849,11 @@
     "N-C1:ytd_revenue": "v0",
     "N-C1:stly_ytd_revenue": "v1",
     "N-C1:yoy_pct": "v2"
+   },
+   "value_kinds": {
+    "N-C1:ytd_revenue": "money",
+    "N-C1:stly_ytd_revenue": "money",
+    "N-C1:yoy_pct": "ratio"
    }
   }
  ]

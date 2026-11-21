@@ -411,8 +411,11 @@ STOCK_DAILY = Table(
     "(the snapshot has one row per item per day, so 91 rows are 91 days).",
 )
 
-ENCODE = "DATEDIFF('day', #2000-01-01#, [stk_snapshot_date]) * 10000000000"
-LAST_DAY_SHIFT = "MAX(DATEDIFF('day', #2000-01-01#, [stk_snapshot_date])) * 10000000000"
+# Every non-date dimension of SLC WWI Stock. The period end d* is the last snapshot date of the view's period with these
+# removed, so an item attribute in the view (an SCD2 color, a stock group) never moves d* (SPEC § 6.3 W-M2).
+STOCK_NON_DATE_DIMS = ["si_wwi_stock_item_id", "si_stock_item", "si_brand", "si_color", "si_size", "si_selling_package",
+                       "si_is_chiller_stock", "csi_stock_item", "csi_color", "sg_stock_group_name", "stk_balance_basis"]
+PERIOD_END = ("{EXCLUDE " + ", ".join(f"[{d}]" for d in STOCK_NON_DATE_DIMS) + " : MAX([stk_snapshot_date])}")
 
 WWI_STOCK = DataSource(
     key="slc_wwi_stock",
@@ -431,22 +434,19 @@ WWI_STOCK = DataSource(
         Rel("stock_item", "stock_group", [("si_wwi_stock_item_id", "sg_wwi_stock_item_id")]),
     ],
     calcs=[
-        Calc("x_qoh_encoded", "Closing Stock Encoded",
-             f"{ENCODE} + {{INCLUDE [stk_snapshot_date] : SUM([stk_quantity_on_hand])}}", "real", hidden=True,
-             desc="Day index times 1e10 plus the context's quantity on hand that day; MAX selects the last day."),
-        Calc("x_u91_encoded", "Units Sold 91 Days Encoded",
-             f"{ENCODE} + ZN({{INCLUDE [stk_snapshot_date] : SUM([stk_units_sold_91d])}})", "real", hidden=True,
-             desc="Day index times 1e10 plus the context's trailing 91-day units that day; MAX selects the last day."),
-        metric_calc("W-M2", "m_closing_stock", f"MAX([x_qoh_encoded]) - {LAST_DAY_SHIFT}",
+        Calc("x_period_end", "Period End Snapshot Date", PERIOD_END, "date", role="dimension", hidden=True,
+             desc="Last snapshot date of the period in context, ignoring item and group attributes in the view."),
+        metric_calc("W-M2", "m_closing_stock",
+                    "SUM(IF [stk_snapshot_date] = [x_period_end] THEN [stk_quantity_on_hand] END)",
                     extra="Value on the last snapshot date of the period in context."),
         Calc("m_units_sold_91d", "Units Sold Trailing 91 Days",
-             f"IIF(MAX([x_u91_encoded]) - {LAST_DAY_SHIFT} = 0, NULL, MAX([x_u91_encoded]) - {LAST_DAY_SHIFT})",
-             "real", desc="Units sold in the 91 days ending on the last snapshot date of the period, for the items in "
-                          "context; blank when no unit sold.", fmt=FORMATS["units"]),
+             "SUM(IF [stk_snapshot_date] = [x_period_end] THEN [stk_units_sold_91d] END)", "real",
+             desc="Units sold in the 91 days ending on the last snapshot date of the period, for the items in "
+                  "context; blank when no unit sold.", fmt=FORMATS["units"]),
         metric_calc("W-C2", "m_days_of_supply", "[m_closing_stock] / ([m_units_sold_91d] / 91)"),
         Calc("m_snapshot_rows", "Snapshot Row Count", "COUNT([stk_snapshot_date])", "integer",
              desc="Number of item-day snapshot rows in context (row presence of the stock fact).", fmt=FORMATS["count"]),
-        Calc("m_closing_date", "Closing Snapshot Date", "MAX([stk_snapshot_date])", "date",
+        Calc("m_closing_date", "Closing Snapshot Date", "MAX([x_period_end])", "date",
              desc="Last snapshot date of the period in context (the date closing stock is taken on)."),
         Calc("rls_wwi_inventory", "RLS Inventory Filter",
              f"NOT ISMEMBEROF('{TERRITORY_GROUP}') AND NOT ISNULL([stk_snapshot_date])", "boolean",

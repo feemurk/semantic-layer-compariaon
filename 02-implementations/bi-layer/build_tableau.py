@@ -278,7 +278,8 @@ def metric_spec(metric_id: str) -> dict:
             q = query(source, [dim(c, a) for c, a in members] + [agg(c, al) for (_, c), al in zip(values, aliases)]
                       + [agg(presence, "presence")])
             branches.append({"grain": grain, **q, "members": [a for _, a in members],
-                             "values": {label: al for (label, _), al in zip(values, aliases)}, "presence": "presence"})
+                             "values": {label: al for (label, _), al in zip(values, aliases)}, "presence": "presence",
+                             "value_kinds": value_kinds(source, values)})
     else:
         values = TIME_INTEL[metric_id]
         for grain, (kind, members) in TIME_INTEL_GRAINS.items():
@@ -288,13 +289,23 @@ def metric_spec(metric_id: str) -> dict:
             branches.append({"grain": grain, **q, "presence": "presence",
                              "members": (["@anchor"] if kind != "total" else []) + [a for _, a in members],
                              "anchor_parameter": "As-of Date", "anchors": anchors(kind),
-                             "values": {label: al for (label, _), al in zip(values, aliases)}})
+                             "values": {label: al for (label, _), al in zip(values, aliases)},
+                             "value_kinds": value_kinds(NYC, values)})
     return {"metric": metric_id,
             "contract": ["grain", "measure", "member_1", "member_2", "member_3", "value"],
             "generated_by": "build_tableau.py", "branches": branches}
 
 
 ALL_METRICS = sorted([*SIMPLE, *MULTI, *TIME_INTEL])
+KIND_OF_FORMAT = {"currency": "money", "decimal_2": "money", "units": "count", "count": "count"}
+
+
+def value_kinds(source: str, values: list[tuple[str, str]]) -> dict[str, str]:
+    """SPEC § 9.3 tolerance class per measure label: money (±0.005), count (exact) or ratio (±1e-6)."""
+    from model import BY_NAME, FORMATS
+    fmt_key = {v: k for k, v in FORMATS.items()}
+    fields = BY_NAME[source].fields()
+    return {label: KIND_OF_FORMAT.get(fmt_key.get(fields[cap].fmt), "ratio") for label, cap in values}
 
 # =========================================================================== outputs
 

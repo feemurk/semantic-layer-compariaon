@@ -35,7 +35,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   },
   {
    "grain": "year",
@@ -69,7 +72,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   },
   {
    "grain": "month",
@@ -103,7 +109,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   },
   {
    "grain": "day",
@@ -137,7 +146,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   },
   {
    "grain": "dropoff_year",
@@ -171,7 +183,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   },
   {
    "grain": "dropoff_month",
@@ -205,7 +220,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   },
   {
    "grain": "year_pickup_hour",
@@ -245,7 +263,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   },
   {
    "grain": "year_pickup_borough",
@@ -285,7 +306,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   },
   {
    "grain": "year_pickup_zone",
@@ -325,7 +349,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   },
   {
    "grain": "year_dropoff_borough",
@@ -365,7 +392,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   },
   {
    "grain": "year_dropoff_zone",
@@ -405,7 +435,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   },
   {
    "grain": "year_payment_type",
@@ -445,7 +478,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   },
   {
    "grain": "year_vendor",
@@ -485,7 +521,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   },
   {
    "grain": "year_pickup_dropoff_borough",
@@ -531,7 +570,10 @@
    "values": {
     "B-N1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "B-N1": "count"
+   }
   }
  ]
 }

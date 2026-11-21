@@ -1,0 +1,6 @@
+# Pinned dependencies of stack S3 (builder, linter, jobs) and scripts/test_tableau.py.
+pyyaml==6.0.2
+duckdb==1.4.1
+xmlschema==4.3.2
+jsonschema==4.26.0
+tableauserverclient==0.42

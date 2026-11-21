@@ -2978,6 +2978,11 @@
     "N-C2": "v0",
     "N-C2:mtd_trips": "v1",
     "N-C2:ytd_trips": "v2"
+   },
+   "value_kinds": {
+    "N-C2": "ratio",
+    "N-C2:mtd_trips": "count",
+    "N-C2:ytd_trips": "count"
    }
   },
   {
@@ -3120,6 +3125,11 @@
     "N-C2": "v0",
     "N-C2:mtd_trips": "v1",
     "N-C2:ytd_trips": "v2"
+   },
+   "value_kinds": {
+    "N-C2": "ratio",
+    "N-C2:mtd_trips": "count",
+    "N-C2:ytd_trips": "count"
    }
   },
   {
@@ -3174,6 +3184,11 @@
     "N-C2": "v0",
     "N-C2:mtd_trips": "v1",
     "N-C2:ytd_trips": "v2"
+   },
+   "value_kinds": {
+    "N-C2": "ratio",
+    "N-C2:mtd_trips": "count",
+    "N-C2:ytd_trips": "count"
    }
   },
   {
@@ -3222,6 +3237,11 @@
     "N-C2": "v0",
     "N-C2:mtd_trips": "v1",
     "N-C2:ytd_trips": "v2"
+   },
+   "value_kinds": {
+    "N-C2": "ratio",
+    "N-C2:mtd_trips": "count",
+    "N-C2:ytd_trips": "count"
    }
   },
   {
@@ -3370,6 +3390,11 @@
     "N-C2": "v0",
     "N-C2:mtd_trips": "v1",
     "N-C2:ytd_trips": "v2"
+   },
+   "value_kinds": {
+    "N-C2": "ratio",
+    "N-C2:mtd_trips": "count",
+    "N-C2:ytd_trips": "count"
    }
   },
   {
@@ -3518,6 +3543,11 @@
     "N-C2": "v0",
     "N-C2:mtd_trips": "v1",
     "N-C2:ytd_trips": "v2"
+   },
+   "value_kinds": {
+    "N-C2": "ratio",
+    "N-C2:mtd_trips": "count",
+    "N-C2:ytd_trips": "count"
    }
   },
   {
@@ -3666,6 +3696,11 @@
     "N-C2": "v0",
     "N-C2:mtd_trips": "v1",
     "N-C2:ytd_trips": "v2"
+   },
+   "value_kinds": {
+    "N-C2": "ratio",
+    "N-C2:mtd_trips": "count",
+    "N-C2:ytd_trips": "count"
    }
   },
   {
@@ -3814,6 +3849,11 @@
     "N-C2": "v0",
     "N-C2:mtd_trips": "v1",
     "N-C2:ytd_trips": "v2"
+   },
+   "value_kinds": {
+    "N-C2": "ratio",
+    "N-C2:mtd_trips": "count",
+    "N-C2:ytd_trips": "count"
    }
   }
  ]

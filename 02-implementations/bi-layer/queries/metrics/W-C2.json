@@ -49,7 +49,12 @@
     "W-C2:closing_units": "v1",
     "W-C2:units_sold_91d": "v2"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C2": "ratio",
+    "W-C2:closing_units": "count",
+    "W-C2:units_sold_91d": "count"
+   }
   },
   {
    "grain": "year",
@@ -97,7 +102,12 @@
     "W-C2:closing_units": "v1",
     "W-C2:units_sold_91d": "v2"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C2": "ratio",
+    "W-C2:closing_units": "count",
+    "W-C2:units_sold_91d": "count"
+   }
   },
   {
    "grain": "month",
@@ -145,7 +155,12 @@
     "W-C2:closing_units": "v1",
     "W-C2:units_sold_91d": "v2"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C2": "ratio",
+    "W-C2:closing_units": "count",
+    "W-C2:units_sold_91d": "count"
+   }
   },
   {
    "grain": "day",
@@ -193,7 +208,12 @@
     "W-C2:closing_units": "v1",
     "W-C2:units_sold_91d": "v2"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C2": "ratio",
+    "W-C2:closing_units": "count",
+    "W-C2:units_sold_91d": "count"
+   }
   },
   {
    "grain": "fiscal_year",
@@ -241,7 +261,12 @@
     "W-C2:closing_units": "v1",
     "W-C2:units_sold_91d": "v2"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C2": "ratio",
+    "W-C2:closing_units": "count",
+    "W-C2:units_sold_91d": "count"
+   }
   },
   {
    "grain": "year_stock_item",
@@ -295,7 +320,12 @@
     "W-C2:closing_units": "v1",
     "W-C2:units_sold_91d": "v2"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C2": "ratio",
+    "W-C2:closing_units": "count",
+    "W-C2:units_sold_91d": "count"
+   }
   },
   {
    "grain": "year_stock_group",
@@ -349,7 +379,12 @@
     "W-C2:closing_units": "v1",
     "W-C2:units_sold_91d": "v2"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-C2": "ratio",
+    "W-C2:closing_units": "count",
+    "W-C2:units_sold_91d": "count"
+   }
   }
  ]
 }

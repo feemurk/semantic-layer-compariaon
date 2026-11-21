@@ -1,0 +1,84 @@
+# SPEC E5 for S3: lint -> publish to the test site -> VizQL Data Service reconciliation gate -> promote, on every push.
+# GitHub environments `test` and `prod` each hold variables TABLEAU_SERVER, TABLEAU_SITE, TABLEAU_PROJECT,
+# TABLEAU_PAT_NAME, DATABRICKS_SERVER_HOSTNAME, DATABRICKS_HTTP_PATH and secrets TABLEAU_PAT_SECRET, DATABRICKS_TOKEN.
+name: s3-tableau
+
+on:
+  push:
+    paths:
+      - 02-implementations/bi-layer/**
+      - 01-spec/oracle/expected/**
+      - 01-spec/glossary.yaml
+      - scripts/test_tableau.py
+      - .github/workflows/s3-tableau.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: s3-tableau-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install -r 02-implementations/bi-layer/requirements.txt
+      - run: python 02-implementations/bi-layer/build_tableau.py --check
+      - run: python 02-implementations/bi-layer/lint_tableau.py
+      - run: python scripts/test_tableau.py
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    environment: test
+    env:
+      TABLEAU_SERVER: ${{ vars.TABLEAU_SERVER }}
+      TABLEAU_SITE: ${{ vars.TABLEAU_SITE }}
+      TABLEAU_PROJECT: ${{ vars.TABLEAU_PROJECT }}
+      TABLEAU_PAT_NAME: ${{ vars.TABLEAU_PAT_NAME }}
+      TABLEAU_PAT_SECRET: ${{ secrets.TABLEAU_PAT_SECRET }}
+      DATABRICKS_SERVER_HOSTNAME: ${{ vars.DATABRICKS_SERVER_HOSTNAME }}
+      DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install -r 02-implementations/bi-layer/requirements.txt
+      - run: python 02-implementations/bi-layer/jobs/publish.py
+      - run: python 02-implementations/bi-layer/jobs/reconcile.py --select 'Q-*-P' --repeat 1 --fail-on-mismatch --out results/s3-gate.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: s3-gate-test
+          path: results/s3-gate.json
+
+  promote:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: prod
+    env:
+      TABLEAU_SERVER: ${{ vars.TABLEAU_SERVER }}
+      TABLEAU_SITE: ${{ vars.TABLEAU_SITE }}
+      TABLEAU_PROJECT: ${{ vars.TABLEAU_PROJECT }}
+      TABLEAU_PAT_NAME: ${{ vars.TABLEAU_PAT_NAME }}
+      TABLEAU_PAT_SECRET: ${{ secrets.TABLEAU_PAT_SECRET }}
+      DATABRICKS_SERVER_HOSTNAME: ${{ vars.DATABRICKS_SERVER_HOSTNAME }}
+      DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install -r 02-implementations/bi-layer/requirements.txt
+      - run: python 02-implementations/bi-layer/jobs/publish.py
+      - run: python 02-implementations/bi-layer/jobs/reconcile.py --select 'Q-*-P' --repeat 1 --fail-on-mismatch --out results/s3-gate.json

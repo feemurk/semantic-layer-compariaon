@@ -35,7 +35,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "year",
@@ -69,7 +72,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "month",
@@ -103,7 +109,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "day",
@@ -137,7 +146,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "fiscal_year",
@@ -171,7 +183,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "delivery_year",
@@ -205,7 +220,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "year_customer_category",
@@ -245,7 +263,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "year_customer",
@@ -285,7 +306,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "year_bill_to_customer",
@@ -325,7 +349,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "year_sales_territory",
@@ -365,7 +392,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "year_state_province",
@@ -405,7 +435,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "year_stock_item",
@@ -445,7 +478,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "year_color",
@@ -485,7 +521,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "year_salesperson",
@@ -525,7 +564,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   },
   {
    "grain": "year_stock_group",
@@ -565,7 +607,10 @@
    "values": {
     "W-S1": "v0"
    },
-   "presence": "presence"
+   "presence": "presence",
+   "value_kinds": {
+    "W-S1": "money"
+   }
   }
  ]
 }
