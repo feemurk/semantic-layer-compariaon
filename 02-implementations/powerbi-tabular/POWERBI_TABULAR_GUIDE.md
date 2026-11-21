@@ -167,4 +167,4 @@ Further limits:
 
 - **Linguistic metadata format.** The JSON layout written to `cultures/en-US.tmdl` (`Entities` → `Definition.Binding` → `Terms`) follows what Power BI Desktop serializes. Microsoft documents that the LSDL holds synonyms and AI instructions, but not its schema (pending verification). AI instructions are applied through the documented dialog for that reason.
 - **Role membership and connections** are environment configuration outside Git (§ 6).
-- **Restricted expected answers** for E8 are not yet produced by the oracle (SPEC § 10).
+- **Restricted expected answers.** Restricted expected answers per role now exist (`01-spec/oracle/expected/restricted`, 24 questions, SPEC § 10); E8 is scored against them once the stack is deployed.

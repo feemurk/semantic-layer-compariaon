@@ -88,6 +88,22 @@ python run_oracle.py --engine duckdb-fixtures
 
 The runner exits non-zero on any error or mismatch. Tolerances (SPEC § 9.3) are applied by Python type of the actual value: integers exact, DECIMAL within 0.005, DOUBLE within 1e-6. NULL matches only NULL.
 
+### 5.1 Restricted answers (SPEC § 10)
+
+[`restricted.py`](restricted.py) produces the per-role expected answers under `expected/restricted/<role>/questions/`. A role is a set of row filters on fact tables, applied the way Unity Catalog row filters apply: beneath every query, never on dimensions. The runner renames each filtered table to `<table>__unrestricted` and replaces it with a view that keeps the role's rows, so the unchanged question SQL answers as the role.
+
+| Role | Questions | Filtered tables |
+|---|---|---|
+| `territory_southeast` (Territory Analyst – Southeast) | the 12 `P` and `D1` questions of WWI | `fact_sale`, `fact_order`: as-was city in the Southeast territory; `fact_stock_holding_daily`, `fact_stock_movement`, `stock_holding_current`: no rows |
+| `pickup_manhattan` (Manhattan Pickup Analyst) | the 12 `P` and `D1` questions of NYC | `fact_trip`: pickup zone in Manhattan |
+
+Denied inventory shows in the shape the SQL gives over empty facts. A grouped question returns no rows (Q-W-M2-P, Q-W-C2-P, Q-W-C2-D1). A question whose answer includes a total grain returns that total with a NULL measure (Q-W-M2-D1). A stack is reconciled against exactly these files; returning a row of NULLs where the oracle returns no row is a reportable E8 difference.
+
+```bash
+python restricted.py --engine duckdb --data-root <b0>/warehouse --write-expected expected/restricted --perf perf/restricted_duckdb.json
+python restricted.py --engine spark  --data-root <b0>/warehouse --compare expected/restricted --perf perf/restricted_spark.json
+```
+
 ---
 
 ## 6. Tests
@@ -101,4 +117,5 @@ The runner exits non-zero on any error or mismatch. Tolerances (SPEC § 9.3) are
 | Comparator | tolerances accept in-range values | out-of-range money/ratio/count, NULL vs 0, column and row-count mismatches rejected |
 | Fixtures | hand-computed answers for every semantic trap | naive average of ratios, summed group revenue, summed daily stock, summed distinct counts rejected |
 | Cross-engine | all 92 queries identical on DuckDB and Spark SQL | — |
-| Real data (opt-in `SLC_LOCAL_B0`) | committed expected answers reproduce exactly from B0 | — |
+| Restricted (SPEC § 10) | 12 answers per role with the unrestricted headers; restricted rows equal the role's subset of the unrestricted answer; inventory denied; all other answers change; DuckDB and Spark agree per role on fixtures; the filter is applied and removed cleanly | an unrestricted run fails the restricted comparison; a missing table or column in a role filter is rejected |
+| Real data (opt-in `SLC_LOCAL_B0`) | committed expected answers, unrestricted and restricted, reproduce exactly from B0 | — |

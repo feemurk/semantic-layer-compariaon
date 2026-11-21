@@ -192,7 +192,7 @@ The DSV SQL is written in the ANSI subset that SQL Server and DuckDB share: CAST
 
 Further limits:
 
-- **Restricted reconciliation.** The oracle does not yet carry restricted expected answers per role (SPEC § 10), so E8 cannot be scored.
+- **Restricted reconciliation.** Restricted expected answers per role now exist (`01-spec/oracle/expected/restricted`, 24 questions, SPEC § 10); E8 is scored against them once the stack is deployed.
 - **Prerequisites outside the repository:**
   - a SQL Server 2025 instance (`slc-sql2025` by default) with PolyBase and the Databricks ODBC Driver;
   - an SSAS 2025 instance in Multidimensional mode, Enterprise edition;

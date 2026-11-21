@@ -13,9 +13,11 @@ Layers
      the deploy plan order of both profiles; the keyed reconciliation comparator.
   5. Negative: malformed YAML, MEASURE() of an undefined measure, and every other lint rule reject bad input.
   6. Emulation on the oracle fixtures (Spark): all 92 queries resolve against the canonical schema with the oracle's
-     output columns; every query without a window measure returns the oracle's answer on the fixtures.
+     output columns; every query without a window measure returns the oracle's answer on the fixtures, also per
+     SPEC § 10 role with the role's row filters on the source tables (how ABAC reaches a metric view, V-28).
   7. Real data (opt-in): SLC_LOCAL_B0=<platform local B0 dir> runs every query without a window measure on the
-     real-data B0 through the emulator and compares it to the committed expected answers.
+     real-data B0 through the emulator and compares it to the committed expected answers, unrestricted and, with the
+     SPEC § 10 row filters applied to the source tables, per role against expected/restricted.
 
 Requires scripts/requirements-test.txt and Java 17+. Exits non-zero on failure.
 
@@ -56,6 +58,7 @@ import deploy  # noqa: E402
 import lint_metric_views as lint  # noqa: E402
 import local_emulator  # noqa: E402
 import reconcile  # noqa: E402
+import restricted  # noqa: E402
 import run_oracle as ro  # noqa: E402
 
 VIEWS = lint.load_views()
@@ -140,6 +143,36 @@ def check_against(columns, rows, expected: Path, query: ro.Query) -> tuple[bool,
     if query.query_id in KNOWN_DIVERGENCES:
         return True, subset_of_expected(columns, rows, expected)
     return False, out.problems[:3] or ["mismatch"]
+
+
+def role_run(engine: ro.SparkEngine, role: restricted.Role, expected_dir: Path | None, tmp: Path | None):
+    """Run the role's non-window P/D1 questions through the emulator over role-filtered source tables.
+
+    With expected_dir None the oracle SQL is run on the same filtered engine into tmp and used as the expected answer.
+    Returns (failures, compared)."""
+    restricted.apply_role(engine, role)
+    try:
+        emu = local_emulator.Emulator(engine)
+        stack = {q.query_id: q for q in reconcile.load_queries() if q.kind == "questions"}
+        failures, compared = {}, 0
+        for oq in restricted.role_queries(role):
+            q = stack[oq.query_id]
+            if emu.uses_window(q.sql):
+                continue
+            if expected_dir is None:
+                columns, rows = engine.execute(oq.sql)
+                expected = tmp / role.name / f"{q.query_id}.csv"
+                ro.write_csv(columns, rows, expected)
+            else:
+                expected = expected_dir / role.name / "questions" / f"{q.query_id}.csv"
+            got_cols, got_rows = emu.execute(q.sql)
+            _, problems = check_against(got_cols, got_rows, expected, q)
+            compared += 1
+            if problems:
+                failures[f"{role.name}/{q.query_id}"] = problems
+        return failures, compared
+    finally:
+        restricted.remove_role(engine, role)
 
 
 def valid_view() -> dict:
@@ -732,6 +765,23 @@ class FixtureEmulationTests(unittest.TestCase):
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 
+    def test_role_filters_reach_metric_view_queries_on_fixtures(self):
+        tmp = Path(tempfile.mkdtemp(prefix="slc-mv-roles-"))
+        try:
+            failures, compared = {}, 0
+            for role in restricted.ROLES.values():
+                f, c = role_run(self.engine, role, None, tmp)
+                failures.update(f)
+                compared += c
+            self.assertEqual(failures, {})
+            self.assertEqual(compared, 15)  # 24 P/D1 questions minus the 9 that use a window measure
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+        # The canonical tables are restored: the unrestricted answer still holds afterwards.
+        cols, rows = self.emu.execute("SELECT MEASURE(trip_count) AS trips FROM slc.semantic.nyc_trips")
+        expected_cols, expected = self.engine.execute("SELECT COUNT(*) AS trips FROM nyctaxi.fact_trip")
+        self.assertEqual(rows, expected)
+
     def test_window_measures_are_not_emulated(self):
         with self.assertRaises(local_emulator.WindowMeasureError):
             self.emu.execute("SELECT MEASURE(revenue_ytd) FROM slc.semantic.nyc_trips")
@@ -769,6 +819,16 @@ class RealDataEmulationTests(unittest.TestCase):
         self.assertEqual(compared, 65)
         # Every documented divergence is observed on the real data; an unobserved one would be a stale claim.
         self.assertEqual(divergent, {q for q, (_, on_b0) in KNOWN_DIVERGENCES.items() if on_b0})
+
+    def test_role_filters_reproduce_restricted_answers_on_b0(self):
+        engine = ro.SparkEngine(data_root=Path(os.environ["SLC_LOCAL_B0"]) / "warehouse", spark=spark())
+        failures, compared = {}, 0
+        for role in restricted.ROLES.values():
+            f, c = role_run(engine, role, restricted.EXPECTED, None)
+            failures.update(f)
+            compared += c
+        self.assertEqual(failures, {})
+        self.assertEqual(compared, 15)
 
 
 if __name__ == "__main__":

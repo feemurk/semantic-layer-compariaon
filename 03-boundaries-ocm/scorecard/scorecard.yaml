@@ -1,0 +1,659 @@
+# Projected evaluation scorecard (SPEC § 8.2). Every cell is a projection, not a measurement.
+# Source of PROJECTED_SCORECARD.md (build_scorecard.py); validated by scripts/test_scorecard.py.
+# Fields per cell:
+#   stack, dimension          S1-S4 x E1-E9
+#   rating                    Meets | Meets with workaround | Partial | Does not meet | Not assessable
+#   evidence                  weakest level the rating depends on: Locally verified | Documented | Design inference | Unknown
+#   confidence                High | Medium | Low (capped by the evidence level and by any Pending item)
+#   boundaries                B- entries the rating rests on (required for Meets with workaround)
+#   pending                   Pending § 14 entries the rating depends on (forces Low)
+#   subset                    what holds and what fails (required for Partial)
+#   expected_range            E3, E4, E7 only: the expected measurement and its basis
+#   rationale, citations      the argument and its sources (V-/B- entries, repository paths)
+#   confirm                   the observation in a measured run that confirms or overturns the cell
+as_of: 2026-11-21
+spec_version: 1.5
+
+findings:
+  - text: >-
+      Modern engineering practice is not where the legacy stacks fall short. The cube is projected to meet CI/CD,
+      partition rollover and near-real-time freshness, at the cost of a SQL Server adapter and a cache-clear cadence.
+      The Tabular model meets rollover, and meets CI/CD except for manual Copilot setup.
+    cells: [S1/E4, S1/E5, S1/E6, S2/E5, S2/E6]
+  - text: >-
+      Calendar time intelligence favors the proprietary engines. MDX and DAX anchor on the calendar, and Tableau does so
+      with a parameter. The SQL-native metric views anchor on the last date with data and cannot list members without
+      facts, the only projected E1 shortfall.
+    cells: [S1/E1, S2/E1, S3/E1, S4/E1]
+  - text: >-
+      Governance and speed trade off in the lakehouse layer. Unity Catalog enforces the security rules once for every
+      consumer, but a governed metric view cannot be materialized, so the fast path and the secure path are separate
+      deployments.
+    cells: [S4/E3, S4/E8]
+  - text: >-
+      Semantic-layer-as-code is universal. All four stacks are generated or linted from Git and validated by committed
+      suites; YAML has no monopoly.
+    cells: [S1/E5, S2/E5, S3/E5, S4/E5]
+  - text: >-
+      Most of the scorecard is low-confidence by construction. 26 of the 36 cells rest on design inference or on an
+      unverified vendor behavior, and performance, freshness latency and agent accuracy stay open for every stack until
+      a measured run.
+    cells: [S1/E3, S2/E3, S3/E3, S4/E3, S2/E4, S2/E7, S4/E7]
+
+cells:
+  # ------------------------------------------------------------------ E1 Metric correctness
+  - stack: S1
+    dimension: E1
+    rating: Meets
+    evidence: Design inference
+    confidence: Low
+    pending: [V-40]
+    rationale: >-
+      The MDX calculation script implements every metric with the SPEC semantics. LastNonEmpty serves W-M2. Period-to-date
+      metrics anchor on the calendar end of the period, so B-07 does not arise. Same-period-last-year uses a key-based
+      member property instead of ParallelPeriod, which misplaces leap-day anchors (V-36). The many-to-many dimension
+      deduplicates W-C1 totals, and dimension members exist without facts, so B-08 does not arise. The model is
+      well-formed and every reference resolves, but no MDX has executed.
+    citations: [V-35, V-36, 02-implementations/ssas-md/SSAS_MD_GUIDE.md, scripts/test_ssas_md.py]
+    confirm: >-
+      All 22 metric files reconcile to the oracle on the deployed cube. Watch above all the N-C1 cells for 2024 dates
+      after 28 February and the W-C2 91-day anchor; a mismatch there overturns the cell.
+
+  - stack: S2
+    dimension: E1
+    rating: Meets with workaround
+    evidence: Design inference
+    confidence: Low
+    boundaries: [B-14, B-15]
+    rationale: >-
+      Explicit DAX measures implement the SPEC anchors: the calendar end of the period capped at 2024-12-31, with
+      29 February mapped to 28 February. Built-in calendar time intelligence cannot serve the composite and hybrid
+      variants (B-14). Measures carry ISCROSSFILTERED guards so the applicability matrix's N cells return blank instead
+      of a repeated total (B-15). Every DAX reference resolves against the TMDL, but no DAX engine ran.
+    citations: [V-13, 02-implementations/powerbi-tabular/POWERBI_TABULAR_GUIDE.md, scripts/test_powerbi_tabular.py]
+    confirm: >-
+      All 22 metric queries reconcile in the Import, Direct Lake and DirectQuery variants. An N cell that returns a
+      value, or a YTD cell that disagrees on a sparse member, overturns the cell.
+
+  - stack: S3
+    dimension: E1
+    rating: Meets with workaround
+    evidence: Design inference
+    confidence: Low
+    boundaries: [B-05, B-17]
+    pending: [V-52]
+    rationale: >-
+      All 22 metric plans reproduce the oracle on the fixtures through the VizQL Data Service emulator. The emulator
+      restates each Tableau calculation in SQL, so Tableau's own evaluation is inferred, not shown. Semi-additive stock
+      needs an EXCLUDE level-of-detail pattern that names every non-date dimension (B-05). Period-to-date metrics need an
+      As-of Date parameter and one query per anchor, which keeps them calendar-anchored (B-17).
+    citations: [V-47, V-48, 02-implementations/bi-layer/TABLEAU_GUIDE.md, 02-implementations/bi-layer/tools/vds_emulator.py, scripts/test_tableau.py]
+    confirm: >-
+      Live VizQL Data Service reconciliation of all 22 metrics. A W-M2 value after an SCD2 change, or a period-to-date
+      value read with the parameter override, that differs from the oracle overturns the cell.
+
+  - stack: S4
+    dimension: E1
+    rating: Partial
+    evidence: Design inference
+    confidence: Low
+    boundaries: [B-07, B-08]
+    pending: [V-30]
+    subset: >-
+      Holds for all 17 metric files without a window measure: the emulator reproduces every committed B0 cell. It
+      fails for N-C1 and N-C2 month × member rows of sparse members: 12 rows with an early anchor and 27 absent rows
+      across Staten Island, EWR, the Unknown payment type and vendor 6.
+    rationale: >-
+      Non-window measures are exact on the real data: 64 of 65 non-window queries match, and the one difference is
+      B-08. Window measures anchor a coarser group on the last date with data, not the calendar end of the period
+      (B-07, V-30). Members without facts are unreachable (B-08). The exposure was counted on B0.
+    citations: [V-02, V-30, B-07, B-08, 02-implementations/databricks-metric-views/METRIC_VIEWS_GUIDE.md, scripts/test_databricks_metric_views.py]
+    confirm: >-
+      Workspace reconciliation of the window metrics. If the sparse-member cells match the oracle, V-30 is false and the
+      cell rises to Meets; if they differ exactly as counted, B-07 is confirmed.
+
+  # ------------------------------------------------------------------ E2 Self-service depth
+  - stack: S1
+    dimension: E2
+    rating: Meets
+    evidence: Design inference
+    confidence: Low
+    pending: [V-40]
+    rationale: >-
+      All 70 questions are expressed in MDX against one unchanged cube. Members are listed independently of facts, so
+      the dimension-driven questions (Q-W-S2-P, Q-N-S2-D4) return the oracle's full member lists. Every hierarchy,
+      measure and property resolves, and output columns equal the oracle headers.
+    citations: [02-implementations/ssas-md/SSAS_MD_GUIDE.md, scripts/test_ssas_md.py]
+    confirm: All 70 questions reconcile through Excel or MDX with zero model changes during the run.
+
+  - stack: S2
+    dimension: E2
+    rating: Meets
+    evidence: Design inference
+    confidence: Low
+    rationale: >-
+      All 70 questions are DAX queries against one model per dataset. Questions that list every member iterate the
+      dimension, so Q-N-S2-D4 returns all seven payment codes. References resolve and headers match the oracle, but no
+      DAX has executed.
+    citations: [02-implementations/powerbi-tabular/POWERBI_TABULAR_GUIDE.md, scripts/test_powerbi_tabular.py]
+    confirm: All 70 questions reconcile in each storage-mode variant with zero model changes.
+
+  - stack: S3
+    dimension: E2
+    rating: Meets with workaround
+    evidence: Design inference
+    confidence: Low
+    boundaries: [B-16, B-17]
+    pending: [V-53]
+    rationale: >-
+      All 70 question plans reproduce the oracle on the fixtures through the emulator. The query service has no query
+      composition, so drill paths query each grain and select client-side (B-16). Period-to-date questions set the As-of
+      parameter per anchor (B-17). Dimension-driven questions take members from dimension-only queries and match the
+      oracle row for row.
+    citations: [V-47, 02-implementations/bi-layer/TABLEAU_GUIDE.md, scripts/test_tableau.py]
+    confirm: All 70 plans reconcile against a live site, including the presence-measure handling of unmatched members (V-53).
+
+  - stack: S4
+    dimension: E2
+    rating: Partial
+    evidence: Locally verified
+    confidence: Medium
+    boundaries: [B-08]
+    subset: >-
+      All 70 questions are answered by MEASURE() queries over unchanged views. Q-N-S2-D4 cannot list payment codes
+      without 2024 trips (5 of the oracle's 7 rows, observed on B0). Q-W-S2-P depends on every month having facts.
+    rationale: >-
+      The B-08 shortfall is observed on the real data through the emulator and follows from the documented join model,
+      in which the source is the fact (V-03). Window questions are safe only when the anchor is selected outside the
+      window (V-31); the committed queries do so, but self-service clients may not.
+    citations: [V-03, B-08, 02-implementations/databricks-metric-views/METRIC_VIEWS_GUIDE.md, scripts/test_databricks_metric_views.py]
+    confirm: >-
+      Workspace run of all 70 queries: Q-N-S2-D4 returns 5 rows and every other question matches the oracle (window
+      questions included).
+
+  # ------------------------------------------------------------------ E3 Query performance
+  - stack: S1
+    dimension: E3
+    rating: Meets with workaround
+    evidence: Design inference
+    confidence: Low
+    boundaries: [B-09]
+    pending: [V-39]
+    expected_range: >-
+      MOLAP P questions well under 2 s warm. The N-C1, N-C2 and W-C2 cells (EXISTING date sets, StrToMember) are the
+      formula-engine risk at concurrency 10. Hot-partition queries add the PolyBase hop.
+    rationale: >-
+      Monthly MOLAP partitions and per-month distinct-count measure groups bound the scans. Aggregations are designed
+      from the E3 query log, not in advance. The ROLAP hot partition reads Databricks through SQL Server (B-09), so its
+      latency depends on PolyBase pushdown (V-39). The raw-SQL floor is 1.08 s or less for every question.
+    citations: [B-09, V-39, 02-implementations/ssas-md/SSAS_MD_GUIDE.md, 01-spec/oracle/ORACLE_REPORT.md]
+    confirm: >-
+      Warm p95 at concurrency 10 within 2 s (P) and 5 s (D1-D4), measured with and without usage-based aggregations and
+      with the hot partition populated.
+
+  - stack: S2
+    dimension: E3
+    rating: Not assessable
+    evidence: Design inference
+    confidence: Low
+    expected_range: >-
+      Import and Direct Lake: P and D questions expected well inside the targets (VertiPaq over about 80M trips is far
+      inside the F64 guardrails). DirectQuery: each DAX query becomes one or more SQL queries on serverless SQL, so
+      concurrency-10 latency is that of the warehouse and is not projectable.
+    rationale: >-
+      No workaround is involved, so the measurement alone decides. The expected range favors Import and Direct Lake.
+      DirectQuery inherits S4-like live latency plus DAX-to-SQL translation.
+    citations: [V-12, 02-implementations/powerbi-tabular/POWERBI_TABULAR_GUIDE.md, 01-spec/oracle/ORACLE_REPORT.md]
+    confirm: Warm p95 per variant at concurrency 1 and 10; the DirectQuery variant decides whether S2 needs a workaround.
+
+  - stack: S3
+    dimension: E3
+    rating: Meets with workaround
+    evidence: Design inference
+    confidence: Low
+    boundaries: [B-16, B-17]
+    expected_range: >-
+      Single-query P questions run at live serverless SQL latency plus the service overhead. Drill-path and multi-anchor
+      questions issue several calls (12 for Q-N-C1-P), so their end-to-end time is several round trips.
+    rationale: >-
+      Live queries compile to SQL on Databricks with relationship join culling. The pervasive WWI security filter always
+      joins City. The lack of query composition (B-16) and the per-anchor parameter (B-17) multiply calls; the extract
+      variant moves the work to Hyper.
+    citations: [B-16, B-17, 02-implementations/bi-layer/TABLEAU_GUIDE.md, 01-spec/oracle/ORACLE_REPORT.md]
+    confirm: Warm p95 per question, counting every call of a plan, at concurrency 1 and 10, for live and extract variants.
+
+  - stack: S4
+    dimension: E3
+    rating: Meets with workaround
+    evidence: Design inference
+    confidence: Low
+    boundaries: [B-01]
+    expected_range: >-
+      Governed profile: live serverless SQL over clustered Delta, near the raw-SQL floor (1.08 s or less on 4 vCPU
+      DuckDB) plus warehouse overhead. Accelerated profile: cube-grain questions served from the materializations.
+    rationale: >-
+      A metric view compiles to the SQL the oracle already runs and joins only what the query needs. Acceleration exists
+      only in the accelerated profile, because materialization is impossible over ABAC-governed sources (B-01). The fast
+      path and the governed path are therefore different deployments.
+    citations: [B-01, V-06, 02-implementations/databricks-metric-views/METRIC_VIEWS_GUIDE.md, 01-spec/oracle/ORACLE_REPORT.md]
+    confirm: >-
+      Warm p95 at concurrency 10 for both profiles, and which questions the engine serves from materializations.
+
+  # ------------------------------------------------------------------ E4 Data freshness
+  - stack: S1
+    dimension: E4
+    rating: Meets with workaround
+    evidence: Design inference
+    confidence: Low
+    boundaries: [B-09, B-10]
+    pending: [V-39]
+    expected_range: >-
+      Pipeline commit latency plus one ClearCache and a ROLAP read through PolyBase: minutes, inside 15 minutes if the
+      poller clears the cache at least every few minutes.
+    rationale: >-
+      The current month is a ROLAP hot partition, so new gold rows are visible without processing. Real-time ROLAP
+      cannot be notified through external tables (B-10), so freshness relies on an explicit cache clear, and every read
+      crosses the adapter (B-09).
+    citations: [V-37, B-09, B-10, 02-implementations/ssas-md/SSAS_MD_GUIDE.md, 02-implementations/ssas-md/jobs/partition_rollover.py]
+    confirm: Sentinel trips visible in MDX within 15 minutes at p95, with the cache-clear cadence recorded.
+
+  - stack: S2
+    dimension: E4
+    rating: Not assessable
+    evidence: Documented
+    confidence: Medium
+    pending: []
+    expected_range: >-
+      Hybrid NYC model: the real-time DirectQuery partition shows rows as soon as Databricks commits them. Direct Lake:
+      mirroring latency (seconds to minutes) plus automatic reframing. DirectQuery: live.
+    rationale: >-
+      Each NYC variant has a documented live path: a hybrid real-time partition, Direct Lake reframing, or DirectQuery.
+      No workaround is needed, so only the latency measurement can rate the cell.
+    citations: [V-12, V-13, 02-implementations/powerbi-tabular/POWERBI_TABULAR_GUIDE.md]
+    confirm: Sentinel trip p95 per variant; the Direct Lake mirroring delay is the uncertain term.
+
+  - stack: S3
+    dimension: E4
+    rating: Partial
+    evidence: Documented
+    confidence: Medium
+    subset: >-
+      The live variant shows committed rows on the next query. The extract variant is only as fresh as its last
+      incremental refresh, so it meets 15 minutes only with a refresh schedule of that frequency.
+    expected_range: Live variant at pipeline latency; extract variant at its refresh interval plus refresh duration.
+    rationale: >-
+      Incremental extract refresh on the pickup timestamp is documented (V-50). Sub-15-minute schedules are a site
+      setting, not a product guarantee.
+    citations: [V-50, 02-implementations/bi-layer/TABLEAU_GUIDE.md, 02-implementations/bi-layer/jobs/refresh.py]
+    confirm: Sentinel trip p95 for both variants at the configured extract schedule.
+
+  - stack: S4
+    dimension: E4
+    rating: Meets with workaround
+    evidence: Design inference
+    confidence: Low
+    boundaries: [B-01]
+    expected_range: >-
+      Governed profile: pipeline commit latency, because every query is live. Accelerated profile: queries the
+      materializations cover may serve data up to the hourly refresh old.
+    rationale: >-
+      The metric view adds no latency of its own over Delta. Freshness and acceleration trade off across the two
+      profiles (B-01), and the platform's freshness pipeline is not measured here.
+    citations: [B-01, V-06, 02-implementations/databricks-metric-views/METRIC_VIEWS_GUIDE.md]
+    confirm: Sentinel trip p95 in both profiles, and whether materialized queries return the sentinel before refresh.
+
+  # ------------------------------------------------------------------ E5 CI/CD
+  - stack: S1
+    dimension: E5
+    rating: Meets
+    evidence: Design inference
+    confidence: Low
+    pending: [V-40]
+    rationale: >-
+      A push runs lint, then deploy and process over XMLA, then the P-question reconciliation gate, then promotion on
+      main, with no manual step in the flow. Deployment runs on a self-hosted Windows runner, and the engine's acceptance
+      of the generated ASSL is untested (V-40).
+    citations: [V-40, 02-implementations/ssas-md/SSAS_MD_GUIDE.md, .github/workflows/s1-ssas-md.yml]
+    confirm: A model change flows to prod unattended, and redeploying the previous commit rolls it back.
+
+  - stack: S2
+    dimension: E5
+    rating: Partial
+    evidence: Documented
+    confidence: Medium
+    boundaries: [B-12, B-13]
+    subset: >-
+      Model, refresh and reconciliation are automated (fabric-cicd, enhanced refresh, XMLA gate). Copilot verified
+      answers, AI-instruction sync and per-environment connections and role membership are manual.
+    rationale: >-
+      Verified answers are not supported by Git, REST or deployment pipelines (V-43), so a change touching them needs a
+      manual step. RLS models force the CI gate onto XMLA with a stored service-principal secret (B-13).
+    citations: [V-17, V-43, B-12, B-13, 02-implementations/powerbi-tabular/POWERBI_TABULAR_GUIDE.md, 02-implementations/powerbi-tabular/copilot/verified_answers.md]
+    confirm: A model-only change flows unattended; a verified-answer change cannot.
+
+  - stack: S3
+    dimension: E5
+    rating: Meets
+    evidence: Design inference
+    confidence: Low
+    pending: [V-52]
+    rationale: >-
+      A push runs lint, publish of the live and extract data sources through the REST API, the P-question gate, and
+      promotion. Environment values are injected at publish time and nothing environment-specific is committed.
+    citations: [V-52, 02-implementations/bi-layer/TABLEAU_GUIDE.md, .github/workflows/s3-tableau.yml]
+    confirm: A calculation change flows to prod unattended and the gate passes.
+
+  - stack: S4
+    dimension: E5
+    rating: Meets
+    evidence: Design inference
+    confidence: Low
+    rationale: >-
+      A push runs lint and tests, then bundle deploy, the deploy job and the P-question gate in test, then promotion,
+      authenticated by workload identity federation with no stored token (V-33). The bundle syncs the oracle answers
+      from the same commit (V-32). The jobs have not run on a workspace.
+    citations: [V-32, V-33, 02-implementations/databricks-metric-views/METRIC_VIEWS_GUIDE.md, .github/workflows/s4-metric-views.yml]
+    confirm: A YAML change flows to prod unattended; the gate fails when a planted wrong measure is pushed.
+
+  # ------------------------------------------------------------------ E6 Partition and refresh automation
+  - stack: S1
+    dimension: E6
+    rating: Meets
+    evidence: Design inference
+    confidence: Low
+    pending: [V-40]
+    rationale: >-
+      The rollover script reads the current partitions and runs one transactional batch: create and process the closed
+      month, re-slice the hot partition, retire months beyond 24, then clear the cache. Plans for two consecutive months
+      are tested locally, and partition coverage of every trip is checked on the fixtures. Enterprise edition is required
+      for more than three partitions (V-35).
+    citations: [V-35, 02-implementations/ssas-md/jobs/partition_rollover.py, scripts/test_ssas_md.py]
+    confirm: Two consecutive simulated rollovers on the server with E1 still passing.
+
+  - stack: S2
+    dimension: E6
+    rating: Meets
+    evidence: Documented
+    confidence: Medium
+    rationale: >-
+      The hybrid refresh policy keeps 24 monthly partitions, refreshes the last 3 days incrementally and adds the
+      real-time partition. The service creates, merges and retires partitions on each applyRefreshPolicy refresh (V-13).
+    citations: [V-13, 02-implementations/powerbi-tabular/POWERBI_TABULAR_GUIDE.md]
+    confirm: Two consecutive simulated month closes leave exactly 24 monthly partitions with E1 still passing.
+
+  - stack: S3
+    dimension: E6
+    rating: Meets
+    evidence: Design inference
+    confidence: Low
+    pending: [V-52]
+    rationale: >-
+      The NYC extract refreshes incrementally on the pickup timestamp. A monthly full refresh with a rolling 24-month
+      relative-date extract filter retires the month that left the window. The live variant has no partitions to manage.
+    citations: [V-50, V-52, 02-implementations/bi-layer/jobs/refresh.py]
+    confirm: Two simulated rollovers leave exactly 24 months in the extract with E1 still passing.
+
+  - stack: S4
+    dimension: E6
+    rating: Meets
+    evidence: Design inference
+    confidence: Low
+    rationale: >-
+      The semantic layer holds no partitions: the views read clustered Delta live, and retention beyond 24 months is a
+      platform delete. Materializations refresh on their schedule, incrementally where possible (V-29). Nothing in S4
+      needs a rollover step.
+    citations: [V-29, 02-implementations/databricks-metric-views/METRIC_VIEWS_GUIDE.md]
+    confirm: After two simulated rollovers on the platform, E1 passes in both profiles with no S4 change.
+
+  # ------------------------------------------------------------------ E7 AI agent accessibility
+  - stack: S1
+    dimension: E7
+    rating: Meets with workaround
+    evidence: Design inference
+    confidence: Low
+    boundaries: [B-04]
+    expected_range: >-
+      Common-harness lane only, over XMLA/MDX. Accuracy depends on the agent writing MDX against a cube whose metadata
+      comes from the same glossary as every other stack.
+    rationale: >-
+      There is no native assistant (B-04), so the agent harness is the only lane. Its MCP server exists only as
+      specification (SPEC § 11), so no accuracy can be projected beyond parity of metadata.
+    citations: [B-04, 02-implementations/ssas-md/SSAS_MD_GUIDE.md]
+    confirm: Harness-lane accuracy, pass@3 and 3-of-3 consistency on the 70 questions.
+
+  - stack: S2
+    dimension: E7
+    rating: Not assessable
+    evidence: Design inference
+    confidence: Low
+    pending: [V-45]
+    expected_range: >-
+      Copilot lane over a model with AI instructions, verified answers and synonyms, plus the harness lane over XMLA/DAX.
+      Calendar-anchored measures avoid the B-07 errors an agent would inherit in S4.
+    rationale: >-
+      Agent accuracy is a measurement. The linguistic schema format for synonyms is undocumented (V-45), and verified
+      answers need manual setup (B-12).
+    citations: [V-13, V-45, 02-implementations/powerbi-tabular/POWERBI_TABULAR_GUIDE.md]
+    confirm: Copilot and harness accuracy, pass@3 and consistency on the 70 questions.
+
+  - stack: S3
+    dimension: E7
+    rating: Meets with workaround
+    evidence: Documented
+    confidence: Medium
+    boundaries: [B-18]
+    expected_range: >-
+      Tableau Agent lane plus the harness lane over the query service. Synonyms are appended to descriptions, and 5 of 69
+      visible fields carry synonyms beyond the 150 indexed characters.
+    rationale: >-
+      Tableau Agent indexes captions and the first 150 characters of descriptions only (V-14), and there is no synonym
+      property (B-18). Multi-call question plans (B-16) are hard for an agent to discover unaided.
+    citations: [V-14, B-16, B-18, 02-implementations/bi-layer/TABLEAU_GUIDE.md]
+    confirm: Agent and harness accuracy on the 70 questions, split by whether the needed synonym is inside the indexed prefix.
+
+  - stack: S4
+    dimension: E7
+    rating: Partial
+    evidence: Documented
+    confidence: Low
+    boundaries: [B-07, B-08]
+    pending: [V-31]
+    subset: >-
+      Genie and the harness read rich metadata (comment, display_name, synonyms, format) on every member. No lane can
+      answer exactly the questions B-07 and B-08 affect, and a date filter pushed into a window-measure query truncates
+      the window (V-31).
+    expected_range: >-
+      Strong metadata coverage. The accuracy ceiling is set by Q-N-S2-D4, by sparse-member period-to-date questions, and
+      by how often agents place date filters inside window queries.
+    rationale: >-
+      Agent metadata is first-class in YAML 1.1 (V-01, V-08), but semantic gaps in the layer pass straight through to
+      every agent.
+    citations: [V-01, V-08, V-31, B-07, B-08, 02-implementations/databricks-metric-views/METRIC_VIEWS_GUIDE.md]
+    confirm: Genie and harness accuracy, with the share of window questions where the agent filtered inside the window.
+
+  # ------------------------------------------------------------------ E8 Governance parity
+  - stack: S1
+    dimension: E8
+    rating: Meets
+    evidence: Design inference
+    confidence: Low
+    pending: [V-38]
+    rationale: >-
+      Roles restrict City to the Southeast territory with visual totals, and grant an empty allowed set on inventory.
+      Restricted expected answers now exist for every P and D1 question. If an empty allowed set raises an error instead
+      of returning NULL (V-38), the cell-security fallback returns #N/A and differs from the oracle.
+    citations: [V-38, 02-implementations/ssas-md/SSAS_MD_GUIDE.md, 01-spec/oracle/expected/restricted]
+    confirm: The 24 restricted questions reconcile per role in the harness and through Excel.
+
+  - stack: S2
+    dimension: E8
+    rating: Meets with workaround
+    evidence: Design inference
+    confidence: Low
+    boundaries: [B-13]
+    rationale: >-
+      Model RLS roles implement both SPEC § 10 rules, and the dropoff role stays unrestricted. Role reconciliation in CI
+      uses XMLA with an effective identity, because service principals cannot be role members and executeQueries refuses
+      them on RLS models (B-13).
+    citations: [V-41, V-42, B-13, 02-implementations/powerbi-tabular/POWERBI_TABULAR_GUIDE.md, 01-spec/oracle/expected/restricted]
+    confirm: The 24 restricted questions reconcile per role in each variant, through reports and Copilot.
+
+  - stack: S3
+    dimension: E8
+    rating: Meets
+    evidence: Design inference
+    confidence: Low
+    pending: [V-53]
+    rationale: >-
+      Data source filters with ISMEMBEROF are evaluated for the querying identity. The territory filter is pervasive
+      because it references City, so it also narrows the City member list. The stock filter denies inventory, and the
+      NYC filter is scoped to Trips so dropoff zones stay browsable.
+    citations: [V-49, V-53, 02-implementations/bi-layer/TABLEAU_GUIDE.md, 01-spec/oracle/expected/restricted]
+    confirm: The 24 restricted questions reconcile per role through the query service and Tableau Agent.
+
+  - stack: S4
+    dimension: E8
+    rating: Meets with workaround
+    evidence: Design inference
+    confidence: Low
+    boundaries: [B-01]
+    pending: [V-28]
+    rationale: >-
+      With the SPEC § 10 row filters on the source tables, the emulator reproduces the restricted oracle answers for the
+      15 role questions without a window measure, on fixtures and on B0. The remaining 9 window questions are inferred.
+      That ABAC policies filter the querying principal through a metric view is unverified (V-28), and the governed
+      profile forgoes materialization (B-01).
+    citations: [V-16, V-27, V-28, B-01, scripts/test_databricks_metric_views.py, 01-spec/oracle/expected/restricted]
+    confirm: The 24 restricted questions reconcile per role through Genie and the harness in the governed profile.
+
+  # ------------------------------------------------------------------ E9 Boundaries
+  - stack: S1
+    dimension: E9
+    rating: Meets
+    evidence: Locally verified
+    confidence: Medium
+    boundaries: [B-04, B-06, B-09, B-10]
+    rationale: >-
+      Every S1 boundary is documented with mechanism, workaround and cost in the guide and the SPEC register, including
+      the adapter that V-11's failed verification forced.
+    citations: [B-04, B-06, B-09, B-10, 02-implementations/ssas-md/SSAS_MD_GUIDE.md]
+    confirm: No boundary surfaces on the server that the register does not already name.
+
+  - stack: S2
+    dimension: E9
+    rating: Meets
+    evidence: Locally verified
+    confidence: Medium
+    boundaries: [B-11, B-12, B-13, B-14, B-15]
+    rationale: Every S2 boundary is documented with mechanism, workaround and cost in the guide and the SPEC register.
+    citations: [B-11, B-12, B-13, B-14, B-15, 02-implementations/powerbi-tabular/POWERBI_TABULAR_GUIDE.md]
+    confirm: No boundary surfaces on Fabric that the register does not already name.
+
+  - stack: S3
+    dimension: E9
+    rating: Meets
+    evidence: Locally verified
+    confidence: Medium
+    boundaries: [B-05, B-16, B-17, B-18, B-19]
+    rationale: Every S3 boundary is documented with mechanism, workaround and cost in the guide and the SPEC register.
+    citations: [B-05, B-16, B-17, B-18, B-19, 02-implementations/bi-layer/TABLEAU_GUIDE.md]
+    confirm: No boundary surfaces on the site that the register does not already name.
+
+  - stack: S4
+    dimension: E9
+    rating: Meets
+    evidence: Locally verified
+    confidence: Medium
+    boundaries: [B-01, B-02, B-03, B-07, B-08]
+    rationale: >-
+      Every S4 boundary is documented with mechanism, workaround and cost. B-07 and B-08 are quantified on the real
+      data, and their exposure is pinned by tests.
+    citations: [B-01, B-02, B-03, B-07, B-08, 02-implementations/databricks-metric-views/METRIC_VIEWS_GUIDE.md]
+    confirm: No boundary surfaces on the workspace that the register does not already name.
+
+verdicts:
+  - claim: MC-01
+    verdict: Refuted with cost
+    evidence: Design inference
+    confidence: Low
+    cells: [S1/E4, S2/E4]
+    rationale: >-
+      The cube serves the current month from a ROLAP hot partition, so new rows are visible without processing. Over
+      Databricks this costs a SQL Server adapter (B-09) and an explicit cache clear (B-10). The Tabular engine's hybrid
+      partition needs no workaround.
+    confirm: S1 sentinel-trip p95 within 15 minutes with the cache-clear cadence recorded.
+
+  - claim: MC-02
+    verdict: Refuted
+    evidence: Design inference
+    confidence: Low
+    cells: [S1/E5, S2/E5]
+    rationale: >-
+      The cube is generated from Python into ASSL, deployed and processed over XMLA, and gated on oracle reconciliation
+      by a GitHub workflow, with no manual step. The Power BI gaps are vendor features (verified answers), not the legacy
+      engine.
+    confirm: An unattended S1 deploy-process-reconcile-promote run from a Git push.
+
+  - claim: MC-03
+    verdict: Inconclusive
+    evidence: Design inference
+    confidence: Low
+    cells: [S1/E3, S1/E6]
+    rationale: >-
+      The design (about 80M trips in 24 monthly MOLAP partitions, per-month distinct-count groups, automated rollover)
+      gives no reason to expect failure. Scale is a measurement, and nothing has been measured.
+    confirm: S1 E3 percentiles at concurrency 10 and two clean rollovers on the full data.
+
+  - claim: MC-04
+    verdict: Refuted with cost
+    evidence: Design inference
+    confidence: Low
+    cells: [S1/E1, S2/E1, S3/E1, S4/E1]
+    rationale: >-
+      The SQL-native layer handles semi-additive and period-to-date logic with window measures, without a proprietary
+      engine. But it anchors on data, not the calendar (B-07), and cannot list members without facts (B-08). Matching
+      the SPEC needs a calendar × member dense source at a cost of days × members rows per dimension. The proprietary
+      engines (MDX, DAX) meet the definition directly.
+    confirm: S4 window-metric reconciliation confirming B-07, set against S1 and S2 matching the same cells.
+
+  - claim: MC-05
+    verdict: Inconclusive
+    evidence: Design inference
+    confidence: Low
+    cells: [S1/E7, S2/E7, S3/E7, S4/E7]
+    rationale: >-
+      Agent accuracy is unmeasured. Structurally, the SQL-native layer's semantic gaps (B-07, B-08) pass straight into
+      agent answers. The legacy cube is reachable only through the common harness (B-04), not denied to agents.
+    confirm: Per-lane accuracy, pass@3 and consistency for all four stacks on the 70 questions.
+
+  - claim: MC-06
+    verdict: Refuted
+    evidence: Design inference
+    confidence: Low
+    cells: [S1/E2, S2/E2, S4/E2]
+    rationale: >-
+      The legacy engines express all 70 questions, including every D-level self-service question, against unchanged
+      models. The lakehouse-native layer is the one that falls short (Q-N-S2-D4, B-08).
+    confirm: E2 runs with zero model changes on S1 and S2.
+
+  - claim: MC-07
+    verdict: Refuted with cost
+    evidence: Design inference
+    confidence: Low
+    cells: [S1/E8, S2/E8, S3/E8, S4/E8]
+    rationale: >-
+      Each BI layer enforces the SPEC § 10 rules for its BI and agent consumers, but the rules are written three more
+      times, once per layer: the consistency cost the claim points at. The catalog enforces them once, but at the price
+      of acceleration (B-01) and pending V-28.
+    confirm: All four stacks pass the 24 restricted questions per role in every lane.
+
+  - claim: MC-08
+    verdict: Refuted
+    evidence: Locally verified
+    confidence: High
+    cells: [S1/E5, S2/E5, S3/E5, S4/E5]
+    rationale: >-
+      Every stack is defined as code in Git and validated in CI: ASSL and MDX (S1), TMDL and DAX (S2), and .tds files
+      valid against Tableau's official XSD (S3), next to the YAML metric views (S4). All four are generated or linted by
+      committed tooling, and their suites pass locally.
+    confirm: Each stack's model round-trips from Git to its server and back without manual editing.

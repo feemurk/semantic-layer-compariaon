@@ -1,0 +1,334 @@
+{
+ "summary": {
+  "engine": "duckdb",
+  "roles": [
+   {
+    "role": "territory_southeast",
+    "queries": 12,
+    "errors": 0,
+    "mismatched": 0
+   },
+   {
+    "role": "pickup_manhattan",
+    "queries": 12,
+    "errors": 0,
+    "mismatched": 0
+   }
+  ],
+  "wall_seconds": 61.2
+ },
+ "results": [
+  {
+   "role": "territory_southeast",
+   "query_id": "Q-W-C1-D1",
+   "kind": "questions",
+   "rows": 67,
+   "runs_seconds": [
+    0.5467
+   ],
+   "first_run_seconds": 0.5467,
+   "warm_median_seconds": 0.5467,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "territory_southeast",
+   "query_id": "Q-W-C1-P",
+   "kind": "questions",
+   "rows": 10,
+   "runs_seconds": [
+    0.0186
+   ],
+   "first_run_seconds": 0.0186,
+   "warm_median_seconds": 0.0186,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "territory_southeast",
+   "query_id": "Q-W-C2-D1",
+   "kind": "questions",
+   "rows": 0,
+   "runs_seconds": [
+    0.0164
+   ],
+   "first_run_seconds": 0.0164,
+   "warm_median_seconds": 0.0164,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "territory_southeast",
+   "query_id": "Q-W-C2-P",
+   "kind": "questions",
+   "rows": 0,
+   "runs_seconds": [
+    0.0269
+   ],
+   "first_run_seconds": 0.0269,
+   "warm_median_seconds": 0.0269,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "territory_southeast",
+   "query_id": "Q-W-M1-D1",
+   "kind": "questions",
+   "rows": 10,
+   "runs_seconds": [
+    0.0241
+   ],
+   "first_run_seconds": 0.0241,
+   "warm_median_seconds": 0.0241,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "territory_southeast",
+   "query_id": "Q-W-M1-P",
+   "kind": "questions",
+   "rows": 8,
+   "runs_seconds": [
+    0.0152
+   ],
+   "first_run_seconds": 0.0152,
+   "warm_median_seconds": 0.0152,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "territory_southeast",
+   "query_id": "Q-W-M2-D1",
+   "kind": "questions",
+   "rows": 1,
+   "runs_seconds": [
+    0.0033
+   ],
+   "first_run_seconds": 0.0033,
+   "warm_median_seconds": 0.0033,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "territory_southeast",
+   "query_id": "Q-W-M2-P",
+   "kind": "questions",
+   "rows": 0,
+   "runs_seconds": [
+    0.0022
+   ],
+   "first_run_seconds": 0.0022,
+   "warm_median_seconds": 0.0022,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "territory_southeast",
+   "query_id": "Q-W-S1-D1",
+   "kind": "questions",
+   "rows": 147,
+   "runs_seconds": [
+    0.0217
+   ],
+   "first_run_seconds": 0.0217,
+   "warm_median_seconds": 0.0217,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "territory_southeast",
+   "query_id": "Q-W-S1-P",
+   "kind": "questions",
+   "rows": 12,
+   "runs_seconds": [
+    0.015
+   ],
+   "first_run_seconds": 0.015,
+   "warm_median_seconds": 0.015,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "territory_southeast",
+   "query_id": "Q-W-S2-D1",
+   "kind": "questions",
+   "rows": 218,
+   "runs_seconds": [
+    0.1373
+   ],
+   "first_run_seconds": 0.1373,
+   "warm_median_seconds": 0.1373,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "territory_southeast",
+   "query_id": "Q-W-S2-P",
+   "kind": "questions",
+   "rows": 12,
+   "runs_seconds": [
+    0.0199
+   ],
+   "first_run_seconds": 0.0199,
+   "warm_median_seconds": 0.0199,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "pickup_manhattan",
+   "query_id": "Q-N-C1-D1",
+   "kind": "questions",
+   "rows": 1,
+   "runs_seconds": [
+    20.1487
+   ],
+   "first_run_seconds": 20.1487,
+   "warm_median_seconds": 20.1487,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "pickup_manhattan",
+   "query_id": "Q-N-C1-P",
+   "kind": "questions",
+   "rows": 12,
+   "runs_seconds": [
+    0.5498
+   ],
+   "first_run_seconds": 0.5498,
+   "warm_median_seconds": 0.5498,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "pickup_manhattan",
+   "query_id": "Q-N-C2-D1",
+   "kind": "questions",
+   "rows": 1,
+   "runs_seconds": [
+    0.5831
+   ],
+   "first_run_seconds": 0.5831,
+   "warm_median_seconds": 0.5831,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "pickup_manhattan",
+   "query_id": "Q-N-C2-P",
+   "kind": "questions",
+   "rows": 12,
+   "runs_seconds": [
+    0.4651
+   ],
+   "first_run_seconds": 0.4651,
+   "warm_median_seconds": 0.4651,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "pickup_manhattan",
+   "query_id": "Q-N-M1-D1",
+   "kind": "questions",
+   "rows": 7,
+   "runs_seconds": [
+    14.2098
+   ],
+   "first_run_seconds": 14.2098,
+   "warm_median_seconds": 14.2098,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "pickup_manhattan",
+   "query_id": "Q-N-M1-P",
+   "kind": "questions",
+   "rows": 12,
+   "runs_seconds": [
+    0.7116
+   ],
+   "first_run_seconds": 0.7116,
+   "warm_median_seconds": 0.7116,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "pickup_manhattan",
+   "query_id": "Q-N-M2-D1",
+   "kind": "questions",
+   "rows": 10,
+   "runs_seconds": [
+    9.3098
+   ],
+   "first_run_seconds": 9.3098,
+   "warm_median_seconds": 9.3098,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "pickup_manhattan",
+   "query_id": "Q-N-M2-P",
+   "kind": "questions",
+   "rows": 8,
+   "runs_seconds": [
+    1.3647
+   ],
+   "first_run_seconds": 1.3647,
+   "warm_median_seconds": 1.3647,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "pickup_manhattan",
+   "query_id": "Q-N-S1-D1",
+   "kind": "questions",
+   "rows": 15,
+   "runs_seconds": [
+    0.7075
+   ],
+   "first_run_seconds": 0.7075,
+   "warm_median_seconds": 0.7075,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "pickup_manhattan",
+   "query_id": "Q-N-S1-P",
+   "kind": "questions",
+   "rows": 12,
+   "runs_seconds": [
+    0.9675
+   ],
+   "first_run_seconds": 0.9675,
+   "warm_median_seconds": 0.9675,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "pickup_manhattan",
+   "query_id": "Q-N-S2-D1",
+   "kind": "questions",
+   "rows": 24,
+   "runs_seconds": [
+    3.1205
+   ],
+   "first_run_seconds": 3.1205,
+   "warm_median_seconds": 3.1205,
+   "error": null,
+   "mismatches": []
+  },
+  {
+   "role": "pickup_manhattan",
+   "query_id": "Q-N-S2-P",
+   "kind": "questions",
+   "rows": 28,
+   "runs_seconds": [
+    5.5767
+   ],
+   "first_run_seconds": 5.5767,
+   "warm_median_seconds": 5.5767,
+   "error": null,
+   "mismatches": []
+  }
+ ]
+}

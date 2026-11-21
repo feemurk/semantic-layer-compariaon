@@ -8,8 +8,11 @@ Layers
   2. Comparator: SPEC § 9.3 tolerances and NULL semantics, positive and negative.
   3. Fixtures (DuckDB): hand-computed answers for each semantic trap, with the naive wrong answer rejected.
   4. Cross-engine (DuckDB vs Spark SQL on fixtures): all 92 queries return identical results.
-  5. Real data (opt-in): SLC_LOCAL_B0=<platform local B0 dir> re-runs all 92 queries on DuckDB
-     against the real-data B0 and compares them to the committed expected answers.
+  5. Restricted answers (SPEC § 10): per-role expected answers exist for every P and D1 question of the role's
+     dataset, equal the role's subset of the unrestricted answers where a question groups by the restricted attribute,
+     deny inventory to the territory role, agree across DuckDB and Spark SQL on fixtures, and reject bad role setups.
+  6. Real data (opt-in): SLC_LOCAL_B0=<platform local B0 dir> re-runs all 92 queries, and the 24 restricted ones per
+     role, on DuckDB against the real-data B0 and compares them to the committed expected answers.
 
 Requires scripts/requirements-test.txt (DuckDB, PySpark, PyYAML) and Java 17+.
 
@@ -41,6 +44,7 @@ try:
 except ImportError as exc:
     sys.exit(f"missing test dependency ({exc}); pip install -r scripts/requirements-test.txt")
 
+import restricted as rs  # noqa: E402
 import run_oracle as ro  # noqa: E402
 
 FORBIDDEN = {
@@ -312,7 +316,124 @@ class CrossEngineFixtureTests(unittest.TestCase):
             shutil.rmtree(tmp, ignore_errors=True)
 
 
-# ================================================================== 5. real data
+# ================================================================== 5. restricted answers (SPEC § 10)
+
+# Restricted answers that legitimately equal the unrestricted ones: Southeast is the top FY2015 territory anyway, and
+# the two NYC questions are Manhattan-pickup questions by definition.
+UNCHANGED_BY_ROLE = {"territory_southeast/Q-W-S1-D1", "pickup_manhattan/Q-N-S1-D1", "pickup_manhattan/Q-N-M2-D1"}
+
+
+class RestrictedAnswerTests(unittest.TestCase):
+    def restricted(self, role, qid):
+        return read_csv(rs.EXPECTED / role / "questions" / f"{qid}.csv")
+
+    def test_every_role_question_has_an_expected_answer_with_the_same_header(self):
+        for role in rs.ROLES.values():
+            queries = rs.role_queries(role)
+            self.assertEqual(len(queries), 12, role.name)
+            for q in queries:
+                header, _ = self.restricted(role.name, q.query_id)
+                self.assertEqual(header, read_csv(ORACLE / "expected" / "questions" / f"{q.query_id}.csv")[0])
+            on_disk = sorted(p.stem for p in (rs.EXPECTED / role.name / "questions").glob("*.csv"))
+            self.assertEqual(on_disk, sorted(q.query_id for q in queries))
+
+    def test_restricted_rows_are_the_role_subset(self):
+        cases = [("territory_southeast", "Q-W-S1-P", "sales_territory", "Southeast"),
+                 ("pickup_manhattan", "Q-N-S1-P", "pickup_borough", "Manhattan")]
+        for role, qid, column, member in cases:
+            header, rows = read_csv(ORACLE / "expected" / "questions" / f"{qid}.csv")
+            subset = [r for r in rows if r[header.index(column)] == member]
+            self.assertTrue(subset)
+            self.assertEqual(self.restricted(role, qid), (header, subset))
+
+    def test_inventory_is_denied_to_the_territory_role(self):
+        for qid in ("Q-W-M2-P", "Q-W-M2-D1", "Q-W-C2-P", "Q-W-C2-D1"):
+            header, rows = self.restricted("territory_southeast", qid)
+            for col in ("closing_units", "units_sold_91d", "days_of_supply"):
+                if col in header:
+                    self.assertEqual({r[header.index(col)] for r in rows} - {""}, set(), (qid, col))
+
+    def test_every_other_answer_changes_under_the_role(self):
+        changed, unchanged = set(), set()
+        for role in rs.ROLES.values():
+            for q in rs.role_queries(role):
+                same = self.restricted(role.name, q.query_id) == read_csv(ORACLE / "expected" / "questions" / f"{q.query_id}.csv")
+                (unchanged if same else changed).add(f"{role.name}/{q.query_id}")
+        self.assertEqual(unchanged, UNCHANGED_BY_ROLE)
+        self.assertEqual(len(changed), 21)
+
+    def test_duckdb_and_spark_agree_per_role_on_fixtures(self):
+        tmp = Path(tempfile.mkdtemp(prefix="slc-oracle-rls-"))
+        try:
+            from pyspark.sql import SparkSession
+            spark = (SparkSession.builder.master("local[2]").appName("slc-oracle-rls-test")
+                     .config("spark.ui.enabled", "false").config("spark.sql.session.timeZone", "UTC")
+                     .config("spark.sql.shuffle.partitions", "4")
+                     .config("spark.sql.warehouse.dir", str(tmp / "warehouse")).getOrCreate())
+            spark.sparkContext.setLogLevel("ERROR")
+            failures = {}
+            for role in rs.ROLES.values():
+                duck = ro.DuckDBEngine(fixtures=ORACLE / "fixtures")
+                rs.apply_role(duck, role)
+                ro.run(duck, rs.role_queries(role), 1, tmp / role.name, None, verbose=False)
+                duck.close()
+                sp = ro.SparkEngine(fixtures=ORACLE / "fixtures", spark=spark)
+                rs.apply_role(sp, role)
+                for r in ro.run(sp, rs.role_queries(role), 1, None, tmp / role.name, verbose=False):
+                    if r.error or r.problems:
+                        failures[f"{role.name}/{r.query_id}"] = r.error or r.problems[:3]
+                rs.remove_role(sp, role)
+            spark.stop()
+            self.assertEqual(failures, {})
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    def test_role_filter_is_applied_and_removed(self):
+        engine = ro.DuckDBEngine(fixtures=ORACLE / "fixtures")
+        try:
+            count = "SELECT COUNT(*) AS n FROM nyctaxi.fact_trip"
+            outside = ("SELECT COUNT(*) AS n FROM nyctaxi.fact_trip f JOIN nyctaxi.dim_zone z "
+                       "ON z.location_id = f.pu_location_id WHERE z.borough <> 'Manhattan'")
+            before = engine.execute(count)[1][0][0]
+            self.assertGreater(engine.execute(outside)[1][0][0], 0)
+            role = rs.ROLES["pickup_manhattan"]
+            rs.apply_role(engine, role)
+            self.assertLess(engine.execute(count)[1][0][0], before)
+            self.assertEqual(engine.execute(outside)[1][0][0], 0)
+            zones = engine.execute("SELECT COUNT(DISTINCT borough) AS n FROM nyctaxi.dim_zone")[1][0][0]
+            self.assertGreater(zones, 1)  # dimensions are never filtered
+            rs.remove_role(engine, role)
+            self.assertEqual(engine.execute(count)[1][0][0], before)
+        finally:
+            engine.close()
+
+    def test_negative_unrestricted_answer_fails_restricted_comparison(self):
+        engine = ro.DuckDBEngine(fixtures=ORACLE / "fixtures")
+        tmp = Path(tempfile.mkdtemp(prefix="slc-oracle-rls-neg-"))
+        try:
+            role = rs.ROLES["territory_southeast"]
+            ro.run(engine, rs.role_queries(role), 1, tmp / "restricted", None, verbose=False)  # no filter applied
+            rs.apply_role(engine, role)
+            results = ro.run(engine, rs.role_queries(role), 1, None, tmp / "restricted", verbose=False)
+            self.assertTrue(any(r.problems for r in results))
+        finally:
+            engine.close()
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    def test_negative_bad_role_definitions_are_rejected(self):
+        engine = ro.DuckDBEngine(fixtures=ORACLE / "fixtures")
+        try:
+            with self.assertRaises(RuntimeError):
+                rs.apply_role(engine, rs.Role("bogus", "Bogus", "W", {"wwi.no_such_table": "1 = 1"}))
+            broken = rs.Role("broken", "Broken", "N", {"nyctaxi.fact_trip": "no_such_column = 1"})
+            with self.assertRaises(Exception):  # rejected when the view is bound (DuckDB) or first queried
+                rs.apply_role(engine, broken)
+                engine.execute("SELECT COUNT(*) FROM nyctaxi.fact_trip")
+        finally:
+            engine.close()
+
+
+# ================================================================== 6. real data
 
 @unittest.skipUnless(os.environ.get("SLC_LOCAL_B0"), "SLC_LOCAL_B0 not set")
 class RealDataReproductionTests(unittest.TestCase):
@@ -321,6 +442,17 @@ class RealDataReproductionTests(unittest.TestCase):
         results = ro.run(engine, ro.load_queries(), 1, None, ORACLE / "expected", verbose=False)
         engine.close()
         self.assertEqual({r.query_id: (r.error or r.problems[:3]) for r in results if r.error or r.problems}, {})
+
+    def test_committed_restricted_answers_reproduce_on_b0(self):
+        failures = {}
+        for role in rs.ROLES.values():
+            engine = ro.DuckDBEngine(data_root=Path(os.environ["SLC_LOCAL_B0"]) / "warehouse")
+            rs.apply_role(engine, role)
+            for r in ro.run(engine, rs.role_queries(role), 1, None, rs.EXPECTED / role.name, verbose=False):
+                if r.error or r.problems:
+                    failures[f"{role.name}/{r.query_id}"] = r.error or r.problems[:3]
+            engine.close()
+        self.assertEqual(failures, {})
 
 
 if __name__ == "__main__":

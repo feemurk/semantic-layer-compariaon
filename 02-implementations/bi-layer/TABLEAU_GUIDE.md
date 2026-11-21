@@ -120,7 +120,7 @@ A question is a set of independent VDS queries plus an assembly in DuckDB over t
 - The NYC Trips custom SQL carries the pickup borough, so the RLS filter references only the Trips table and can be scoped. A filter on Pickup Zone would be pervasive and would also narrow the Dropoff Zone member list, which SPEC § 10 keeps unrestricted.
 - [jobs/publish.py](jobs/publish.py) grants the two groups View, Connect and API Access (`VizqlDataApiAccess`) on both variants.
 - Prerequisites: the Tableau groups `slc_territory_southeast` and `slc_pickup_manhattan` exist (synchronized from the identity provider), and the site permits VDS.
-- E8 cannot be scored until the oracle carries restricted expected answers per role, a gap shared with S4.
+- Restricted expected answers per role now exist (`01-spec/oracle/expected/restricted`, 24 questions, SPEC § 10); E8 is scored against them once the stack is deployed.
 
 ## 5. Performance behavior
 

@@ -14,8 +14,9 @@ Run date: 2026-11-19. Scope: SPEC v1.2 § 6, § 7, § 9. Design and conventions:
 | Cross-engine reconciliation | 92/92 Spark SQL results identical to DuckDB within SPEC § 9.3 tolerances (0 mismatches) |
 | Determinism | two independent DuckDB runs produced byte-identical expected-answer files |
 | Fixture answers | every hand-computed fixture answer reproduced; every naive wrong answer rejected (§ 3.2) |
-| Test suite | `scripts/test_oracle.py`: 29/29 pass, including the opt-in real-data reproduction of all 92 answers |
+| Test suite | `scripts/test_oracle.py`: 38/38 pass, including the opt-in real-data reproduction of all 92 answers and the 24 restricted answers |
 | Specification | 4 question-bank defects found on real data and corrected under change control (SPEC v1.2, § 4.2) |
+| Restricted answers (added 2026-11-21) | 24 per-role answers (SPEC § 10) written on DuckDB in 61 s and reproduced identically on Spark SQL in 179 s; see § 9 |
 | Not run | the authoritative Databricks serverless run (SPEC § 9.1): no workspace is attached to this environment |
 
 ---
@@ -150,4 +151,24 @@ python 01-spec/oracle/run_oracle.py --engine spark --data-root $B0/warehouse --s
 python 01-spec/oracle/run_oracle.py --engine spark --data-root $B0/warehouse --select '[BWN]-*' --compare 01-spec/oracle/expected --perf 01-spec/oracle/perf/spark_metrics.json
 python 01-spec/oracle/summarize_perf.py 01-spec/oracle/perf/duckdb.json 01-spec/oracle/perf/spark_questions.json 01-spec/oracle/perf/spark_metrics.json
 SLC_LOCAL_B0=$B0 python scripts/test_oracle.py
+```
+
+---
+
+## 9. Restricted answers (SPEC § 10), 2026-11-21
+
+| Item | Result |
+|---|---|
+| Scope | 24 questions: the 12 `P` and `D1` questions of WWI as Territory Analyst – Southeast, and the 12 of NYC as Manhattan Pickup Analyst |
+| Method | Row filters on the fact tables beneath the unchanged question SQL ([`restricted.py`](restricted.py), ORACLE.md § 5.1) |
+| Execution | 24/24 written on DuckDB 1.4.1 (61 s); 24/24 identical on Spark SQL 4.3.0 (179 s); raw timings in [`perf/restricted_duckdb.json`](perf/restricted_duckdb.json), [`perf/restricted_spark.json`](perf/restricted_spark.json) |
+| Subset property | Restricted Q-W-S1-P equals the Southeast rows of the unrestricted answer, and restricted Q-N-S1-P equals the Manhattan rows, value for value |
+| Unchanged answers | 3 of 24, all legitimate: Southeast is the top FY2015 territory regardless (Q-W-S1-D1), and Q-N-S1-D1 and Q-N-M2-D1 already ask about Manhattan pickups |
+| Inventory denial | W-M2 and W-C2 answers carry no values for the territory role: no rows for grouped questions, a NULL total for Q-W-M2-D1 |
+
+These answers make E8 scoreable. The S4 emulator already reproduces them for the 15 role questions that use no window measure, by applying the same filters to the metric views' source tables (`scripts/test_databricks_metric_views.py`).
+
+```bash
+python 01-spec/oracle/restricted.py --engine duckdb --data-root $B0/warehouse --write-expected 01-spec/oracle/expected/restricted --perf 01-spec/oracle/perf/restricted_duckdb.json
+python 01-spec/oracle/restricted.py --engine spark --data-root $B0/warehouse --compare 01-spec/oracle/expected/restricted --perf 01-spec/oracle/perf/restricted_spark.json
 ```
