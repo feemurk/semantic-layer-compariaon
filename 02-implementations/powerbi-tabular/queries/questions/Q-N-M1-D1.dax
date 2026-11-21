@@ -1,0 +1,24 @@
+// Q-N-M1-D1 Distinct OD pairs by payment type for 2024, the overall total (re-evaluated, not summed) and the sum of members.
+DEFINE
+    VAR y2024 = TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] )
+    VAR by_type = SUMMARIZECOLUMNS ( 'Payment Type'[Payment Type Name], y2024, "pairs", [Distinct OD Pairs] )
+EVALUATE
+UNION (
+    SELECTCOLUMNS (
+        by_type,
+        "grain", "payment_type",
+        "payment_type_name", 'Payment Type'[Payment Type Name],
+        "distinct_od_pairs", [pairs]
+    ),
+    ROW (
+        "grain", "total",
+        "payment_type_name", CONVERT ( BLANK (), STRING ),
+        "distinct_od_pairs", CALCULATE ( [Distinct OD Pairs], y2024 )
+    ),
+    ROW (
+        "grain", "sum_of_members",
+        "payment_type_name", CONVERT ( BLANK (), STRING ),
+        "distinct_od_pairs", SUMX ( by_type, [pairs] )
+    )
+)
+ORDER BY [grain], [payment_type_name]

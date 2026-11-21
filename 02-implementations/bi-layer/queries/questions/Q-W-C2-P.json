@@ -1,0 +1,64 @@
+{
+ "question": "Q-W-C2-P",
+ "text": "Days of supply at each calendar month end of 2015, company-wide.",
+ "interpretation": "Days of supply at each calendar month end of 2015, company-wide: t = month end; DOS = closing units / (units sold in [t - 90, t] / 91).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "Closing Snapshot Date",
+      "fieldAlias": "closing_date",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "closing_units",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Units Sold Trailing 91 Days",
+      "fieldAlias": "units_sold_91d",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Days of Supply",
+      "fieldAlias": "days_of_supply",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "snap_rows",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "month_start_date": "DATE",
+    "closing_date": "DATE",
+    "closing_units": "DOUBLE",
+    "units_sold_91d": "DOUBLE",
+    "days_of_supply": "DOUBLE",
+    "snap_rows": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT closing_date AS month_end_date, closing_units, units_sold_91d, days_of_supply FROM q WHERE snap_rows > 0 ORDER BY closing_date"
+}

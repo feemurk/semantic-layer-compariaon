@@ -1,0 +1,12 @@
+// Q-A09 Tip amount (all payment types) vs card tips by payment type for 2024.
+// @column payment_type = [Payment Type].[Payment Type Code]
+// @column payment_type_name = [Measures].[q_payment_type_name]
+// @column tip_amount = [Measures].[Tip Amount]
+// @column card_tips = [Measures].[Card Tips]
+WITH
+MEMBER [Measures].[q_payment_type_name] AS
+  [Payment Type].[Payment Type Code].CurrentMember.Properties("Payment Type")
+SELECT {[Measures].[q_payment_type_name], [Measures].[Tip Amount], [Measures].[Card Tips]} ON COLUMNS,
+  NonEmpty([Payment Type].[Payment Type Code].[Payment Type Code].Members, {[Measures].[Trip Count]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Calendar Year].&[2024])

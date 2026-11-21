@@ -1,0 +1,93 @@
+{
+ "question": "Q-W-S2-D1",
+ "text": "For the 2015 month with the largest gap between ordered quantity and units sold, break ordered quantity down by stock item.",
+ "interpretation": "The 2015 month with the largest absolute gap |ordered quantity - units sold| (order_date vs invoice_date months); ordered quantity by stock item in that month (ties broken by item id).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "gap": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "Ordered Quantity",
+      "fieldAlias": "ordered_quantity",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "units_sold",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "month_start_date": "DATE",
+    "ordered_quantity": "BIGINT",
+    "units_sold": "BIGINT"
+   }
+  },
+  "items": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "WWI Stock Item ID",
+      "fieldAlias": "wwi_stock_item_id"
+     },
+     {
+      "fieldCaption": "Stock Item",
+      "fieldAlias": "stock_item"
+     },
+     {
+      "fieldCaption": "Ordered Quantity",
+      "fieldAlias": "ordered_quantity",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Order Line Count",
+      "fieldAlias": "order_lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "month_start_date": "DATE",
+    "wwi_stock_item_id": "BIGINT",
+    "stock_item": "VARCHAR",
+    "ordered_quantity": "BIGINT",
+    "order_lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH g AS (SELECT month_start_date, ordered_quantity, units_sold FROM gap WHERE ordered_quantity IS NOT NULL AND units_sold IS NOT NULL ORDER BY ABS(ordered_quantity - units_sold) DESC, month_start_date LIMIT 1) SELECT g.month_start_date, g.ordered_quantity AS month_ordered_quantity, g.units_sold AS month_units_sold, i.wwi_stock_item_id, i.stock_item, i.ordered_quantity FROM items i JOIN g ON g.month_start_date = i.month_start_date WHERE i.order_lines > 0 ORDER BY i.ordered_quantity DESC, i.wwi_stock_item_id"
+}

@@ -1,0 +1,14 @@
+// Q-N-S1-P Gross trip revenue by pickup borough by month for 2024.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Pickup Zone'[Pickup Borough],
+        'Pickup Date'[Pickup Month Start],
+        TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+        "rev", [Gross Trip Revenue]
+    ),
+    "pickup_borough", 'Pickup Zone'[Pickup Borough],
+    "month_start_date", 'Pickup Date'[Pickup Month Start],
+    "revenue", [rev]
+)
+ORDER BY [pickup_borough], [month_start_date]

@@ -1,0 +1,22 @@
+// Q-N-M2-D4 For trips picked up at JFK Airport in 2024, fare per mile by dropoff borough and payment type; which combination is highest?
+// @column dropoff_borough = [Dropoff Zone].[Borough]
+// @column payment_type_name = [Payment Type].[Payment Type]
+// @column trips = [Measures].[Trip Count]
+// @column fare_per_mile = [Measures].[Fare per Mile]
+// @column is_highest = [Measures].[q_is_highest]
+WITH
+SET [q_cells] AS
+  NonEmpty([Dropoff Zone].[Borough].[Borough].Members * [Payment Type].[Payment Type].[Payment Type].Members,
+           {[Measures].[Trip Count]})
+SET [q_top] AS
+  Head(Order(Order([q_cells],
+                   [Dropoff Zone].[Borough].CurrentMember.Name + "|" + [Payment Type].[Payment Type].CurrentMember.Name,
+                   BASC),
+             [Measures].[Fare per Mile], BDESC), 1)
+MEMBER [Measures].[q_is_highest] AS
+  IIF([Dropoff Zone].[Borough].CurrentMember IS [q_top].Item(0).Item(0)
+      AND [Payment Type].[Payment Type].CurrentMember IS [q_top].Item(0).Item(1), "true", "false")
+SELECT {[Measures].[Trip Count], [Measures].[Fare per Mile], [Measures].[q_is_highest]} ON COLUMNS,
+  [q_cells] ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Calendar Year].&[2024], [Pickup Zone].[Zone].[JFK Airport])

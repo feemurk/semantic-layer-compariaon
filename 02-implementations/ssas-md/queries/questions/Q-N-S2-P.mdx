@@ -1,0 +1,7 @@
+// Q-N-S2-P Card tips by vendor by month for 2024.
+// @column vendor_id = [Vendor].[Vendor]
+// @column month_start_date = [Pickup Date].[Month]
+// @column card_tips = [Measures].[Card Tips]
+SELECT {[Measures].[Card Tips]} ON COLUMNS,
+  NonEmpty([Vendor].[Vendor].[Vendor].Members * Exists([Pickup Date].[Month].[Month].Members, {[Pickup Date].[Calendar Year].&[2024]}), {[Measures].[Card Tips]}) ON ROWS
+FROM [NYC]

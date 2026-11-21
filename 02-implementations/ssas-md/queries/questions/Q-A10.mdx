@@ -1,0 +1,11 @@
+// Q-A10 Fare amount per trip by vendor by month for 2024.
+// @column vendor_id = [Vendor].[Vendor]
+// @column month_start_date = [Pickup Date].[Month]
+// @column fare_amount = [Measures].[Fare Amount]
+// @column trips = [Measures].[Trip Count]
+// @column fare_per_trip = [Measures].[q_fare_per_trip]
+WITH
+MEMBER [Measures].[q_fare_per_trip] AS [Measures].[Fare Amount] / [Measures].[Trip Count]
+SELECT {[Measures].[Fare Amount], [Measures].[Trip Count], [Measures].[q_fare_per_trip]} ON COLUMNS,
+  NonEmpty([Vendor].[Vendor].[Vendor].Members * Exists([Pickup Date].[Month].[Month].Members, {[Pickup Date].[Calendar Year].&[2024]}), {[Measures].[Trip Count]}) ON ROWS
+FROM [NYC]

@@ -1,0 +1,19 @@
+// Q-N-S1-D2 For the 2024 month with the highest revenue, gross trip revenue by pickup hour and payment type.
+DEFINE
+    VAR months = SUMMARIZECOLUMNS ( 'Pickup Date'[Pickup Month Start], TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ), "rev", [Gross Trip Revenue] )
+    VAR top_month =
+        MAXX ( TOPN ( 1, months, [rev], DESC, 'Pickup Date'[Pickup Month Start], ASC ), 'Pickup Date'[Pickup Month Start] )
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        Trips[Pickup Hour],
+        'Payment Type'[Payment Type Name],
+        TREATAS ( { top_month }, 'Pickup Date'[Pickup Month Start] ),
+        "rev", [Gross Trip Revenue]
+    ),
+    "month_start_date", top_month,
+    "pickup_hour", Trips[Pickup Hour],
+    "payment_type_name", 'Payment Type'[Payment Type Name],
+    "revenue", [rev]
+)
+ORDER BY [pickup_hour], [payment_type_name]

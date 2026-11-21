@@ -1,0 +1,12 @@
+// Q-N-M1-D3 Distinct OD pairs served by each vendor, 2023 vs 2024.
+// @column vendor_id = [Vendor].[Vendor]
+// @column distinct_od_pairs_2023 = [Measures].[q_pairs_2023]
+// @column distinct_od_pairs_2024 = [Measures].[q_pairs_2024]
+WITH
+MEMBER [Measures].[q_pairs_2023] AS
+  CoalesceEmpty(([Measures].[Distinct OD Pairs], [Pickup Date].[Calendar Year].&[2023]), 0)
+MEMBER [Measures].[q_pairs_2024] AS
+  CoalesceEmpty(([Measures].[Distinct OD Pairs], [Pickup Date].[Calendar Year].&[2024]), 0)
+SELECT {[Measures].[q_pairs_2023], [Measures].[q_pairs_2024]} ON COLUMNS,
+  NonEmpty([Vendor].[Vendor].[Vendor].Members, {[Measures].[Distinct OD Pairs]}) ON ROWS
+FROM [NYC]

@@ -1,0 +1,17 @@
+// Q-N-M1-D4 Among Manhattan pickup zones, the 10 with the most distinct OD pairs in 2024.
+// @column rank_no = [Measures].[q_rank_no]
+// @column pu_location_id = [Measures].[q_pu_location_id]
+// @column zone = [Pickup Zone].[Zone]
+// @column distinct_od_pairs = [Measures].[Distinct OD Pairs]
+WITH
+SET [q_zones] AS
+  Head(Order(Order(NonEmpty(Exists([Pickup Zone].[Zone].[Zone].Members, {[Pickup Zone].[Borough].&[Manhattan]}),
+                            {[Measures].[Distinct OD Pairs]}),
+                   [Pickup Zone].[Zone].CurrentMember.MemberValue, BASC),
+             [Measures].[Distinct OD Pairs], BDESC), 10)
+MEMBER [Measures].[q_rank_no] AS Rank([Pickup Zone].[Zone].CurrentMember, [q_zones])
+MEMBER [Measures].[q_pu_location_id] AS [Pickup Zone].[Zone].CurrentMember.Properties("Location ID")
+SELECT {[Measures].[q_rank_no], [Measures].[q_pu_location_id], [Measures].[Distinct OD Pairs]} ON COLUMNS,
+  [q_zones] ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Calendar Year].&[2024])

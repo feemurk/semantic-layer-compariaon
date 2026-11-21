@@ -1,0 +1,93 @@
+{
+ "question": "Q-W-C1-D1",
+ "text": "For the stock group with the highest FY2015 share, each stock item's share of that group's revenue.",
+ "interpretation": "Stock group with the highest FY2015 share (ties: name); each of its stock items' share of the group's FY2015 revenue.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "groups": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "stock_group_name": "VARCHAR",
+    "revenue": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  },
+  "items": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "WWI Stock Item ID",
+      "fieldAlias": "wwi_stock_item_id"
+     },
+     {
+      "fieldCaption": "Stock Item",
+      "fieldAlias": "stock_item"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "stock_group_name": "VARCHAR",
+    "wwi_stock_item_id": "BIGINT",
+    "stock_item": "VARCHAR",
+    "revenue": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH g AS (SELECT stock_group_name, revenue AS group_revenue FROM groups WHERE lines > 0 AND stock_group_name IS NOT NULL ORDER BY revenue DESC, stock_group_name LIMIT 1) SELECT g.stock_group_name, i.wwi_stock_item_id, i.stock_item, i.revenue, i.revenue / g.group_revenue AS share_of_group FROM items i JOIN g USING (stock_group_name) WHERE i.lines > 0 ORDER BY share_of_group DESC, i.wwi_stock_item_id"
+}

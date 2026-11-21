@@ -1,0 +1,46 @@
+{
+ "question": "Q-A01",
+ "text": "The 5 bill-to customers with the highest revenue including tax in calendar 2015.",
+ "interpretation": "The 5 bill-to customers with the highest revenue including tax in calendar 2015 (Bill-To role; the source has 3 bill-to customers).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Bill-To Customer",
+      "fieldAlias": "bill_to_customer"
+     },
+     {
+      "fieldCaption": "Revenue Including Tax",
+      "fieldAlias": "revenue_including_tax",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "bill_to_customer": "VARCHAR",
+    "revenue_including_tax": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT bill_to_customer, revenue_including_tax FROM q WHERE lines > 0 ORDER BY revenue_including_tax DESC, bill_to_customer LIMIT 5"
+}

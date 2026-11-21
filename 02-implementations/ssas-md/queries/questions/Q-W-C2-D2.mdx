@@ -1,0 +1,20 @@
+// Q-W-C2-D2 The 10 stock items with the lowest days of supply at 2015-12-31, excluding items with no sales in the trailing 91 days.
+// @column rank_no = [Measures].[q_rank_no]
+// @column wwi_stock_item_id = [Stock Item].[WWI Stock Item ID]
+// @column stock_item = [Measures].[q_stock_item]
+// @column closing_units = [Measures].[Closing Units]
+// @column units_sold_91d = [Measures].[Units Sold 91D]
+// @column days_of_supply = [Measures].[Days of Supply]
+WITH
+SET [q_items] AS
+  Head(Order(Order(Filter([Stock Item].[WWI Stock Item ID].[WWI Stock Item ID].Members,
+                          NOT IsEmpty([Measures].[Units Sold 91D]) AND [Measures].[Units Sold 91D] > 0),
+                   [Stock Item].[WWI Stock Item ID].CurrentMember.MemberValue, BASC),
+             [Measures].[Days of Supply], BASC), 10)
+MEMBER [Measures].[q_rank_no] AS Rank([Stock Item].[WWI Stock Item ID].CurrentMember, [q_items])
+MEMBER [Measures].[q_stock_item] AS [Stock Item].[WWI Stock Item ID].CurrentMember.Properties("Stock Item")
+SELECT {[Measures].[q_rank_no], [Measures].[q_stock_item], [Measures].[Closing Units], [Measures].[Units Sold 91D],
+        [Measures].[Days of Supply]} ON COLUMNS,
+  [q_items] ON ROWS
+FROM [WWI]
+WHERE ([Date].[Date].&[20151231])

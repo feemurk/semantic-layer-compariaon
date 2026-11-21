@@ -1,0 +1,13 @@
+// Q-N-S2-D1 Card tips by pickup hour for December 2024.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        Trips[Pickup Hour],
+        TREATAS ( { DATE ( 2024, 12, 1 ) }, 'Pickup Date'[Pickup Month Start] ),
+        "__trips", [Trip Count],
+        "tips", [Card Tips]
+    ),
+    "pickup_hour", Trips[Pickup Hour],
+    "card_tips", [tips]
+)
+ORDER BY [pickup_hour]

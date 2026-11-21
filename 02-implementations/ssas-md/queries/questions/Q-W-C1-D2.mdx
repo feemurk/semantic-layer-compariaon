@@ -1,0 +1,10 @@
+// Q-W-C1-D2 Stock group revenue share within each Sales Territory for FY2015.
+// @column sales_territory = [City].[Sales Territory]
+// @column stock_group_name = [Stock Group].[Stock Group]
+// @column revenue = [Measures].[Revenue]
+// @column share_of_territory = [Measures].[Stock Group Revenue Share]
+SELECT {[Measures].[Revenue], [Measures].[Stock Group Revenue Share]} ON COLUMNS,
+  NonEmpty([City].[Sales Territory].[Sales Territory].Members * [Stock Group].[Stock Group].[Stock Group].Members,
+           {[Measures].[Revenue]}) ON ROWS
+FROM [WWI]
+WHERE ([Date].[Fiscal Year].&[2015])

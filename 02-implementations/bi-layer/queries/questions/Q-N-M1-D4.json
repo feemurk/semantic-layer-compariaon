@@ -1,0 +1,60 @@
+{
+ "question": "Q-N-M1-D4",
+ "text": "Among Manhattan pickup zones, the 10 with the most distinct OD pairs in 2024.",
+ "interpretation": "Among Manhattan pickup zones, the 10 with the most distinct OD pairs in 2024 (ties: location id).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Zone ID",
+      "fieldAlias": "pu_location_id"
+     },
+     {
+      "fieldCaption": "Pickup Zone",
+      "fieldAlias": "zone"
+     },
+     {
+      "fieldCaption": "Distinct OD Pairs",
+      "fieldAlias": "distinct_od_pairs",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     },
+     {
+      "field": {
+       "fieldCaption": "Pickup Borough"
+      },
+      "filterType": "SET",
+      "values": [
+       "Manhattan"
+      ]
+     }
+    ]
+   },
+   "output": {
+    "pu_location_id": "BIGINT",
+    "zone": "VARCHAR",
+    "distinct_od_pairs": "BIGINT",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH ranked AS (SELECT q.*, ROW_NUMBER() OVER (ORDER BY distinct_od_pairs DESC, pu_location_id) AS rank_no FROM q WHERE trips > 0) SELECT rank_no, pu_location_id, zone, distinct_od_pairs FROM ranked WHERE rank_no <= 10 ORDER BY rank_no"
+}

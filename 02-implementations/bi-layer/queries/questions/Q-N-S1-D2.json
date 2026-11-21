@@ -1,0 +1,93 @@
+{
+ "question": "Q-N-S1-D2",
+ "text": "For that month, gross trip revenue by pickup hour and payment type.",
+ "interpretation": "For the 2024 month with the highest revenue: gross trip revenue by pickup hour and payment type.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "months": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "Gross Trip Revenue",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     }
+    ]
+   },
+   "output": {
+    "month_start_date": "DATE",
+    "revenue": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  },
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "Pickup Hour",
+      "fieldAlias": "pickup_hour"
+     },
+     {
+      "fieldCaption": "Payment Type",
+      "fieldAlias": "payment_type_name"
+     },
+     {
+      "fieldCaption": "Gross Trip Revenue",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     }
+    ]
+   },
+   "output": {
+    "month_start_date": "DATE",
+    "pickup_hour": "BIGINT",
+    "payment_type_name": "VARCHAR",
+    "revenue": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH m AS (SELECT month_start_date FROM months WHERE trips > 0 ORDER BY revenue DESC, month_start_date LIMIT 1) SELECT q.month_start_date, q.pickup_hour, q.payment_type_name, q.revenue FROM q JOIN m USING (month_start_date) WHERE q.trips > 0 ORDER BY q.pickup_hour, q.payment_type_name"
+}

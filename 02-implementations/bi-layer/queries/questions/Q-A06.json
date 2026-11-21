@@ -1,0 +1,50 @@
+{
+ "question": "Q-A06",
+ "text": "Trip count by pickup hour and day of week for 2024.",
+ "interpretation": "Trip count by pickup hour and ISO day of week, 2024.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Hour",
+      "fieldAlias": "pickup_hour"
+     },
+     {
+      "fieldCaption": "Pickup Day of Week",
+      "fieldAlias": "day_of_week"
+     },
+     {
+      "fieldCaption": "Pickup Day Name",
+      "fieldAlias": "day_name"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     }
+    ]
+   },
+   "output": {
+    "pickup_hour": "BIGINT",
+    "day_of_week": "BIGINT",
+    "day_name": "VARCHAR",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT pickup_hour, day_of_week, day_name, trips FROM q WHERE trips > 0 ORDER BY pickup_hour, day_of_week"
+}

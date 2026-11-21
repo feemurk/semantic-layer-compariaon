@@ -1,0 +1,7 @@
+// Q-N-M1-D2 Distinct OD pairs by pickup hour for Q4 2024.
+// @column pickup_hour = [Pickup Hour].[Pickup Hour]
+// @column distinct_od_pairs = [Measures].[Distinct OD Pairs]
+SELECT {[Measures].[Distinct OD Pairs]} ON COLUMNS,
+  NonEmpty([Pickup Hour].[Pickup Hour].[Pickup Hour].Members, {[Measures].[Distinct OD Pairs]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Calendar Quarter].&[20244])

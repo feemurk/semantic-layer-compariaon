@@ -1,0 +1,16 @@
+// Q-N-C1-D3 YTD revenue and YoY % at 2024-12-31 by payment type.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Payment Type'[Payment Type Name],
+        TREATAS ( { DATE ( 2024, 12, 31 ) }, 'Pickup Date'[Pickup Date] ),
+        "ytd", [Revenue YTD],
+        "stly", [Revenue STLY YTD],
+        "yoy", [Revenue YoY % vs STLY]
+    ),
+    "payment_type_name", 'Payment Type'[Payment Type Name],
+    "ytd_revenue", [ytd],
+    "stly_ytd_revenue", [stly],
+    "yoy_pct", [yoy]
+)
+ORDER BY [payment_type_name]

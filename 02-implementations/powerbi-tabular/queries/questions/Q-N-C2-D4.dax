@@ -1,0 +1,35 @@
+// Q-N-C2-D4 For the pickup zone with the highest pace index at 2024-11-30 among zones with at least 50,000 YTD trips (ties: zone
+// id), daily trip counts for November 2024.
+DEFINE
+    VAR zones =
+        FILTER (
+            SUMMARIZECOLUMNS (
+                'Pickup Zone'[Pickup Location ID],
+                'Pickup Zone'[Pickup Zone],
+                TREATAS ( { DATE ( 2024, 11, 30 ) }, 'Pickup Date'[Pickup Date] ),
+                "ytd", [Trips YTD],
+                "pace", [MTD-to-YTD Daily Pace Index]
+            ),
+            [ytd] >= 50000
+        )
+    VAR top_zone = TOPN ( 1, zones, [pace], DESC, 'Pickup Zone'[Pickup Location ID], ASC )
+    VAR zone_id = MAXX ( top_zone, 'Pickup Zone'[Pickup Location ID] )
+    VAR zone_name = MAXX ( top_zone, 'Pickup Zone'[Pickup Zone] )
+    VAR zone_pace = MAXX ( top_zone, [pace] )
+    VAR days =
+        SUMMARIZECOLUMNS (
+            'Pickup Date'[Pickup Date],
+            TREATAS ( { zone_id }, 'Pickup Zone'[Pickup Location ID] ),
+            DATESBETWEEN ( 'Pickup Date'[Pickup Date], DATE ( 2024, 11, 1 ), DATE ( 2024, 11, 30 ) ),
+            "trips", [Trip Count]
+        )
+EVALUATE
+SELECTCOLUMNS (
+    days,
+    "pu_location_id", zone_id,
+    "zone", zone_name,
+    "pace_index", zone_pace,
+    "pickup_date", 'Pickup Date'[Pickup Date],
+    "trips", [trips]
+)
+ORDER BY [pickup_date]

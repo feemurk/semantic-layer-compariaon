@@ -1,0 +1,26 @@
+// Q-N-M2-D4 For trips picked up at JFK Airport in 2024, fare per mile by dropoff borough and payment type; is_highest marks the
+// highest combination (ties: borough, then payment type).
+DEFINE
+    VAR combos =
+        SUMMARIZECOLUMNS (
+            'Dropoff Zone'[Dropoff Borough],
+            'Payment Type'[Payment Type Name],
+            TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+            TREATAS ( { "JFK Airport" }, 'Pickup Zone'[Pickup Zone] ),
+            "trips", [Trip Count],
+            "fpm", [Fare per Mile]
+        )
+    VAR top_combo =
+        TOPN ( 1, combos, [fpm], DESC, 'Dropoff Zone'[Dropoff Borough], ASC, 'Payment Type'[Payment Type Name], ASC )
+    VAR top_borough = MAXX ( top_combo, 'Dropoff Zone'[Dropoff Borough] )
+    VAR top_payment = MAXX ( top_combo, 'Payment Type'[Payment Type Name] )
+EVALUATE
+SELECTCOLUMNS (
+    combos,
+    "dropoff_borough", 'Dropoff Zone'[Dropoff Borough],
+    "payment_type_name", 'Payment Type'[Payment Type Name],
+    "trips", [trips],
+    "fare_per_mile", [fpm],
+    "is_highest", 'Dropoff Zone'[Dropoff Borough] = top_borough && 'Payment Type'[Payment Type Name] = top_payment
+)
+ORDER BY [dropoff_borough], [payment_type_name]

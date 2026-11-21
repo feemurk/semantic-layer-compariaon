@@ -1,0 +1,51 @@
+{
+ "question": "Q-A03",
+ "text": "Units sold by stock group by delivery month for January–May 2016, delivered lines only.",
+ "interpretation": "Units sold by stock group by delivery month for January-May 2016 (Delivery Date role), delivered lines only.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "Delivery Month Start Date",
+      "fieldAlias": "delivery_month"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "units_sold",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Delivery Date"
+      },
+      "filterType": "QUANTITATIVE_DATE",
+      "quantitativeFilterType": "RANGE",
+      "minDate": "2016-01-01",
+      "maxDate": "2016-05-31"
+     }
+    ]
+   },
+   "output": {
+    "stock_group_name": "VARCHAR",
+    "delivery_month": "DATE",
+    "units_sold": "BIGINT",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT stock_group_name, delivery_month, units_sold FROM q WHERE lines > 0 AND stock_group_name IS NOT NULL ORDER BY stock_group_name, delivery_month"
+}

@@ -1,0 +1,11 @@
+// Q-N-C2-D2 Pace index at 2024-11-30 by payment type.
+// @column payment_type_name = [Payment Type].[Payment Type]
+// @column mtd_trips = [Measures].[Trips MTD]
+// @column day_of_month = [Measures].[Days Elapsed In Month]
+// @column ytd_trips = [Measures].[Trips YTD]
+// @column day_of_year = [Measures].[Days Elapsed In Year]
+// @column pace_index = [Measures].[Pace Index]
+SELECT {[Measures].[Trips MTD], [Measures].[Days Elapsed In Month], [Measures].[Trips YTD], [Measures].[Days Elapsed In Year], [Measures].[Pace Index]} ON COLUMNS,
+  NonEmpty([Payment Type].[Payment Type].[Payment Type].Members, {[Measures].[Trips YTD]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Date].&[20241130])

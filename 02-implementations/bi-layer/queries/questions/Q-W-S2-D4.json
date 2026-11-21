@@ -1,0 +1,77 @@
+{
+ "question": "Q-W-S2-D4",
+ "text": "Backordered order lines in 2015 by salesperson and stock group; identify the salesperson with the most.",
+ "interpretation": "Backordered order lines in calendar 2015 by salesperson and stock group. salesperson_total_lines counts each line once (deduplicated across groups); is_top_salesperson marks the salesperson with the most lines (ties: name).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "groups": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Salesperson",
+      "fieldAlias": "salesperson"
+     },
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "Backordered Order Lines",
+      "fieldAlias": "backordered_lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "salesperson": "VARCHAR",
+    "stock_group_name": "VARCHAR",
+    "backordered_lines": "BIGINT"
+   }
+  },
+  "people": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Salesperson",
+      "fieldAlias": "salesperson"
+     },
+     {
+      "fieldCaption": "Backordered Order Lines",
+      "fieldAlias": "total_lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "salesperson": "VARCHAR",
+    "total_lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH p AS (SELECT salesperson, total_lines FROM people WHERE total_lines IS NOT NULL), top_sp AS (SELECT salesperson FROM p ORDER BY total_lines DESC, salesperson LIMIT 1) SELECT g.salesperson, g.stock_group_name, g.backordered_lines, p.total_lines AS salesperson_total_lines, g.salesperson = t.salesperson AS is_top_salesperson FROM groups g JOIN p ON p.salesperson = g.salesperson CROSS JOIN top_sp t WHERE g.backordered_lines IS NOT NULL ORDER BY g.salesperson, g.stock_group_name",
+ "note": "salesperson_total_lines comes from a query without Stock Group, which Tableau answers without the bridge, so each backordered line counts once."
+}

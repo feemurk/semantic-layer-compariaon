@@ -1,0 +1,51 @@
+{
+ "question": "Q-A05",
+ "text": "Backordered order lines by stock group by calendar quarter for 2015.",
+ "interpretation": "Backordered order lines by stock group by calendar quarter for 2015 (NULL where a group has no backordered line).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "Calendar Quarter",
+      "fieldAlias": "calendar_quarter"
+     },
+     {
+      "fieldCaption": "Backordered Order Lines",
+      "fieldAlias": "backordered_lines",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Order Line Count",
+      "fieldAlias": "order_lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "stock_group_name": "VARCHAR",
+    "calendar_quarter": "BIGINT",
+    "backordered_lines": "BIGINT",
+    "order_lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT stock_group_name, calendar_quarter, backordered_lines FROM q WHERE order_lines > 0 AND stock_group_name IS NOT NULL ORDER BY stock_group_name, calendar_quarter"
+}

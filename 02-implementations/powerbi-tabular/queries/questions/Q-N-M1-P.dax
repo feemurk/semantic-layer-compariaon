@@ -1,0 +1,8 @@
+// Q-N-M1-P Distinct OD pairs by month for 2024 (exact distinct count re-evaluated per month).
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS ( 'Pickup Date'[Pickup Month Start], TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ), "pairs", [Distinct OD Pairs] ),
+    "month_start_date", 'Pickup Date'[Pickup Month Start],
+    "distinct_od_pairs", [pairs]
+)
+ORDER BY [month_start_date]

@@ -1,0 +1,19 @@
+// Q-N-S2-D3 Card tips per card trip (card tips / trip count for payment type 1) by month, 2023 vs 2024.
+// @column calendar_month = [Pickup Date].[Month Of Year]
+// @column card_tips_per_card_trip_2023 = [Measures].[q_per_trip_2023]
+// @column card_tips_per_card_trip_2024 = [Measures].[q_per_trip_2024]
+WITH
+MEMBER [Measures].[q_per_trip_2023] AS
+  IIF(IsEmpty(([Measures].[Card Trips], [Pickup Date].[Calendar Year].&[2023]))
+      OR ([Measures].[Card Trips], [Pickup Date].[Calendar Year].&[2023]) = 0, NULL,
+      ([Measures].[Card Tips], [Pickup Date].[Calendar Year].&[2023])
+      / ([Measures].[Card Trips], [Pickup Date].[Calendar Year].&[2023]))
+MEMBER [Measures].[q_per_trip_2024] AS
+  IIF(IsEmpty(([Measures].[Card Trips], [Pickup Date].[Calendar Year].&[2024]))
+      OR ([Measures].[Card Trips], [Pickup Date].[Calendar Year].&[2024]) = 0, NULL,
+      ([Measures].[Card Tips], [Pickup Date].[Calendar Year].&[2024])
+      / ([Measures].[Card Trips], [Pickup Date].[Calendar Year].&[2024]))
+SELECT {[Measures].[q_per_trip_2023], [Measures].[q_per_trip_2024]} ON COLUMNS,
+  NonEmpty([Pickup Date].[Month Of Year].[Month Of Year].Members,
+           {[Measures].[q_per_trip_2023], [Measures].[q_per_trip_2024]}) ON ROWS
+FROM [NYC]

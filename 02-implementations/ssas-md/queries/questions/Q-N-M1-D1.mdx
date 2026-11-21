@@ -1,0 +1,20 @@
+// Q-N-M1-D1 Distinct OD pairs by payment type for 2024, alongside the overall total (which is less than the sum of payment types).
+// @column grain = [Measures].[q_grain]
+// @column payment_type_name = [Measures].[q_payment_type_name]
+// @column distinct_od_pairs = [Measures].[Distinct OD Pairs]
+WITH
+MEMBER [Payment Type].[Payment Type].[q_sum_of_members] AS
+  Sum(NonEmpty([Payment Type].[Payment Type].[Payment Type].Members, {[Measures].[Distinct OD Pairs]}),
+      [Measures].[Distinct OD Pairs])
+MEMBER [Measures].[q_grain] AS
+  IIF([Payment Type].[Payment Type].CurrentMember IS [Payment Type].[Payment Type].[All], "total",
+      IIF([Payment Type].[Payment Type].CurrentMember IS [Payment Type].[Payment Type].[q_sum_of_members],
+          "sum_of_members", "payment_type"))
+MEMBER [Measures].[q_payment_type_name] AS
+  IIF([Measures].[q_grain] = "payment_type", [Payment Type].[Payment Type].CurrentMember.Name, NULL)
+SELECT {[Measures].[q_grain], [Measures].[q_payment_type_name], [Measures].[Distinct OD Pairs]} ON COLUMNS,
+  {NonEmpty([Payment Type].[Payment Type].[Payment Type].Members, {[Measures].[Distinct OD Pairs]}),
+   [Payment Type].[Payment Type].[All],
+   [Payment Type].[Payment Type].[q_sum_of_members]} ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Calendar Year].&[2024])

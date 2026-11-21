@@ -1,0 +1,105 @@
+{
+ "question": "Q-W-M1-D1",
+ "text": "For the category with the lowest FY2015 gross margin %, list the 10 lowest-margin stock items with FY2015 revenue above 10,000.",
+ "interpretation": "Customer category with the lowest FY2015 gross margin %; within it, the 10 stock items with the lowest FY2015 gross margin % among items with FY2015 revenue > 10,000 (ties broken by item id).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "cats": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Customer Category",
+      "fieldAlias": "customer_category"
+     },
+     {
+      "fieldCaption": "Gross Margin %",
+      "fieldAlias": "gross_margin_pct",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "customer_category": "VARCHAR",
+    "gross_margin_pct": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  },
+  "items": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Customer Category",
+      "fieldAlias": "customer_category"
+     },
+     {
+      "fieldCaption": "WWI Stock Item ID",
+      "fieldAlias": "wwi_stock_item_id"
+     },
+     {
+      "fieldCaption": "Stock Item",
+      "fieldAlias": "stock_item"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Gross Profit",
+      "fieldAlias": "profit",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Gross Margin %",
+      "fieldAlias": "gross_margin_pct",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "customer_category": "VARCHAR",
+    "wwi_stock_item_id": "BIGINT",
+    "stock_item": "VARCHAR",
+    "revenue": "DOUBLE",
+    "profit": "DOUBLE",
+    "gross_margin_pct": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH low AS (SELECT customer_category FROM cats WHERE lines > 0 ORDER BY gross_margin_pct, customer_category LIMIT 1), ranked AS (SELECT i.*, ROW_NUMBER() OVER (ORDER BY i.gross_margin_pct, i.wwi_stock_item_id) AS rank_no FROM items i JOIN low USING (customer_category) WHERE i.lines > 0 AND i.revenue > 10000) SELECT customer_category, rank_no, wwi_stock_item_id, stock_item, revenue, profit, gross_margin_pct FROM ranked WHERE rank_no <= 10 ORDER BY rank_no"
+}

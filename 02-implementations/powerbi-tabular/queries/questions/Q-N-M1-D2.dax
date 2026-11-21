@@ -1,0 +1,13 @@
+// Q-N-M1-D2 Distinct OD pairs by pickup hour for Q4 2024.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        Trips[Pickup Hour],
+        TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+        TREATAS ( { 4 }, 'Pickup Date'[Pickup Calendar Quarter] ),
+        "pairs", [Distinct OD Pairs]
+    ),
+    "pickup_hour", Trips[Pickup Hour],
+    "distinct_od_pairs", [pairs]
+)
+ORDER BY [pickup_hour]

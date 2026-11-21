@@ -1,0 +1,83 @@
+{
+ "question": "Q-W-S1-D4",
+ "text": "Show FY2015 revenue by stock item Color as recorded at time of sale and by each item's current Color; list colors where the two differ.",
+ "interpretation": "FY2015 revenue by stock item Color as recorded at time of sale (surrogate key, as-was) and by the item's current Color (durable key -> is_current row, as-is); differs = true where the two attributions disagree.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "as_was": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Color",
+      "fieldAlias": "color"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "color": "VARCHAR",
+    "revenue": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  },
+  "as_is": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Current Color",
+      "fieldAlias": "color"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "color": "VARCHAR",
+    "revenue": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH w AS (SELECT color, revenue FROM as_was WHERE lines > 0), i AS (SELECT color, revenue FROM as_is WHERE lines > 0), colors AS (SELECT color FROM w UNION SELECT color FROM i) SELECT c.color, w.revenue AS revenue_as_was, i.revenue AS revenue_as_is, COALESCE(w.revenue, 0) <> COALESCE(i.revenue, 0) AS differs FROM colors c LEFT JOIN w ON w.color = c.color LEFT JOIN i ON i.color = c.color ORDER BY c.color"
+}

@@ -217,6 +217,12 @@ TIME_INTEL_GRAINS = {
     "month_pickup_hour": ("month", [("Pickup Hour", "m2")]),
 }
 
+# Row-presence measure of each fact: rows where it is 0 or blank carry no facts and are dropped by the runner.
+PRESENCE = {"sales": ("Sales Line Count"), "orders": ("Order Line Count"), "stock": "Snapshot Row Count",
+            "trips": "Trip Count"}
+FACT_OF = {"B-W1": "sales", "B-W2": "sales", "B-W3": "sales", "B-W4": "sales", "W-S1": "sales", "W-M1": "sales",
+           "W-C1": "sales", "B-W5": "orders", "W-S2": "orders", "W-M2": "stock", "W-C2": "stock"}
+
 SIMPLE = {
     "B-W1": (WS, SALE_GRAINS, "Revenue Including Tax"), "B-W2": (WS, SALE_GRAINS, "Gross Profit"),
     "B-W3": (WS, SALE_GRAINS, "Units Sold"), "B-W4": (WS, SALE_GRAINS, "Invoice Count"),
@@ -266,17 +272,20 @@ def metric_spec(metric_id: str) -> dict:
             values = [(metric_id, caption)]
         else:
             source, grains, values = MULTI[metric_id]
+        presence = PRESENCE[FACT_OF.get(metric_id, "trips")]
         for grain, members in grains.items():
             aliases = [f"v{i}" for i in range(len(values))]
-            q = query(source, [dim(c, a) for c, a in members] + [agg(c, al) for (_, c), al in zip(values, aliases)])
+            q = query(source, [dim(c, a) for c, a in members] + [agg(c, al) for (_, c), al in zip(values, aliases)]
+                      + [agg(presence, "presence")])
             branches.append({"grain": grain, **q, "members": [a for _, a in members],
-                             "values": {label: al for (label, _), al in zip(values, aliases)}})
+                             "values": {label: al for (label, _), al in zip(values, aliases)}, "presence": "presence"})
     else:
         values = TIME_INTEL[metric_id]
         for grain, (kind, members) in TIME_INTEL_GRAINS.items():
             aliases = [f"v{i}" for i in range(len(values))]
-            q = query(NYC, [dim(c, a) for c, a in members] + [agg(c, al) for (_, c), al in zip(values, aliases)])
-            branches.append({"grain": grain, **q,
+            q = query(NYC, [dim(c, a) for c, a in members] + [agg(c, al) for (_, c), al in zip(values, aliases)]
+                      + [agg(PRESENCE["trips"], "presence")])
+            branches.append({"grain": grain, **q, "presence": "presence",
                              "members": (["@anchor"] if kind != "total" else []) + [a for _, a in members],
                              "anchor_parameter": "As-of Date", "anchors": anchors(kind),
                              "values": {label: al for (label, _), al in zip(values, aliases)}})

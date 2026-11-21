@@ -1,0 +1,52 @@
+{
+ "question": "Q-W-C1-D3",
+ "text": "Compare stock group shares FY2014 vs FY2015; which group gained the most share points?",
+ "interpretation": "Stock group shares FY2014 vs FY2015 and change in share points; is_top_gainer marks the largest gain (ties: name).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "Fiscal Year",
+      "fieldAlias": "fiscal_year"
+     },
+     {
+      "fieldCaption": "Stock Group Revenue Share",
+      "fieldAlias": "share",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2014,
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "stock_group_name": "VARCHAR",
+    "fiscal_year": "BIGINT",
+    "share": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH s AS (SELECT * FROM q WHERE lines > 0 AND stock_group_name IS NOT NULL), cmp AS (SELECT a.stock_group_name, a.share AS share_fy2014, b.share AS share_fy2015, (b.share - a.share) * 100 AS change_points FROM s a JOIN s b ON b.stock_group_name = a.stock_group_name AND b.fiscal_year = 2015 WHERE a.fiscal_year = 2014), top_gainer AS (SELECT stock_group_name FROM cmp ORDER BY change_points DESC, stock_group_name LIMIT 1) SELECT c.stock_group_name, c.share_fy2014, c.share_fy2015, c.change_points, c.stock_group_name = t.stock_group_name AS is_top_gainer FROM cmp c CROSS JOIN top_gainer t ORDER BY c.stock_group_name"
+}

@@ -1,0 +1,60 @@
+{
+ "question": "Q-N-M2-D4",
+ "text": "For trips picked up at JFK Airport in 2024, fare per mile by dropoff borough and payment type; which combination is highest?",
+ "interpretation": "Trips picked up at JFK Airport in 2024: fare per mile by dropoff borough x payment type; is_highest marks the highest combination (ties: borough, payment type).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Dropoff Borough",
+      "fieldAlias": "dropoff_borough"
+     },
+     {
+      "fieldCaption": "Payment Type",
+      "fieldAlias": "payment_type_name"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Fare per Mile",
+      "fieldAlias": "fare_per_mile",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     },
+     {
+      "field": {
+       "fieldCaption": "Pickup Zone"
+      },
+      "filterType": "SET",
+      "values": [
+       "JFK Airport"
+      ]
+     }
+    ]
+   },
+   "output": {
+    "dropoff_borough": "VARCHAR",
+    "payment_type_name": "VARCHAR",
+    "trips": "BIGINT",
+    "fare_per_mile": "DOUBLE"
+   }
+  }
+ },
+ "assemble": "WITH c AS (SELECT * FROM q WHERE trips > 0), top_c AS (SELECT dropoff_borough, payment_type_name FROM c ORDER BY fare_per_mile DESC, dropoff_borough, payment_type_name LIMIT 1) SELECT c.dropoff_borough, c.payment_type_name, c.trips, c.fare_per_mile, c.dropoff_borough = t.dropoff_borough AND c.payment_type_name = t.payment_type_name AS is_highest FROM c CROSS JOIN top_c t ORDER BY c.dropoff_borough, c.payment_type_name"
+}

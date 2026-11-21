@@ -1,0 +1,123 @@
+{
+ "question": "Q-N-C1-D2",
+ "text": "For the pickup borough with the lowest YoY % at 2024-06-30, the 10 pickup zones with the largest absolute YTD revenue decline.",
+ "interpretation": "Pickup borough with the lowest YoY % at 2024-06-30 (NULL YoY excluded; ties: name); its 10 pickup zones with the largest absolute YTD revenue decline (YTD - STLY, most negative first; ties: location id).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "boroughs": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Borough",
+      "fieldAlias": "pickup_borough"
+     },
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Date"
+      },
+      "filterType": "QUANTITATIVE_DATE",
+      "quantitativeFilterType": "RANGE",
+      "minDate": "2023-01-01",
+      "maxDate": "2024-06-30"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-06-30"
+     }
+    ]
+   },
+   "output": {
+    "pickup_borough": "VARCHAR",
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  },
+  "zones": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Borough",
+      "fieldAlias": "pickup_borough"
+     },
+     {
+      "fieldCaption": "Pickup Zone ID",
+      "fieldAlias": "pu_location_id"
+     },
+     {
+      "fieldCaption": "Pickup Zone",
+      "fieldAlias": "zone"
+     },
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Date"
+      },
+      "filterType": "QUANTITATIVE_DATE",
+      "quantitativeFilterType": "RANGE",
+      "minDate": "2023-01-01",
+      "maxDate": "2024-06-30"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-06-30"
+     }
+    ]
+   },
+   "output": {
+    "pickup_borough": "VARCHAR",
+    "pu_location_id": "BIGINT",
+    "zone": "VARCHAR",
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH low AS (SELECT pickup_borough, yoy_pct FROM boroughs WHERE trips > 0 AND yoy_pct IS NOT NULL ORDER BY yoy_pct, pickup_borough LIMIT 1), ranked AS (SELECT z.pickup_borough AS borough, low.yoy_pct AS borough_yoy_pct, z.pu_location_id, z.zone, z.ytd_revenue, z.stly_ytd_revenue, COALESCE(z.ytd_revenue, 0) - COALESCE(z.stly_ytd_revenue, 0) AS revenue_change, ROW_NUMBER() OVER (ORDER BY COALESCE(z.ytd_revenue, 0) - COALESCE(z.stly_ytd_revenue, 0), z.pu_location_id) AS rank_no FROM zones z JOIN low ON low.pickup_borough = z.pickup_borough WHERE z.trips > 0) SELECT borough, borough_yoy_pct, rank_no, pu_location_id, zone, ytd_revenue, stly_ytd_revenue, revenue_change FROM ranked WHERE rank_no <= 10 ORDER BY rank_no"
+}

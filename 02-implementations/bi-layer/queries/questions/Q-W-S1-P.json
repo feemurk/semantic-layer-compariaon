@@ -1,0 +1,56 @@
+{
+ "question": "Q-W-S1-P",
+ "text": "Revenue (excl. tax) by Sales Territory by fiscal month for fiscal year 2015.",
+ "interpretation": "Revenue (excl. tax) by Sales Territory by fiscal month for fiscal year 2015.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Sales Territory",
+      "fieldAlias": "sales_territory"
+     },
+     {
+      "fieldCaption": "Fiscal Month",
+      "fieldAlias": "fiscal_month"
+     },
+     {
+      "fieldCaption": "Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "sales_territory": "VARCHAR",
+    "fiscal_month": "BIGINT",
+    "month_start_date": "DATE",
+    "revenue": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT sales_territory, fiscal_month, month_start_date, revenue FROM q WHERE lines > 0 ORDER BY sales_territory, fiscal_month"
+}

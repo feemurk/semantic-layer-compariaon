@@ -1,0 +1,17 @@
+// Q-A10 Fare amount per trip by vendor by month for 2024.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        Trips[Vendor ID],
+        'Pickup Date'[Pickup Month Start],
+        TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+        "fare", [Fare Amount],
+        "trips", [Trip Count]
+    ),
+    "vendor_id", Trips[Vendor ID],
+    "month_start_date", 'Pickup Date'[Pickup Month Start],
+    "fare_amount", [fare],
+    "trips", [trips],
+    "fare_per_trip", DIVIDE ( [fare], [trips] )
+)
+ORDER BY [vendor_id], [month_start_date]

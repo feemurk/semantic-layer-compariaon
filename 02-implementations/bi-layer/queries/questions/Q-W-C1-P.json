@@ -1,0 +1,91 @@
+{
+ "question": "Q-W-C1-P",
+ "text": "Revenue share by stock group for FY2015, with a grand total equal to total revenue.",
+ "interpretation": "FY2015 revenue share by stock group (REV(g) / FY2015 revenue) plus the deduplicated total row equal to FY2015 revenue.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "groups": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Stock Group Revenue Share",
+      "fieldAlias": "share",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "stock_group_name": "VARCHAR",
+    "revenue": "DOUBLE",
+    "share": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  },
+  "total": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Stock Group Revenue Share",
+      "fieldAlias": "share",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "revenue": "DOUBLE",
+    "share": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT grain, stock_group_name, revenue, share FROM ( SELECT 'group' AS grain, stock_group_name, revenue, share FROM groups WHERE lines > 0 AND stock_group_name IS NOT NULL UNION ALL SELECT 'total', CAST(NULL AS VARCHAR), revenue, share FROM total WHERE lines > 0 ) r ORDER BY grain, stock_group_name NULLS FIRST",
+ "note": "Group rows sum each line into every group of its item (relationship through the bridge); the total row is the same measure without Stock Group, which Tableau answers without the bridge (deduplicated)."
+}

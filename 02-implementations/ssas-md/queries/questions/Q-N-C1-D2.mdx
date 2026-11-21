@@ -1,0 +1,34 @@
+// Q-N-C1-D2 For the pickup borough with the lowest YoY % at 2024-06-30, the 10 pickup zones with the largest absolute YTD revenue decline.
+// @column borough = [Measures].[q_borough]
+// @column borough_yoy_pct = [Measures].[q_borough_yoy_pct]
+// @column rank_no = [Measures].[q_rank_no]
+// @column pu_location_id = [Measures].[q_pu_location_id]
+// @column zone = [Pickup Zone].[Zone]
+// @column ytd_revenue = [Measures].[q_ytd_revenue]
+// @column stly_ytd_revenue = [Measures].[q_stly_ytd_revenue]
+// @column revenue_change = [Measures].[q_revenue_change]
+WITH
+SET [q_borough_set] AS
+  Head(Order(Order(Filter([Pickup Zone].[Borough].[Borough].Members, NOT IsEmpty([Measures].[Revenue YoY %])),
+                   [Pickup Zone].[Borough].CurrentMember.Name, BASC),
+             [Measures].[Revenue YoY %], BASC), 1)
+MEMBER [Measures].[q_ytd_revenue] AS ([Measures].[Revenue YTD], [q_borough_set].Item(0).Item(0))
+MEMBER [Measures].[q_stly_ytd_revenue] AS ([Measures].[Revenue STLY YTD], [q_borough_set].Item(0).Item(0))
+MEMBER [Measures].[q_revenue_change] AS
+  CoalesceEmpty([Measures].[q_ytd_revenue], 0) - CoalesceEmpty([Measures].[q_stly_ytd_revenue], 0)
+SET [q_zones] AS
+  Head(Order(Order(NonEmpty(Exists([Pickup Zone].[Zone].[Zone].Members, [q_borough_set]),
+                            {[Measures].[q_ytd_revenue], [Measures].[q_stly_ytd_revenue]}),
+                   [Pickup Zone].[Zone].CurrentMember.MemberValue, BASC),
+             [Measures].[q_revenue_change], BASC), 10)
+MEMBER [Measures].[q_borough] AS [q_borough_set].Item(0).Item(0).Name
+MEMBER [Measures].[q_borough_yoy_pct] AS
+  ([Measures].[Revenue YoY %], [q_borough_set].Item(0).Item(0), [Pickup Zone].[Zone].[All])
+MEMBER [Measures].[q_rank_no] AS Rank([Pickup Zone].[Zone].CurrentMember, [q_zones])
+MEMBER [Measures].[q_pu_location_id] AS [Pickup Zone].[Zone].CurrentMember.Properties("Location ID")
+SELECT {[Measures].[q_borough], [Measures].[q_borough_yoy_pct], [Measures].[q_rank_no],
+        [Measures].[q_pu_location_id], [Measures].[q_ytd_revenue], [Measures].[q_stly_ytd_revenue],
+        [Measures].[q_revenue_change]} ON COLUMNS,
+  [q_zones] ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Date].&[20240630])

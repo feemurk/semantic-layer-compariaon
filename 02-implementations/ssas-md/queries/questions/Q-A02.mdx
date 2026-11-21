@@ -1,0 +1,8 @@
+// Q-A02 Invoice count by salesperson by fiscal year.
+// @column salesperson = [Salesperson].[Employee]
+// @column fiscal_year = [Date].[Fiscal Year]
+// @column invoice_count = [Measures].[Invoice Count]
+SELECT {[Measures].[Invoice Count]} ON COLUMNS,
+  NonEmpty([Salesperson].[Employee].[Employee].Members * [Date].[Fiscal Year].[Fiscal Year].Members,
+           {[Measures].[Invoice Count]}) ON ROWS
+FROM [WWI]

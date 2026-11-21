@@ -1,0 +1,14 @@
+// Q-W-S1-P Revenue (excl. tax) by Sales Territory by fiscal month for fiscal year 2015.
+// @column sales_territory = [City].[Sales Territory]
+// @column fiscal_month = [Date].[Fiscal Month Of Year]
+// @column month_start_date = [Measures].[q_month_start_date]
+// @column revenue = [Measures].[Revenue]
+WITH
+MEMBER [Measures].[q_month_start_date] AS
+  Tail(EXISTING [Date].[Month].[Month].Members, 1).Item(0).Item(0).Name
+SELECT {[Measures].[q_month_start_date], [Measures].[Revenue]} ON COLUMNS,
+  NonEmpty([City].[Sales Territory].[Sales Territory].Members
+           * [Date].[Fiscal Month Of Year].[Fiscal Month Of Year].Members,
+           {[Measures].[Revenue]}) ON ROWS
+FROM [WWI]
+WHERE ([Date].[Fiscal Year].&[2015])

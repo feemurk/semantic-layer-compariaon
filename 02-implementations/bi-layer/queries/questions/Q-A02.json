@@ -1,0 +1,40 @@
+{
+ "question": "Q-A02",
+ "text": "Invoice count by salesperson by fiscal year.",
+ "interpretation": "Invoice count (exact distinct wwi_invoice_id) by salesperson by fiscal year.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Salesperson",
+      "fieldAlias": "salesperson"
+     },
+     {
+      "fieldCaption": "Fiscal Year",
+      "fieldAlias": "fiscal_year"
+     },
+     {
+      "fieldCaption": "Invoice Count",
+      "fieldAlias": "invoice_count",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "salesperson": "VARCHAR",
+    "fiscal_year": "BIGINT",
+    "invoice_count": "BIGINT",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT salesperson, fiscal_year, invoice_count FROM q WHERE lines > 0 ORDER BY salesperson, fiscal_year"
+}

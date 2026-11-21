@@ -1,0 +1,12 @@
+// Q-A06 Trip count by pickup hour and day of week for 2024.
+// @column pickup_hour = [Pickup Hour].[Pickup Hour]
+// @column day_of_week = [Pickup Date].[Day Of Week]
+// @column day_name = [Measures].[q_day_name]
+// @column trips = [Measures].[Trip Count]
+WITH
+MEMBER [Measures].[q_day_name] AS [Pickup Date].[Day Of Week].CurrentMember.Properties("Day Name")
+SELECT {[Measures].[q_day_name], [Measures].[Trip Count]} ON COLUMNS,
+  NonEmpty([Pickup Hour].[Pickup Hour].[Pickup Hour].Members * [Pickup Date].[Day Of Week].[Day Of Week].Members,
+           {[Measures].[Trip Count]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Calendar Year].&[2024])

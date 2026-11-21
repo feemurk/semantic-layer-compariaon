@@ -1,0 +1,106 @@
+{
+ "question": "Q-W-M1-D4",
+ "text": "Which salesperson's gross margin % fell the most from FY2014 to FY2015, and which stock groups drove the change?",
+ "interpretation": "Salesperson whose gross margin % fell the most from FY2014 to FY2015 (ties: name); for that salesperson, per stock group: gross margin % in each year, change in points, and FY2015 revenue; ordered by change ascending (largest drop first).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "people": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Salesperson",
+      "fieldAlias": "salesperson"
+     },
+     {
+      "fieldCaption": "Fiscal Year",
+      "fieldAlias": "fiscal_year"
+     },
+     {
+      "fieldCaption": "Gross Margin %",
+      "fieldAlias": "gross_margin_pct",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2014,
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "salesperson": "VARCHAR",
+    "fiscal_year": "BIGINT",
+    "gross_margin_pct": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  },
+  "groups": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Salesperson",
+      "fieldAlias": "salesperson"
+     },
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "Fiscal Year",
+      "fieldAlias": "fiscal_year"
+     },
+     {
+      "fieldCaption": "Gross Margin %",
+      "fieldAlias": "gross_margin_pct",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2014,
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "salesperson": "VARCHAR",
+    "stock_group_name": "VARCHAR",
+    "fiscal_year": "BIGINT",
+    "gross_margin_pct": "DOUBLE",
+    "revenue": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH sp AS (SELECT salesperson, MAX(CASE WHEN fiscal_year = 2014 THEN gross_margin_pct END) AS gm_2014, MAX(CASE WHEN fiscal_year = 2015 THEN gross_margin_pct END) AS gm_2015 FROM people WHERE lines > 0 GROUP BY salesperson), worst AS (SELECT salesperson, gm_2014, gm_2015 FROM sp ORDER BY gm_2015 - gm_2014, salesperson LIMIT 1), bg AS (SELECT g.stock_group_name, MAX(CASE WHEN g.fiscal_year = 2014 THEN g.gross_margin_pct END) AS gm_2014, MAX(CASE WHEN g.fiscal_year = 2015 THEN g.gross_margin_pct END) AS gm_2015, MAX(CASE WHEN g.fiscal_year = 2015 THEN g.revenue END) AS revenue_fy2015 FROM groups g JOIN worst w ON w.salesperson = g.salesperson WHERE g.lines > 0 GROUP BY g.stock_group_name) SELECT w.salesperson, w.gm_2014 AS salesperson_gm_fy2014, w.gm_2015 AS salesperson_gm_fy2015, bg.stock_group_name, bg.gm_2014 AS group_gm_fy2014, bg.gm_2015 AS group_gm_fy2015, (bg.gm_2015 - bg.gm_2014) * 100 AS group_change_points, bg.revenue_fy2015 FROM bg CROSS JOIN worst w ORDER BY group_change_points NULLS FIRST, bg.stock_group_name"
+}

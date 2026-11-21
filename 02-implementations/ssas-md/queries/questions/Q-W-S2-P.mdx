@@ -1,0 +1,7 @@
+// Q-W-S2-P Ordered quantity and revenue (excl. tax) by calendar month for 2015 on one shared date axis.
+// @column month_start_date = [Date].[Month]
+// @column ordered_quantity = [Measures].[Ordered Quantity]
+// @column revenue = [Measures].[Revenue]
+SELECT {[Measures].[Ordered Quantity], [Measures].[Revenue]} ON COLUMNS,
+  Exists([Date].[Month].[Month].Members, {[Date].[Calendar Year].&[2015]}) ON ROWS
+FROM [WWI]

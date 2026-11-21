@@ -369,6 +369,10 @@ WWI_SALES_ORDERS = DataSource(
         metric_calc("W-C1", "m_stock_group_revenue_share",
                     "SUM([sale_total_excluding_tax]) / MIN({EXCLUDE [sg_stock_group_name] : SUM([sale_total_excluding_tax])})",
                     extra="Denominator: revenue of the same context with Stock Group removed, counting each line once."),
+        Calc("m_sales_line_count", "Sales Line Count", "COUNT([sale_key])", "integer",
+             desc="Number of invoice lines in context (row presence of the sales fact).", fmt=FORMATS["count"]),
+        Calc("m_order_line_count", "Order Line Count", "COUNT([ord_order_key])", "integer",
+             desc="Number of order lines in context (row presence of the orders fact).", fmt=FORMATS["count"]),
         Calc("m_revenue_all_stock_groups", "Revenue (All Stock Groups)",
              "MIN({EXCLUDE [sg_stock_group_name] : SUM([sale_total_excluding_tax])})", "real",
              desc="Revenue of the current context with Stock Group removed; each invoice line counted once. "
@@ -440,6 +444,8 @@ WWI_STOCK = DataSource(
              "real", desc="Units sold in the 91 days ending on the last snapshot date of the period, for the items in "
                           "context; blank when no unit sold.", fmt=FORMATS["units"]),
         metric_calc("W-C2", "m_days_of_supply", "[m_closing_stock] / ([m_units_sold_91d] / 91)"),
+        Calc("m_snapshot_rows", "Snapshot Row Count", "COUNT([stk_snapshot_date])", "integer",
+             desc="Number of item-day snapshot rows in context (row presence of the stock fact).", fmt=FORMATS["count"]),
         Calc("m_closing_date", "Closing Snapshot Date", "MAX([stk_snapshot_date])", "date",
              desc="Last snapshot date of the period in context (the date closing stock is taken on)."),
         Calc("rls_wwi_inventory", "RLS Inventory Filter",
@@ -490,7 +496,7 @@ NYC_TRIPS = DataSource(
                    {"calendar_year": "Pickup Year", "calendar_quarter": "Pickup Quarter",
                     "calendar_month": "Pickup Calendar Month", "month_start_date": "Pickup Month Start Date",
                     "day_of_week": "Pickup Day of Week", "day_name": "Pickup Day Name"},
-                   None, "Calendar of the pickup date."),
+                   "Pickup Calendar Date", "Calendar of the pickup date (every day of 2023-2025, with or without trips)."),
         Table("pickup_zone", "Pickup Zone",
               "SELECT location_id AS pz_location_id, borough AS pz_borough, zone AS pz_zone, "
               "service_zone AS pz_service_zone FROM slc.nyctaxi.dim_zone",

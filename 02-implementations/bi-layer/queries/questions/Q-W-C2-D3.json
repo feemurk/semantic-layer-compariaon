@@ -1,0 +1,69 @@
+{
+ "question": "Q-W-C2-D3",
+ "text": "Days of supply for chiller vs non-chiller items at each calendar quarter end of 2015.",
+ "interpretation": "Days of supply for chiller vs non-chiller items at each calendar quarter end of 2015.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Quarter",
+      "fieldAlias": "calendar_quarter"
+     },
+     {
+      "fieldCaption": "Is Chiller Stock",
+      "fieldAlias": "is_chiller_stock"
+     },
+     {
+      "fieldCaption": "Closing Snapshot Date",
+      "fieldAlias": "closing_date",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "closing_units",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Units Sold Trailing 91 Days",
+      "fieldAlias": "units_sold_91d",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Days of Supply",
+      "fieldAlias": "days_of_supply",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "snap_rows",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "calendar_quarter": "BIGINT",
+    "is_chiller_stock": "BOOLEAN",
+    "closing_date": "DATE",
+    "closing_units": "DOUBLE",
+    "units_sold_91d": "DOUBLE",
+    "days_of_supply": "DOUBLE",
+    "snap_rows": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT calendar_quarter, closing_date AS quarter_end_date, is_chiller_stock, closing_units, units_sold_91d, days_of_supply FROM q WHERE snap_rows > 0 ORDER BY calendar_quarter, is_chiller_stock"
+}

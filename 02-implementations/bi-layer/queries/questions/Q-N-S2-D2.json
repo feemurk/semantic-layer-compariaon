@@ -1,0 +1,51 @@
+{
+ "question": "Q-N-S2-D2",
+ "text": "Card tips by pickup borough × dropoff borough for 2024.",
+ "interpretation": "Card tips by pickup borough x dropoff borough (two roles of dim_zone), 2024.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Borough",
+      "fieldAlias": "pickup_borough"
+     },
+     {
+      "fieldCaption": "Dropoff Borough",
+      "fieldAlias": "dropoff_borough"
+     },
+     {
+      "fieldCaption": "Card Tips",
+      "fieldAlias": "card_tips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     }
+    ]
+   },
+   "output": {
+    "pickup_borough": "VARCHAR",
+    "dropoff_borough": "VARCHAR",
+    "card_tips": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT pickup_borough, dropoff_borough, card_tips FROM q WHERE trips > 0 ORDER BY pickup_borough, dropoff_borough"
+}

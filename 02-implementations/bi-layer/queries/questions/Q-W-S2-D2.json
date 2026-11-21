@@ -1,0 +1,88 @@
+{
+ "question": "Q-W-S2-D2",
+ "text": "For that month, ordered quantity by picker.",
+ "interpretation": "For the month found in Q-W-S2-D1: ordered quantity by picker (Picker role of dim_employee; unknown member kept).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "gap": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "Ordered Quantity",
+      "fieldAlias": "ordered_quantity",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "units_sold",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "month_start_date": "DATE",
+    "ordered_quantity": "BIGINT",
+    "units_sold": "BIGINT"
+   }
+  },
+  "pickers": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "Picker",
+      "fieldAlias": "picker"
+     },
+     {
+      "fieldCaption": "Ordered Quantity",
+      "fieldAlias": "ordered_quantity",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Order Line Count",
+      "fieldAlias": "order_lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "month_start_date": "DATE",
+    "picker": "VARCHAR",
+    "ordered_quantity": "BIGINT",
+    "order_lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH g AS (SELECT month_start_date, ordered_quantity, units_sold FROM gap WHERE ordered_quantity IS NOT NULL AND units_sold IS NOT NULL ORDER BY ABS(ordered_quantity - units_sold) DESC, month_start_date LIMIT 1) SELECT g.month_start_date, p.picker, p.ordered_quantity FROM pickers p JOIN g ON g.month_start_date = p.month_start_date WHERE p.order_lines > 0 ORDER BY p.ordered_quantity DESC, p.picker NULLS FIRST"
+}

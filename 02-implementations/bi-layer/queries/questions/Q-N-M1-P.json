@@ -1,0 +1,46 @@
+{
+ "question": "Q-N-M1-P",
+ "text": "Distinct OD pairs by month for 2024.",
+ "interpretation": "Distinct origin-destination pairs (exact count of distinct od_pair_id) by month, 2024.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "Distinct OD Pairs",
+      "fieldAlias": "distinct_od_pairs",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     }
+    ]
+   },
+   "output": {
+    "month_start_date": "DATE",
+    "distinct_od_pairs": "BIGINT",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT month_start_date, distinct_od_pairs FROM q WHERE trips > 0 ORDER BY month_start_date"
+}

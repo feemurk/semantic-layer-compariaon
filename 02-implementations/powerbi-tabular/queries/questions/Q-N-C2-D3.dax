@@ -1,0 +1,20 @@
+// Q-N-C2-D3 Pace index at 2024-03-15 vs 2023-03-15 (day of year 75 in the leap year vs 74).
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Pickup Date'[Pickup Date],
+        TREATAS ( { DATE ( 2023, 3, 15 ), DATE ( 2024, 3, 15 ) }, 'Pickup Date'[Pickup Date] ),
+        "mtd", [Trips MTD],
+        "dom", [Days Elapsed in Month],
+        "ytd", [Trips YTD],
+        "doy", [Days Elapsed in Year],
+        "pace", [MTD-to-YTD Daily Pace Index]
+    ),
+    "anchor_date", 'Pickup Date'[Pickup Date],
+    "mtd_trips", [mtd],
+    "day_of_month", [dom],
+    "ytd_trips", [ytd],
+    "day_of_year", [doy],
+    "pace_index", [pace]
+)
+ORDER BY [anchor_date]

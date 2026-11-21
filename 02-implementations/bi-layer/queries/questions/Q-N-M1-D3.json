@@ -1,0 +1,41 @@
+{
+ "question": "Q-N-M1-D3",
+ "text": "Distinct OD pairs served by each vendor, 2023 vs 2024.",
+ "interpretation": "Distinct OD pairs served by each vendor, 2023 vs 2024.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Vendor",
+      "fieldAlias": "vendor_id"
+     },
+     {
+      "fieldCaption": "Pickup Year",
+      "fieldAlias": "pickup_year"
+     },
+     {
+      "fieldCaption": "Distinct OD Pairs",
+      "fieldAlias": "distinct_od_pairs",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "vendor_id": "BIGINT",
+    "pickup_year": "BIGINT",
+    "distinct_od_pairs": "BIGINT",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT vendor_id, COALESCE(MAX(CASE WHEN pickup_year = 2023 THEN distinct_od_pairs END), 0) AS distinct_od_pairs_2023, COALESCE(MAX(CASE WHEN pickup_year = 2024 THEN distinct_od_pairs END), 0) AS distinct_od_pairs_2024 FROM q WHERE trips > 0 GROUP BY vendor_id ORDER BY vendor_id",
+ "note": "A vendor with no trips in a year has zero distinct pairs, as COUNT(DISTINCT) over no rows."
+}

@@ -1,0 +1,537 @@
+{
+ "metric": "B-N3",
+ "contract": [
+  "grain",
+  "measure",
+  "member_1",
+  "member_2",
+  "member_3",
+  "value"
+ ],
+ "generated_by": "build_tableau.py",
+ "branches": [
+  {
+   "grain": "total",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "month",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Month Start Date",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "DATE",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "day",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Date",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "DATE",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "dropoff_year",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Dropoff Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "dropoff_month",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Dropoff Month Start Date",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "DATE",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_pickup_hour",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Pickup Hour",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "BIGINT",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_pickup_borough",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Pickup Borough",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_pickup_zone",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Pickup Zone ID",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "BIGINT",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_dropoff_borough",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Dropoff Borough",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_dropoff_zone",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Dropoff Zone ID",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "BIGINT",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_payment_type",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Payment Type",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_vendor",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Vendor",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "BIGINT",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_pickup_dropoff_borough",
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Pickup Borough",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Dropoff Borough",
+      "fieldAlias": "m3"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "m3": "VARCHAR",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2",
+    "m3"
+   ],
+   "values": {
+    "B-N3": "v0"
+   },
+   "presence": "presence"
+  }
+ ]
+}

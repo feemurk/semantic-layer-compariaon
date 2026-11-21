@@ -1,0 +1,16 @@
+// Q-W-M1-D3 Gross margin % by selling package, FY2014 vs FY2015.
+// @column selling_package = [Stock Item].[Selling Package]
+// @column gross_margin_pct_fy2014 = [Measures].[q_gross_margin_pct_fy2014]
+// @column gross_margin_pct_fy2015 = [Measures].[q_gross_margin_pct_fy2015]
+// @column change_points = [Measures].[q_change_points]
+WITH
+MEMBER [Measures].[q_gross_margin_pct_fy2014] AS ([Measures].[Gross Margin %], [Date].[Fiscal Year].&[2014])
+MEMBER [Measures].[q_gross_margin_pct_fy2015] AS ([Measures].[Gross Margin %], [Date].[Fiscal Year].&[2015])
+MEMBER [Measures].[q_change_points] AS
+  IIF(IsEmpty([Measures].[q_gross_margin_pct_fy2014]) OR IsEmpty([Measures].[q_gross_margin_pct_fy2015]), NULL,
+      ([Measures].[q_gross_margin_pct_fy2015] - [Measures].[q_gross_margin_pct_fy2014]) * 100)
+SELECT {[Measures].[q_gross_margin_pct_fy2014], [Measures].[q_gross_margin_pct_fy2015],
+        [Measures].[q_change_points]} ON COLUMNS,
+  NonEmpty([Stock Item].[Selling Package].[Selling Package].Members,
+           {[Measures].[q_gross_margin_pct_fy2014], [Measures].[q_gross_margin_pct_fy2015]}) ON ROWS
+FROM [WWI]

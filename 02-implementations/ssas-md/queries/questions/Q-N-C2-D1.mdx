@@ -1,0 +1,11 @@
+// Q-N-C2-D1 Pace index at 2024-11-30 by pickup borough.
+// @column pickup_borough = [Pickup Zone].[Borough]
+// @column mtd_trips = [Measures].[Trips MTD]
+// @column day_of_month = [Measures].[Days Elapsed In Month]
+// @column ytd_trips = [Measures].[Trips YTD]
+// @column day_of_year = [Measures].[Days Elapsed In Year]
+// @column pace_index = [Measures].[Pace Index]
+SELECT {[Measures].[Trips MTD], [Measures].[Days Elapsed In Month], [Measures].[Trips YTD], [Measures].[Days Elapsed In Year], [Measures].[Pace Index]} ON COLUMNS,
+  NonEmpty([Pickup Zone].[Borough].[Borough].Members, {[Measures].[Trips YTD]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Date].&[20241130])

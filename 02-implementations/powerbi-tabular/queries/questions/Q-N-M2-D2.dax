@@ -1,0 +1,14 @@
+// Q-N-M2-D2 Fare per mile by pickup hour for Manhattan -> Manhattan trips in 2024.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        Trips[Pickup Hour],
+        TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+        TREATAS ( { "Manhattan" }, 'Pickup Zone'[Pickup Borough] ),
+            TREATAS ( { "Manhattan" }, 'Dropoff Zone'[Dropoff Borough] ),
+        "fpm", [Fare per Mile]
+    ),
+    "pickup_hour", Trips[Pickup Hour],
+    "fare_per_mile", [fpm]
+)
+ORDER BY [pickup_hour]

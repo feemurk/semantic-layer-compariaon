@@ -1,0 +1,52 @@
+{
+ "question": "Q-W-M2-P",
+ "text": "Closing stock on hand (units) at each fiscal month end of FY2015.",
+ "interpretation": "Closing stock on hand (units) at each fiscal month end of FY2015: d* = last snapshot date of the fiscal month.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Fiscal Month",
+      "fieldAlias": "fiscal_month"
+     },
+     {
+      "fieldCaption": "Closing Snapshot Date",
+      "fieldAlias": "closing_date",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "closing_units",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "snap_rows",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "fiscal_month": "BIGINT",
+    "closing_date": "DATE",
+    "closing_units": "DOUBLE",
+    "snap_rows": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT fiscal_month, closing_date AS month_end_date, closing_units FROM q WHERE snap_rows > 0 ORDER BY fiscal_month"
+}

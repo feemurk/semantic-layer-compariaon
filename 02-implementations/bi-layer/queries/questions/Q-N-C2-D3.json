@@ -1,0 +1,95 @@
+{
+ "question": "Q-N-C2-D3",
+ "text": "Pace index at 2024-03-15 vs 2023-03-15 (leap-year day counts differ).",
+ "interpretation": "Pace index at 2024-03-15 vs 2023-03-15 (day_of_year 75 vs 74: 2024 is a leap year).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "a2023": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD (zero filled)",
+      "calculation": "ZN([Trips MTD])",
+      "fieldAlias": "mtd_trips"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2023-03-15"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  },
+  "a2024": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD (zero filled)",
+      "calculation": "ZN([Trips MTD])",
+      "fieldAlias": "mtd_trips"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-03-15"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  }
+ },
+ "assemble": "SELECT DATE '2023-03-15' AS anchor_date, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM a2023 UNION ALL SELECT DATE '2024-03-15', mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM a2024 ORDER BY anchor_date"
+}

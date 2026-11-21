@@ -1,0 +1,11 @@
+// Q-W-M2-P Closing stock on hand (units) at each fiscal month end of FY2015.
+// @column fiscal_month = [Date].[Fiscal Month Of Year]
+// @column month_end_date = [Measures].[q_month_end_date]
+// @column closing_units = [Measures].[Closing Units]
+WITH
+MEMBER [Measures].[q_month_end_date] AS
+  Tail(EXISTING [Date].[Month].[Month].Members, 1).Item(0).Item(0).Properties("Month End Date")
+SELECT {[Measures].[q_month_end_date], [Measures].[Closing Units]} ON COLUMNS,
+  NonEmpty([Date].[Fiscal Month Of Year].[Fiscal Month Of Year].Members, {[Measures].[Closing Units]}) ON ROWS
+FROM [WWI]
+WHERE ([Date].[Fiscal Year].&[2015])

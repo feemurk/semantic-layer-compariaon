@@ -1,0 +1,11 @@
+// Q-A04 The 20 State Province x Customer Category combinations with the highest gross profit in calendar 2015.
+// @column state_province = [City].[State Province]
+// @column customer_category = [Customer].[Category]
+// @column gross_profit = [Measures].[Gross Profit]
+SELECT {[Measures].[Gross Profit]} ON COLUMNS,
+  Head(Order(Order(NonEmpty([City].[State Province].[State Province].Members * [Customer].[Category].[Category].Members,
+                            {[Measures].[Gross Profit]}),
+                   [City].[State Province].CurrentMember.Name + "|" + [Customer].[Category].CurrentMember.Name, BASC),
+             [Measures].[Gross Profit], BDESC), 20) ON ROWS
+FROM [WWI]
+WHERE ([Date].[Calendar Year].&[2015])

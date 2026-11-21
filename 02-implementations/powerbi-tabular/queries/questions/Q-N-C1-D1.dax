@@ -1,0 +1,16 @@
+// Q-N-C1-D1 YoY % of YTD revenue at 2024-06-30 by pickup borough.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Pickup Zone'[Pickup Borough],
+        TREATAS ( { DATE ( 2024, 6, 30 ) }, 'Pickup Date'[Pickup Date] ),
+        "ytd", [Revenue YTD],
+        "stly", [Revenue STLY YTD],
+        "yoy", [Revenue YoY % vs STLY]
+    ),
+    "pickup_borough", 'Pickup Zone'[Pickup Borough],
+    "ytd_revenue", [ytd],
+    "stly_ytd_revenue", [stly],
+    "yoy_pct", [yoy]
+)
+ORDER BY [pickup_borough]

@@ -1,0 +1,64 @@
+{
+ "question": "Q-N-C1-D1",
+ "text": "YoY % of YTD revenue at 2024-06-30 by pickup borough.",
+ "interpretation": "YoY % of YTD gross trip revenue at 2024-06-30 by pickup borough (YTD 2024-01-01..06-30 vs 2023-01-01..06-30).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Borough",
+      "fieldAlias": "pickup_borough"
+     },
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Date"
+      },
+      "filterType": "QUANTITATIVE_DATE",
+      "quantitativeFilterType": "RANGE",
+      "minDate": "2023-01-01",
+      "maxDate": "2024-06-30"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-06-30"
+     }
+    ]
+   },
+   "output": {
+    "pickup_borough": "VARCHAR",
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT pickup_borough, ytd_revenue, stly_ytd_revenue, yoy_pct FROM q WHERE trips > 0 ORDER BY pickup_borough"
+}

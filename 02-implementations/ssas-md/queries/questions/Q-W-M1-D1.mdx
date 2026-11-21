@@ -1,0 +1,29 @@
+// Q-W-M1-D1 For the category with the lowest FY2015 gross margin %, list the 10 lowest-margin stock items with FY2015 revenue above 10,000.
+// @column customer_category = [Measures].[q_customer_category]
+// @column rank_no = [Measures].[q_rank_no]
+// @column wwi_stock_item_id = [Stock Item].[WWI Stock Item ID]
+// @column stock_item = [Measures].[q_stock_item]
+// @column revenue = [Measures].[q_revenue]
+// @column profit = [Measures].[q_profit]
+// @column gross_margin_pct = [Measures].[q_gross_margin_pct]
+WITH
+SET [q_category] AS
+  Head(Order(Order(NonEmpty([Customer].[Category].[Category].Members, {[Measures].[Revenue]}),
+                   [Customer].[Category].CurrentMember.Name, BASC),
+             [Measures].[Gross Margin %], BASC), 1)
+SET [q_items] AS
+  Head(Order(Order(Filter([Stock Item].[WWI Stock Item ID].[WWI Stock Item ID].Members,
+                          ([Measures].[Revenue], [q_category].Item(0).Item(0)) > 10000),
+                   [Stock Item].[WWI Stock Item ID].CurrentMember.MemberValue, BASC),
+             ([Measures].[Gross Margin %], [q_category].Item(0).Item(0)), BASC), 10)
+MEMBER [Measures].[q_stock_item] AS [Stock Item].[WWI Stock Item ID].CurrentMember.Properties("Stock Item")
+MEMBER [Measures].[q_revenue] AS ([Measures].[Revenue], [q_category].Item(0).Item(0))
+MEMBER [Measures].[q_profit] AS ([Measures].[Gross Profit], [q_category].Item(0).Item(0))
+MEMBER [Measures].[q_gross_margin_pct] AS ([Measures].[Gross Margin %], [q_category].Item(0).Item(0))
+MEMBER [Measures].[q_customer_category] AS [q_category].Item(0).Item(0).Name
+MEMBER [Measures].[q_rank_no] AS Rank([Stock Item].[WWI Stock Item ID].CurrentMember, [q_items])
+SELECT {[Measures].[q_customer_category], [Measures].[q_rank_no], [Measures].[q_stock_item], [Measures].[q_revenue],
+        [Measures].[q_profit], [Measures].[q_gross_margin_pct]} ON COLUMNS,
+  [q_items] ON ROWS
+FROM [WWI]
+WHERE ([Date].[Fiscal Year].&[2015])

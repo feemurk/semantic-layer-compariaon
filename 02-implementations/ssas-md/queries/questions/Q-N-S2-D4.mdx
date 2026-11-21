@@ -1,0 +1,11 @@
+// Q-N-S2-D4 Card tips by payment type for 2024. Expected: a value only for payment type 1; NULL for all others.
+// @column payment_type = [Payment Type].[Payment Type Code]
+// @column payment_type_name = [Measures].[q_payment_type_name]
+// @column card_tips = [Measures].[Card Tips]
+WITH
+MEMBER [Measures].[q_payment_type_name] AS
+  [Payment Type].[Payment Type Code].CurrentMember.Properties("Payment Type")
+SELECT {[Measures].[q_payment_type_name], [Measures].[Card Tips]} ON COLUMNS,
+  [Payment Type].[Payment Type Code].[Payment Type Code].Members ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Calendar Year].&[2024])

@@ -1,0 +1,406 @@
+{
+ "question": "Q-N-C1-P",
+ "text": "YTD gross trip revenue and YoY % vs STLY at each month end of 2024.",
+ "interpretation": "YTD gross trip revenue and YoY % vs STLY at each month end of 2024 (t = month end; STLY = Jan 1 2023 .. t - 1 year).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "m01": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-01-31"
+     }
+    ]
+   },
+   "output": {
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE"
+   }
+  },
+  "m02": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-02-29"
+     }
+    ]
+   },
+   "output": {
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE"
+   }
+  },
+  "m03": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-03-31"
+     }
+    ]
+   },
+   "output": {
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE"
+   }
+  },
+  "m04": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-04-30"
+     }
+    ]
+   },
+   "output": {
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE"
+   }
+  },
+  "m05": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-05-31"
+     }
+    ]
+   },
+   "output": {
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE"
+   }
+  },
+  "m06": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-06-30"
+     }
+    ]
+   },
+   "output": {
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE"
+   }
+  },
+  "m07": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-07-31"
+     }
+    ]
+   },
+   "output": {
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE"
+   }
+  },
+  "m08": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-08-31"
+     }
+    ]
+   },
+   "output": {
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE"
+   }
+  },
+  "m09": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-09-30"
+     }
+    ]
+   },
+   "output": {
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE"
+   }
+  },
+  "m10": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-10-31"
+     }
+    ]
+   },
+   "output": {
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE"
+   }
+  },
+  "m11": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-11-30"
+     }
+    ]
+   },
+   "output": {
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE"
+   }
+  },
+  "m12": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-12-31"
+     }
+    ]
+   },
+   "output": {
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE"
+   }
+  }
+ },
+ "assemble": "SELECT DATE '2024-01-31' AS month_end_date, ytd_revenue, stly_ytd_revenue, yoy_pct FROM m01 UNION ALL SELECT DATE '2024-02-29' AS month_end_date, ytd_revenue, stly_ytd_revenue, yoy_pct FROM m02 UNION ALL SELECT DATE '2024-03-31' AS month_end_date, ytd_revenue, stly_ytd_revenue, yoy_pct FROM m03 UNION ALL SELECT DATE '2024-04-30' AS month_end_date, ytd_revenue, stly_ytd_revenue, yoy_pct FROM m04 UNION ALL SELECT DATE '2024-05-31' AS month_end_date, ytd_revenue, stly_ytd_revenue, yoy_pct FROM m05 UNION ALL SELECT DATE '2024-06-30' AS month_end_date, ytd_revenue, stly_ytd_revenue, yoy_pct FROM m06 UNION ALL SELECT DATE '2024-07-31' AS month_end_date, ytd_revenue, stly_ytd_revenue, yoy_pct FROM m07 UNION ALL SELECT DATE '2024-08-31' AS month_end_date, ytd_revenue, stly_ytd_revenue, yoy_pct FROM m08 UNION ALL SELECT DATE '2024-09-30' AS month_end_date, ytd_revenue, stly_ytd_revenue, yoy_pct FROM m09 UNION ALL SELECT DATE '2024-10-31' AS month_end_date, ytd_revenue, stly_ytd_revenue, yoy_pct FROM m10 UNION ALL SELECT DATE '2024-11-30' AS month_end_date, ytd_revenue, stly_ytd_revenue, yoy_pct FROM m11 UNION ALL SELECT DATE '2024-12-31' AS month_end_date, ytd_revenue, stly_ytd_revenue, yoy_pct FROM m12 ORDER BY month_end_date",
+ "note": "One query per month end: the period-to-date measures are anchored by the As-of Date parameter."
+}

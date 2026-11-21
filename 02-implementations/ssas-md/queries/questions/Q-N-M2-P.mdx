@@ -1,0 +1,11 @@
+// Q-N-M2-P Fare per mile by pickup borough x dropoff borough for 2024.
+// @column pickup_borough = [Pickup Zone].[Borough]
+// @column dropoff_borough = [Dropoff Zone].[Borough]
+// @column fare_amount = [Measures].[Fare Amount]
+// @column trip_distance = [Measures].[Total Trip Distance]
+// @column fare_per_mile = [Measures].[Fare per Mile]
+SELECT {[Measures].[Fare Amount], [Measures].[Total Trip Distance], [Measures].[Fare per Mile]} ON COLUMNS,
+  NonEmpty([Pickup Zone].[Borough].[Borough].Members * [Dropoff Zone].[Borough].[Borough].Members,
+           {[Measures].[Trip Count]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Calendar Year].&[2024])

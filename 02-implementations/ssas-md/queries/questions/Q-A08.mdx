@@ -1,0 +1,7 @@
+// Q-A08 Total tolls by dropoff borough for trips picked up at LaGuardia Airport in 2024.
+// @column dropoff_borough = [Dropoff Zone].[Borough]
+// @column tolls_amount = [Measures].[Tolls Amount]
+SELECT {[Measures].[Tolls Amount]} ON COLUMNS,
+  NonEmpty([Dropoff Zone].[Borough].[Borough].Members, {[Measures].[Trip Count]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Calendar Year].&[2024], [Pickup Zone].[Zone].[LaGuardia Airport])

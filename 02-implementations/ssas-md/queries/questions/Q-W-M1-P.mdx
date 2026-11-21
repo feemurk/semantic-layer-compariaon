@@ -1,0 +1,11 @@
+// Q-W-M1-P Gross margin % by Customer Category by fiscal quarter for FY2015.
+// @column customer_category = [Customer].[Category]
+// @column fiscal_quarter = [Date].[Fiscal Quarter Of Year]
+// @column revenue = [Measures].[Revenue]
+// @column profit = [Measures].[Gross Profit]
+// @column gross_margin_pct = [Measures].[Gross Margin %]
+SELECT {[Measures].[Revenue], [Measures].[Gross Profit], [Measures].[Gross Margin %]} ON COLUMNS,
+  NonEmpty([Customer].[Category].[Category].Members * [Date].[Fiscal Quarter Of Year].[Fiscal Quarter Of Year].Members,
+           {[Measures].[Revenue]}) ON ROWS
+FROM [WWI]
+WHERE ([Date].[Fiscal Year].&[2015])

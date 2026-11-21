@@ -1,0 +1,61 @@
+{
+ "question": "Q-N-C1-D4",
+ "text": "Gross trip revenue for dropoff dates in 2024 vs pickup dates in 2024; report both and the difference.",
+ "interpretation": "Gross trip revenue for dropoff dates in 2024 vs pickup dates in 2024 (Dropoff Date vs Pickup Date roles) and the difference.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "pickup": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Gross Trip Revenue",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     }
+    ]
+   },
+   "output": {
+    "revenue": "DOUBLE"
+   }
+  },
+  "dropoff": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Gross Trip Revenue",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Dropoff Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     }
+    ]
+   },
+   "output": {
+    "revenue": "DOUBLE"
+   }
+  }
+ },
+ "assemble": "SELECT p.revenue AS revenue_pickup_2024, d.revenue AS revenue_dropoff_2024, d.revenue - p.revenue AS difference FROM pickup p CROSS JOIN dropoff d"
+}

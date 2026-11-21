@@ -1,0 +1,51 @@
+{
+ "question": "Q-N-S1-P",
+ "text": "Gross trip revenue by pickup borough by month for 2024.",
+ "interpretation": "Gross trip revenue by pickup borough by month, 2024.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Borough",
+      "fieldAlias": "pickup_borough"
+     },
+     {
+      "fieldCaption": "Pickup Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "Gross Trip Revenue",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     }
+    ]
+   },
+   "output": {
+    "pickup_borough": "VARCHAR",
+    "month_start_date": "DATE",
+    "revenue": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT pickup_borough, month_start_date, revenue FROM q WHERE trips > 0 ORDER BY pickup_borough, month_start_date"
+}

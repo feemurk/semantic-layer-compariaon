@@ -1,0 +1,10 @@
+// Q-N-C1-D1 YoY % of YTD revenue at 2024-06-30 by pickup borough.
+// @column pickup_borough = [Pickup Zone].[Borough]
+// @column ytd_revenue = [Measures].[Revenue YTD]
+// @column stly_ytd_revenue = [Measures].[Revenue STLY YTD]
+// @column yoy_pct = [Measures].[Revenue YoY %]
+SELECT {[Measures].[Revenue YTD], [Measures].[Revenue STLY YTD], [Measures].[Revenue YoY %]} ON COLUMNS,
+  NonEmpty([Pickup Zone].[Borough].[Borough].Members,
+           {[Measures].[Revenue YTD], [Measures].[Revenue STLY YTD]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Date].&[20240630])

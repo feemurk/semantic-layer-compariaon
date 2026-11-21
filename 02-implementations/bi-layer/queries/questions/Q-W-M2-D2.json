@@ -1,0 +1,93 @@
+{
+ "question": "Q-W-M2-D2",
+ "text": "For the stock group with the most units at FY2015 end, the 10 stock items with the highest closing stock.",
+ "interpretation": "Stock group with the most units at FY2015 end (ties: name); its 10 stock items with the highest closing stock (ties: item id).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "groups": {
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "closing_units",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "snap_rows",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Snapshot Date"
+      },
+      "filterType": "QUANTITATIVE_DATE",
+      "quantitativeFilterType": "RANGE",
+      "minDate": "2015-10-31",
+      "maxDate": "2015-10-31"
+     }
+    ]
+   },
+   "output": {
+    "stock_group_name": "VARCHAR",
+    "closing_units": "DOUBLE",
+    "snap_rows": "BIGINT"
+   }
+  },
+  "items": {
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "WWI Stock Item ID",
+      "fieldAlias": "wwi_stock_item_id"
+     },
+     {
+      "fieldCaption": "Stock Item",
+      "fieldAlias": "stock_item"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "closing_units",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "snap_rows",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Snapshot Date"
+      },
+      "filterType": "QUANTITATIVE_DATE",
+      "quantitativeFilterType": "RANGE",
+      "minDate": "2015-10-31",
+      "maxDate": "2015-10-31"
+     }
+    ]
+   },
+   "output": {
+    "stock_group_name": "VARCHAR",
+    "wwi_stock_item_id": "BIGINT",
+    "stock_item": "VARCHAR",
+    "closing_units": "DOUBLE",
+    "snap_rows": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH g AS (SELECT stock_group_name FROM groups WHERE snap_rows > 0 ORDER BY closing_units DESC, stock_group_name LIMIT 1), ranked AS (SELECT i.stock_group_name, i.wwi_stock_item_id, i.stock_item, i.closing_units, ROW_NUMBER() OVER (ORDER BY i.closing_units DESC, i.wwi_stock_item_id) AS rank_no FROM items i JOIN g USING (stock_group_name) WHERE i.snap_rows > 0) SELECT stock_group_name, rank_no, wwi_stock_item_id, stock_item, closing_units FROM ranked WHERE rank_no <= 10 ORDER BY rank_no"
+}

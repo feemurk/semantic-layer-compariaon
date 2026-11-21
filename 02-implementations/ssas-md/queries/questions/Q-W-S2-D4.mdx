@@ -1,0 +1,20 @@
+// Q-W-S2-D4 Backordered order lines in 2015 by salesperson and stock group; identify the salesperson with the most.
+// @column salesperson = [Salesperson].[Employee]
+// @column stock_group_name = [Stock Group].[Stock Group]
+// @column backordered_lines = [Measures].[Backordered Order Lines]
+// @column salesperson_total_lines = [Measures].[q_salesperson_total_lines]
+// @column is_top_salesperson = [Measures].[q_is_top_salesperson]
+WITH
+SET [q_top_salesperson] AS
+  Head(Order(Order([Salesperson].[Employee].[Employee].Members, [Salesperson].[Employee].CurrentMember.Name, BASC),
+             ([Measures].[Backordered Order Lines], [Stock Group].[Stock Group].[All]), BDESC), 1)
+MEMBER [Measures].[q_salesperson_total_lines] AS
+  ([Measures].[Backordered Order Lines], [Stock Group].[Stock Group].[All])
+MEMBER [Measures].[q_is_top_salesperson] AS
+  IIF([Salesperson].[Employee].CurrentMember IS [q_top_salesperson].Item(0).Item(0), "true", "false")
+SELECT {[Measures].[Backordered Order Lines], [Measures].[q_salesperson_total_lines],
+        [Measures].[q_is_top_salesperson]} ON COLUMNS,
+  NonEmpty([Salesperson].[Employee].[Employee].Members * [Stock Group].[Stock Group].[Stock Group].Members,
+           {[Measures].[Backordered Order Lines]}) ON ROWS
+FROM [WWI]
+WHERE ([Date].[Calendar Year].&[2015])

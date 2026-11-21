@@ -1,0 +1,58 @@
+{
+ "question": "Q-W-C1-D2",
+ "text": "Stock group revenue share within each Sales Territory for FY2015.",
+ "interpretation": "FY2015 stock group revenue share within each Sales Territory (denominator: the territory's deduplicated FY2015 revenue).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Sales Territory",
+      "fieldAlias": "sales_territory"
+     },
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Stock Group Revenue Share",
+      "fieldAlias": "share",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "sales_territory": "VARCHAR",
+    "stock_group_name": "VARCHAR",
+    "revenue": "DOUBLE",
+    "share": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT sales_territory, stock_group_name, revenue, share AS share_of_territory FROM q WHERE lines > 0 AND stock_group_name IS NOT NULL ORDER BY sales_territory, stock_group_name",
+ "note": "share_of_territory is Stock Group Revenue Share itself: its EXCLUDE [Stock Group] denominator is the territory's deduplicated revenue."
+}

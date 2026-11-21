@@ -1,0 +1,571 @@
+{
+ "metric": "B-W3",
+ "contract": [
+  "grain",
+  "measure",
+  "member_1",
+  "member_2",
+  "member_3",
+  "value"
+ ],
+ "generated_by": "build_tableau.py",
+ "branches": [
+  {
+   "grain": "total",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "month",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Month Start Date",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "DATE",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "day",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Invoice Date",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "DATE",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "fiscal_year",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Fiscal Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "delivery_year",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Delivery Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_customer_category",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Customer Category",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_customer",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Customer",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_bill_to_customer",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Bill-To Customer",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_sales_territory",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Sales Territory",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_state_province",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "State Province",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_stock_item",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Stock Item",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_color",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Color",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_salesperson",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Salesperson",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_stock_group",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Units Sold",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "BIGINT",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "B-W3": "v0"
+   },
+   "presence": "presence"
+  }
+ ]
+}

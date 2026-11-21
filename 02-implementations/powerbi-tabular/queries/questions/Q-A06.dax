@@ -1,0 +1,16 @@
+// Q-A06 Trip count by pickup hour and ISO day of week for 2024.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        Trips[Pickup Hour],
+        'Pickup Date'[Pickup Day of Week],
+        'Pickup Date'[Pickup Day Name],
+        TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+        "trips", [Trip Count]
+    ),
+    "pickup_hour", Trips[Pickup Hour],
+    "day_of_week", 'Pickup Date'[Pickup Day of Week],
+    "day_name", 'Pickup Date'[Pickup Day Name],
+    "trips", [trips]
+)
+ORDER BY [pickup_hour], [day_of_week]

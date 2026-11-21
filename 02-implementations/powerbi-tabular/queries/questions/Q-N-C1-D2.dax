@@ -1,0 +1,37 @@
+// Q-N-C1-D2 For the pickup borough with the lowest YoY % at 2024-06-30 (ties: name), the 10 pickup zones with the largest
+// absolute YTD revenue decline (YTD - STLY YTD ascending, blanks as 0; ties: zone id).
+DEFINE
+    VAR at_june = TREATAS ( { DATE ( 2024, 6, 30 ) }, 'Pickup Date'[Pickup Date] )
+    VAR boroughs =
+        FILTER (
+            SUMMARIZECOLUMNS ( 'Pickup Zone'[Pickup Borough], at_june, "yoy", [Revenue YoY % vs STLY] ),
+            NOT ISBLANK ( [yoy] )
+        )
+    VAR low = TOPN ( 1, boroughs, [yoy], ASC, 'Pickup Zone'[Pickup Borough], ASC )
+    VAR low_borough = MAXX ( low, 'Pickup Zone'[Pickup Borough] )
+    VAR low_yoy = MAXX ( low, [yoy] )
+    VAR zones =
+        SUMMARIZECOLUMNS (
+            'Pickup Zone'[Pickup Location ID],
+            'Pickup Zone'[Pickup Zone],
+            at_june,
+            TREATAS ( { low_borough }, 'Pickup Zone'[Pickup Borough] ),
+            "ytd", [Revenue YTD],
+            "stly", [Revenue STLY YTD]
+        )
+    VAR changes = ADDCOLUMNS ( zones, "chg", ( [ytd] + 0 ) - ( [stly] + 0 ) )
+    VAR ranked =
+        ADDCOLUMNS ( changes, "rank_no", ROWNUMBER ( changes, ORDERBY ( [chg], ASC, 'Pickup Zone'[Pickup Location ID], ASC ) ) )
+EVALUATE
+SELECTCOLUMNS (
+    FILTER ( ranked, [rank_no] <= 10 ),
+    "borough", low_borough,
+    "borough_yoy_pct", low_yoy,
+    "rank_no", [rank_no],
+    "pu_location_id", 'Pickup Zone'[Pickup Location ID],
+    "zone", 'Pickup Zone'[Pickup Zone],
+    "ytd_revenue", [ytd],
+    "stly_ytd_revenue", [stly],
+    "revenue_change", [chg]
+)
+ORDER BY [rank_no]

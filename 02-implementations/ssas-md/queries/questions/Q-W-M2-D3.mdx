@@ -1,0 +1,17 @@
+// Q-W-M2-D3 Compare closing stock on hand at 2015-12-31 and 2014-12-31 by selling package and chiller flag.
+// @column selling_package = [Stock Item].[Selling Package]
+// @column is_chiller_stock = [Stock Item].[Is Chiller Stock]
+// @column closing_units_2014 = [Measures].[q_closing_units_2014]
+// @column closing_units_2015 = [Measures].[q_closing_units_2015]
+// @column change_units = [Measures].[q_change_units]
+WITH
+MEMBER [Measures].[q_closing_units_2014] AS ([Measures].[Closing Units], [Date].[Date].&[20141231])
+MEMBER [Measures].[q_closing_units_2015] AS ([Measures].[Closing Units], [Date].[Date].&[20151231])
+MEMBER [Measures].[q_change_units] AS
+  IIF(IsEmpty([Measures].[q_closing_units_2014]) OR IsEmpty([Measures].[q_closing_units_2015]), NULL,
+      [Measures].[q_closing_units_2015] - [Measures].[q_closing_units_2014])
+SELECT {[Measures].[q_closing_units_2014], [Measures].[q_closing_units_2015], [Measures].[q_change_units]} ON COLUMNS,
+  NonEmpty([Stock Item].[Selling Package].[Selling Package].Members
+           * [Stock Item].[Is Chiller Stock].[Is Chiller Stock].Members,
+           {[Measures].[q_closing_units_2014], [Measures].[q_closing_units_2015]}) ON ROWS
+FROM [WWI]

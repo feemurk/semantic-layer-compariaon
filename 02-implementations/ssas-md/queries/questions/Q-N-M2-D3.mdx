@@ -1,0 +1,11 @@
+// Q-N-M2-D3 Fare per mile by month for pickups in the Airports service zone, 2024 vs 2023.
+// @column calendar_month = [Pickup Date].[Month Of Year]
+// @column fare_per_mile_2023 = [Measures].[q_fpm_2023]
+// @column fare_per_mile_2024 = [Measures].[q_fpm_2024]
+WITH
+MEMBER [Measures].[q_fpm_2023] AS ([Measures].[Fare per Mile], [Pickup Date].[Calendar Year].&[2023])
+MEMBER [Measures].[q_fpm_2024] AS ([Measures].[Fare per Mile], [Pickup Date].[Calendar Year].&[2024])
+SELECT {[Measures].[q_fpm_2023], [Measures].[q_fpm_2024]} ON COLUMNS,
+  NonEmpty([Pickup Date].[Month Of Year].[Month Of Year].Members, {[Measures].[Trip Count]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Zone].[Service Zone].&[Airports])

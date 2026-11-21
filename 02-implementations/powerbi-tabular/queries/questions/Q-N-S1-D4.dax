@@ -1,0 +1,23 @@
+// Q-N-S1-D4 The 10 dropoff zones that received the most 2024 revenue from trips picked up at JFK Airport (Dropoff Zone role).
+DEFINE
+    VAR zones =
+        SUMMARIZECOLUMNS (
+            'Dropoff Zone'[Dropoff Location ID],
+            'Dropoff Zone'[Dropoff Borough],
+            'Dropoff Zone'[Dropoff Zone],
+            TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+            TREATAS ( { "JFK Airport" }, 'Pickup Zone'[Pickup Zone] ),
+            "rev", [Gross Trip Revenue]
+        )
+    VAR ranked =
+        ADDCOLUMNS ( zones, "rank_no", ROWNUMBER ( zones, ORDERBY ( [rev], DESC, 'Dropoff Zone'[Dropoff Location ID], ASC ) ) )
+EVALUATE
+SELECTCOLUMNS (
+    FILTER ( ranked, [rank_no] <= 10 ),
+    "rank_no", [rank_no],
+    "do_location_id", 'Dropoff Zone'[Dropoff Location ID],
+    "dropoff_borough", 'Dropoff Zone'[Dropoff Borough],
+    "dropoff_zone", 'Dropoff Zone'[Dropoff Zone],
+    "revenue", [rev]
+)
+ORDER BY [rank_no]

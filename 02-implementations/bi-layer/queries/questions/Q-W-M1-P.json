@@ -1,0 +1,63 @@
+{
+ "question": "Q-W-M1-P",
+ "text": "Gross margin % by Customer Category by fiscal quarter for FY2015.",
+ "interpretation": "Gross margin % (sum(profit) / sum(total_excluding_tax)) by Customer Category by fiscal quarter, FY2015.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Customer Category",
+      "fieldAlias": "customer_category"
+     },
+     {
+      "fieldCaption": "Fiscal Quarter",
+      "fieldAlias": "fiscal_quarter"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Gross Profit",
+      "fieldAlias": "profit",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Gross Margin %",
+      "fieldAlias": "gross_margin_pct",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "customer_category": "VARCHAR",
+    "fiscal_quarter": "BIGINT",
+    "revenue": "DOUBLE",
+    "profit": "DOUBLE",
+    "gross_margin_pct": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT customer_category, fiscal_quarter, revenue, profit, gross_margin_pct FROM q WHERE lines > 0 ORDER BY customer_category, fiscal_quarter"
+}

@@ -1,0 +1,51 @@
+{
+ "question": "Q-N-S2-D3",
+ "text": "Card tips per card trip (card tips ÷ trip count for payment type 1) by month, 2023 vs 2024.",
+ "interpretation": "Card tips per card trip (card tips / trip count for payment type 1) by calendar month, 2023 vs 2024.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Calendar Month",
+      "fieldAlias": "calendar_month"
+     },
+     {
+      "fieldCaption": "Pickup Year",
+      "fieldAlias": "pickup_year"
+     },
+     {
+      "fieldCaption": "Card Tips",
+      "fieldAlias": "card_tips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Payment Type Code"
+      },
+      "filterType": "SET",
+      "values": [
+       1
+      ]
+     }
+    ]
+   },
+   "output": {
+    "calendar_month": "BIGINT",
+    "pickup_year": "BIGINT",
+    "card_tips": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT calendar_month, MAX(CASE WHEN pickup_year = 2023 THEN card_tips / NULLIF(trips, 0) END) AS card_tips_per_card_trip_2023, MAX(CASE WHEN pickup_year = 2024 THEN card_tips / NULLIF(trips, 0) END) AS card_tips_per_card_trip_2024 FROM q WHERE trips > 0 GROUP BY calendar_month ORDER BY calendar_month"
+}

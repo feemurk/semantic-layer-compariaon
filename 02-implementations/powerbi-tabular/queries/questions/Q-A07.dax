@@ -1,0 +1,15 @@
+// Q-A07 Average trip distance (total distance / trip count) by pickup borough for 2024.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Pickup Zone'[Pickup Borough],
+        TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+        "distance", [Total Trip Distance],
+        "trips", [Trip Count]
+    ),
+    "pickup_borough", 'Pickup Zone'[Pickup Borough],
+    "total_distance", [distance],
+    "trips", [trips],
+    "average_trip_distance", DIVIDE ( [distance], [trips] )
+)
+ORDER BY [pickup_borough]

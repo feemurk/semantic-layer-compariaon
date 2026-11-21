@@ -1,0 +1,13 @@
+// Q-A08 Total tolls by dropoff borough for trips picked up at LaGuardia Airport in 2024.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Dropoff Zone'[Dropoff Borough],
+        TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+        TREATAS ( { "LaGuardia Airport" }, 'Pickup Zone'[Pickup Zone] ),
+        "tolls", [Tolls Amount]
+    ),
+    "dropoff_borough", 'Dropoff Zone'[Dropoff Borough],
+    "tolls_amount", [tolls]
+)
+ORDER BY [dropoff_borough]

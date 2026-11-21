@@ -1,0 +1,12 @@
+// Q-W-C2-P Days of supply at each calendar month end of 2015, company-wide.
+// @column month_end_date = [Measures].[q_month_end_date]
+// @column closing_units = [Measures].[Closing Units]
+// @column units_sold_91d = [Measures].[Units Sold 91D]
+// @column days_of_supply = [Measures].[Days of Supply]
+WITH
+MEMBER [Measures].[q_month_end_date] AS [Date].[Month].CurrentMember.Properties("Month End Date")
+SELECT {[Measures].[q_month_end_date], [Measures].[Closing Units], [Measures].[Units Sold 91D],
+        [Measures].[Days of Supply]} ON COLUMNS,
+  NonEmpty(Exists([Date].[Month].[Month].Members, {[Date].[Calendar Year].&[2015]}),
+           {[Measures].[Closing Units]}) ON ROWS
+FROM [WWI]

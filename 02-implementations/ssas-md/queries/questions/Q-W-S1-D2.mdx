@@ -1,0 +1,31 @@
+// Q-W-S1-D2 For that Sales Territory, which 10 stock items contributed the most FY2015 revenue, and what share of the territory's revenue do they represent together?
+// @column sales_territory = [Measures].[q_sales_territory]
+// @column rank_no = [Measures].[q_rank_no]
+// @column wwi_stock_item_id = [Stock Item].[WWI Stock Item ID]
+// @column stock_item = [Measures].[q_stock_item]
+// @column revenue = [Measures].[q_revenue]
+// @column share_of_territory = [Measures].[q_share_of_territory]
+// @column top10_combined_share = [Measures].[q_top10_combined_share]
+WITH
+SET [q_territory] AS
+  Head(Order(Order([City].[Sales Territory].[Sales Territory].Members,
+                   [City].[Sales Territory].CurrentMember.Name, BASC),
+             [Measures].[Revenue], BDESC), 1)
+SET [q_items] AS
+  Head(Order(Order([Stock Item].[WWI Stock Item ID].[WWI Stock Item ID].Members,
+                   [Stock Item].[WWI Stock Item ID].CurrentMember.MemberValue, BASC),
+             ([Measures].[Revenue], [q_territory].Item(0).Item(0)), BDESC), 10)
+MEMBER [Measures].[q_territory_revenue] AS
+  ([Measures].[Revenue], [q_territory].Item(0).Item(0), [Stock Item].[WWI Stock Item ID].[All])
+MEMBER [Measures].[q_sales_territory] AS [q_territory].Item(0).Item(0).Name
+MEMBER [Measures].[q_rank_no] AS Rank([Stock Item].[WWI Stock Item ID].CurrentMember, [q_items])
+MEMBER [Measures].[q_stock_item] AS [Stock Item].[WWI Stock Item ID].CurrentMember.Properties("Stock Item")
+MEMBER [Measures].[q_revenue] AS ([Measures].[Revenue], [q_territory].Item(0).Item(0))
+MEMBER [Measures].[q_share_of_territory] AS [Measures].[q_revenue] / [Measures].[q_territory_revenue]
+MEMBER [Measures].[q_top10_combined_share] AS
+  Sum([q_items], ([Measures].[Revenue], [q_territory].Item(0).Item(0))) / [Measures].[q_territory_revenue]
+SELECT {[Measures].[q_sales_territory], [Measures].[q_rank_no], [Measures].[q_stock_item], [Measures].[q_revenue],
+        [Measures].[q_share_of_territory], [Measures].[q_top10_combined_share]} ON COLUMNS,
+  [q_items] ON ROWS
+FROM [WWI]
+WHERE ([Date].[Fiscal Year].&[2015])

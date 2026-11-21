@@ -1,0 +1,19 @@
+// Q-W-S1-D4 Show FY2015 revenue by stock item Color as recorded at time of sale and by each item's current Color; list colors where the two differ.
+// @column color = [Stock Item].[Color]
+// @column revenue_as_was = [Measures].[q_revenue_as_was]
+// @column revenue_as_is = [Measures].[q_revenue_as_is]
+// @column differs = [Measures].[q_differs]
+WITH
+MEMBER [Measures].[q_revenue_as_was] AS [Measures].[Revenue]
+MEMBER [Measures].[q_revenue_as_is] AS
+  Sum(Filter([Stock Item].[Current Color].[Current Color].Members,
+             [Stock Item].[Current Color].CurrentMember.Name = [Stock Item].[Color].CurrentMember.Name),
+      ([Measures].[Revenue], [Stock Item].[Color].[All]))
+MEMBER [Measures].[q_differs] AS
+  IIF(CoalesceEmpty([Measures].[q_revenue_as_was], 0) <> CoalesceEmpty([Measures].[q_revenue_as_is], 0),
+      "true", "false")
+SELECT {[Measures].[q_revenue_as_was], [Measures].[q_revenue_as_is], [Measures].[q_differs]} ON COLUMNS,
+  NonEmpty([Stock Item].[Color].[Color].Members,
+           {[Measures].[q_revenue_as_was], [Measures].[q_revenue_as_is]}) ON ROWS
+FROM [WWI]
+WHERE ([Date].[Fiscal Year].&[2015])

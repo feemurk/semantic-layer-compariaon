@@ -1,0 +1,30 @@
+{
+ "question": "Q-W-C2-D4",
+ "text": "Days of supply by Sales Territory at 2015-12-31. Expected: NULL for every territory, with the reason (non-conformed dimension).",
+ "interpretation": "Days of supply by Sales Territory at 2015-12-31: Sales Territory is not a conformed dimension of the stock snapshot (SPEC § 6.5, W-C2 CITY = N), so every territory's value is NULL. Lists every territory with sales.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "territories": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Sales Territory",
+      "fieldAlias": "sales_territory"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "sales_territory": "VARCHAR",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT sales_territory, CAST(NULL AS DOUBLE) AS days_of_supply, 'non-conformed dimension: stock holdings carry no city' AS reason FROM territories WHERE lines > 0 ORDER BY sales_territory",
+ "note": "SLC WWI Stock has no City table: stock is a separate published data source because a multi-fact model would repeat stock measures across the unrelated City dimension (guide § 3.3). Territories come from the sales data source."
+}

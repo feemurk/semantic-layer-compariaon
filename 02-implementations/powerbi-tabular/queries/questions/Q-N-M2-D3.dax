@@ -1,0 +1,17 @@
+// Q-N-M2-D3 Fare per mile by calendar month for pickups in the Airports service zone, 2024 vs 2023.
+DEFINE
+    VAR base =
+        SUMMARIZECOLUMNS (
+            'Pickup Date'[Pickup Calendar Month],
+            TREATAS ( { "Airports" }, 'Pickup Zone'[Pickup Service Zone] ),
+            TREATAS ( { 2023, 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+            "fpm", [Fare per Mile]
+        )
+EVALUATE
+SELECTCOLUMNS (
+    base,
+    "calendar_month", 'Pickup Date'[Pickup Calendar Month],
+    "fare_per_mile_2023", CALCULATE ( [Fare per Mile], TREATAS ( { "Airports" }, 'Pickup Zone'[Pickup Service Zone] ), 'Pickup Date'[Pickup Calendar Year] = 2023 ),
+    "fare_per_mile_2024", CALCULATE ( [Fare per Mile], TREATAS ( { "Airports" }, 'Pickup Zone'[Pickup Service Zone] ), 'Pickup Date'[Pickup Calendar Year] = 2024 )
+)
+ORDER BY [calendar_month]

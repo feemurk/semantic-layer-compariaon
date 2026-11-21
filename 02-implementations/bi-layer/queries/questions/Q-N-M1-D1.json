@@ -1,0 +1,79 @@
+{
+ "question": "Q-N-M1-D1",
+ "text": "Distinct OD pairs by payment type for 2024, alongside the overall total (which is less than the sum of payment types).",
+ "interpretation": "Distinct OD pairs by payment type for 2024 (grain 'payment_type'), the overall total (grain 'total') and the sum of the payment-type values (grain 'sum_of_members'), which exceeds the total because one pair occurs under several payment types.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "types": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Payment Type",
+      "fieldAlias": "payment_type_name"
+     },
+     {
+      "fieldCaption": "Distinct OD Pairs",
+      "fieldAlias": "distinct_od_pairs",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     }
+    ]
+   },
+   "output": {
+    "payment_type_name": "VARCHAR",
+    "distinct_od_pairs": "BIGINT",
+    "trips": "BIGINT"
+   }
+  },
+  "total": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Distinct OD Pairs",
+      "fieldAlias": "distinct_od_pairs",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     }
+    ]
+   },
+   "output": {
+    "distinct_od_pairs": "BIGINT",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT grain, payment_type_name, distinct_od_pairs FROM ( SELECT 'payment_type' AS grain, payment_type_name, distinct_od_pairs FROM types WHERE trips > 0 UNION ALL SELECT 'total', CAST(NULL AS VARCHAR), distinct_od_pairs FROM total WHERE trips > 0 UNION ALL SELECT 'sum_of_members', CAST(NULL AS VARCHAR), SUM(distinct_od_pairs) FROM types WHERE trips > 0 ) r ORDER BY grain, payment_type_name NULLS FIRST",
+ "note": "sum_of_members adds the per-type distinct counts Tableau returned, to show they exceed the total."
+}

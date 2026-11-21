@@ -1,0 +1,12 @@
+// Q-W-M2-D1 Closing stock on hand at the end of FY2015 by stock group, with a deduplicated total.
+// @column grain = [Measures].[q_grain]
+// @column stock_group_name = [Stock Group].[Stock Group]
+// @column closing_units = [Measures].[Closing Units]
+WITH
+MEMBER [Measures].[q_grain] AS
+  IIF([Stock Group].[Stock Group].CurrentMember IS [Stock Group].[Stock Group].[All], "total", "group")
+SELECT {[Measures].[q_grain], [Measures].[Closing Units]} ON COLUMNS,
+  {NonEmpty([Stock Group].[Stock Group].[Stock Group].Members, {[Measures].[Closing Units]}),
+   [Stock Group].[Stock Group].[All]} ON ROWS
+FROM [WWI]
+WHERE ([Date].[Date].&[20151031])

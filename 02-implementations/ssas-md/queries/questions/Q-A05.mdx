@@ -1,0 +1,9 @@
+// Q-A05 Backordered order lines by stock group by calendar quarter for 2015.
+// @column stock_group_name = [Stock Group].[Stock Group]
+// @column calendar_quarter = [Date].[Quarter Of Year]
+// @column backordered_lines = [Measures].[Backordered Order Lines]
+SELECT {[Measures].[Backordered Order Lines]} ON COLUMNS,
+  NonEmpty([Stock Group].[Stock Group].[Stock Group].Members * [Date].[Quarter Of Year].[Quarter Of Year].Members,
+           {[Measures].[Backordered Order Lines]}) ON ROWS
+FROM [WWI]
+WHERE ([Date].[Calendar Year].&[2015])

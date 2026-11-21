@@ -1,0 +1,9 @@
+// Q-A03 Units sold by stock group by delivery month for January-May 2016, delivered lines only.
+// @column stock_group_name = [Stock Group].[Stock Group]
+// @column delivery_month = [Delivery Date].[Month]
+// @column units_sold = [Measures].[Units Sold]
+SELECT {[Measures].[Units Sold]} ON COLUMNS,
+  NonEmpty([Stock Group].[Stock Group].[Stock Group].Members
+           * {[Delivery Date].[Month].&[201601] : [Delivery Date].[Month].&[201605]},
+           {[Measures].[Units Sold]}) ON ROWS
+FROM [WWI]

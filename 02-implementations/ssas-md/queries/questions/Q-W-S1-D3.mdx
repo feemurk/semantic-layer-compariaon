@@ -1,0 +1,16 @@
+// Q-W-S1-D3 Compare FY2015 and FY2014 revenue by Buying Group and Customer Category.
+// @column buying_group = [Customer].[Buying Group]
+// @column customer_category = [Customer].[Category]
+// @column revenue_fy2014 = [Measures].[q_revenue_fy2014]
+// @column revenue_fy2015 = [Measures].[q_revenue_fy2015]
+// @column change_pct = [Measures].[q_change_pct]
+WITH
+MEMBER [Measures].[q_revenue_fy2014] AS ([Measures].[Revenue], [Date].[Fiscal Year].&[2014])
+MEMBER [Measures].[q_revenue_fy2015] AS ([Measures].[Revenue], [Date].[Fiscal Year].&[2015])
+MEMBER [Measures].[q_change_pct] AS
+  IIF(IsEmpty([Measures].[q_revenue_fy2014]) OR [Measures].[q_revenue_fy2014] = 0, NULL,
+      [Measures].[q_revenue_fy2015] / [Measures].[q_revenue_fy2014] - 1)
+SELECT {[Measures].[q_revenue_fy2014], [Measures].[q_revenue_fy2015], [Measures].[q_change_pct]} ON COLUMNS,
+  NonEmpty([Customer].[Buying Group].[Buying Group].Members * [Customer].[Category].[Category].Members,
+           {[Measures].[q_revenue_fy2014], [Measures].[q_revenue_fy2015]}) ON ROWS
+FROM [WWI]

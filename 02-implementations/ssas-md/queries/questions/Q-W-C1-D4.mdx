@@ -1,0 +1,24 @@
+// Q-W-C1-D4 For FY2015, report the sum of stock group revenues, total revenue, and the overlap amount from items in more than one group.
+// @column sum_of_group_revenue = [Measures].[q_sum_of_group_revenue]
+// @column total_revenue = [Measures].[q_total_revenue]
+// @column overlap_revenue = [Measures].[q_overlap_revenue]
+// @column overlap_from_multi_group_items = [Measures].[q_overlap_from_multi_group_items]
+// @column revenue_without_group = [Measures].[q_revenue_without_group]
+WITH
+SET [q_groups] AS [Stock Group].[Stock Group].[Stock Group].Members
+SET [q_items] AS [Stock Item].[WWI Stock Item ID].[WWI Stock Item ID].Members
+MEMBER [Measures].[q_sum_of_group_revenue] AS Sum([q_groups], [Measures].[Revenue])
+MEMBER [Measures].[q_total_revenue] AS ([Measures].[Revenue], [Stock Group].[Stock Group].[All])
+MEMBER [Measures].[q_overlap_revenue] AS [Measures].[q_sum_of_group_revenue] - [Measures].[q_total_revenue]
+MEMBER [Measures].[q_item_group_revenue] AS Sum([q_groups], [Measures].[Revenue])
+MEMBER [Measures].[q_overlap_from_multi_group_items] AS
+  Sum([q_items],
+      IIF(CoalesceEmpty([Measures].[q_item_group_revenue], 0) > CoalesceEmpty([Measures].[Revenue], 0),
+          [Measures].[q_item_group_revenue] - [Measures].[Revenue], 0))
+MEMBER [Measures].[q_revenue_without_group] AS
+  [Measures].[q_total_revenue]
+  - Sum(Filter([q_items], NOT IsEmpty(([Measures].[Bridge Rows], [Date].[Fiscal Year].[All]))), [Measures].[Revenue])
+SELECT {[Measures].[q_sum_of_group_revenue], [Measures].[q_total_revenue], [Measures].[q_overlap_revenue],
+        [Measures].[q_overlap_from_multi_group_items], [Measures].[q_revenue_without_group]} ON COLUMNS
+FROM [WWI]
+WHERE ([Date].[Fiscal Year].&[2015])

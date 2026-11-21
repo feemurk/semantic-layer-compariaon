@@ -1,0 +1,10 @@
+// Q-W-C2-D4 Days of supply by Sales Territory at 2015-12-31. Expected: NULL for every territory, with the reason (non-conformed dimension).
+// @column sales_territory = [City].[Sales Territory]
+// @column days_of_supply = [Measures].[q_days_of_supply]
+// @column reason = [Measures].[q_reason]
+WITH
+MEMBER [Measures].[q_days_of_supply] AS ([Measures].[Days of Supply], [Date].[Date].&[20151231])
+MEMBER [Measures].[q_reason] AS "non-conformed dimension: stock holdings carry no city"
+SELECT {[Measures].[q_days_of_supply], [Measures].[q_reason]} ON COLUMNS,
+  NonEmpty([City].[Sales Territory].[Sales Territory].Members, {[Measures].[Sales Lines]}) ON ROWS
+FROM [WWI]

@@ -1,0 +1,72 @@
+{
+ "question": "Q-W-S2-P",
+ "text": "Ordered quantity and revenue (excl. tax) by calendar month for 2015 on one shared date axis.",
+ "interpretation": "Ordered quantity (by order_date) and revenue excl. tax (by invoice_date) per calendar month of 2015 on one shared date axis.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "months": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Month Start Date",
+      "fieldAlias": "month_start_date"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "month_start_date": "DATE"
+   }
+  },
+  "q": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "Ordered Quantity",
+      "fieldAlias": "ordered_quantity",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "month_start_date": "DATE",
+    "ordered_quantity": "BIGINT",
+    "revenue": "DOUBLE"
+   }
+  }
+ },
+ "assemble": "SELECT m.month_start_date, q.ordered_quantity, q.revenue FROM months m LEFT JOIN q ON q.month_start_date = m.month_start_date ORDER BY m.month_start_date",
+ "note": "One query returns orders (by order date) and revenue (by invoice date) on the shared Date table; the month axis is the Date table's own domain (dimension-only query)."
+}

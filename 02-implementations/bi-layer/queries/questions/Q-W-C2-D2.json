@@ -1,0 +1,63 @@
+{
+ "question": "Q-W-C2-D2",
+ "text": "The 10 stock items with the lowest days of supply at 2015-12-31, excluding items with no sales in the trailing 91 days.",
+ "interpretation": "The 10 stock items with the lowest days of supply at 2015-12-31, excluding items with no sales in [t - 90, t] (ties: item id).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "WWI Stock Item ID",
+      "fieldAlias": "wwi_stock_item_id"
+     },
+     {
+      "fieldCaption": "Stock Item",
+      "fieldAlias": "stock_item"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "closing_units",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Units Sold Trailing 91 Days",
+      "fieldAlias": "units_sold_91d",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Days of Supply",
+      "fieldAlias": "days_of_supply",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "snap_rows",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Snapshot Date"
+      },
+      "filterType": "QUANTITATIVE_DATE",
+      "quantitativeFilterType": "RANGE",
+      "minDate": "2015-12-31",
+      "maxDate": "2015-12-31"
+     }
+    ]
+   },
+   "output": {
+    "wwi_stock_item_id": "BIGINT",
+    "stock_item": "VARCHAR",
+    "closing_units": "DOUBLE",
+    "units_sold_91d": "DOUBLE",
+    "days_of_supply": "DOUBLE",
+    "snap_rows": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH ranked AS (SELECT q.*, ROW_NUMBER() OVER (ORDER BY days_of_supply, wwi_stock_item_id) AS rank_no FROM q WHERE snap_rows > 0 AND units_sold_91d > 0) SELECT rank_no, wwi_stock_item_id, stock_item, closing_units, units_sold_91d, days_of_supply FROM ranked WHERE rank_no <= 10 ORDER BY rank_no"
+}

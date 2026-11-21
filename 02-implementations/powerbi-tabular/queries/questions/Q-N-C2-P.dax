@@ -1,0 +1,20 @@
+// Q-N-C2-P MTD-to-YTD daily pace index at each month end of 2024 (calendar days elapsed as denominators).
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Pickup Date'[Pickup Month Start],
+        TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+        "mtd", [Trips MTD],
+        "dom", [Days Elapsed in Month],
+        "ytd", [Trips YTD],
+        "doy", [Days Elapsed in Year],
+        "pace", [MTD-to-YTD Daily Pace Index]
+    ),
+    "month_end_date", EOMONTH ( 'Pickup Date'[Pickup Month Start], 0 ),
+    "mtd_trips", [mtd],
+    "day_of_month", [dom],
+    "ytd_trips", [ytd],
+    "day_of_year", [doy],
+    "pace_index", [pace]
+)
+ORDER BY [month_end_date]

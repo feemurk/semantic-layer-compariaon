@@ -1,0 +1,28 @@
+// Q-W-S1-D1 For the Sales Territory with the highest FY2015 revenue, break its revenue in its peak fiscal month down by State Province, then by City.
+// @column grain = [Measures].[q_grain]
+// @column sales_territory = [Measures].[q_sales_territory]
+// @column fiscal_month = [Measures].[q_fiscal_month]
+// @column state_province = [City].[State Province]
+// @column city = [City].[City]
+// @column revenue = [Measures].[q_revenue]
+WITH
+SET [q_territory] AS
+  Head(Order(Order([City].[Sales Territory].[Sales Territory].Members,
+                   [City].[Sales Territory].CurrentMember.Name, BASC),
+             [Measures].[Revenue], BDESC), 1)
+SET [q_peak_month] AS
+  Head(Order(Order([Date].[Fiscal Month Of Year].[Fiscal Month Of Year].Members,
+                   [Date].[Fiscal Month Of Year].CurrentMember.MemberValue, BASC),
+             ([Measures].[Revenue], [q_territory].Item(0).Item(0)), BDESC), 1)
+MEMBER [Measures].[q_revenue] AS ([Measures].[Revenue], [q_peak_month].Item(0).Item(0))
+MEMBER [Measures].[q_grain] AS IIF([City].[City].CurrentMember IS [City].[City].[All], "state", "city")
+MEMBER [Measures].[q_sales_territory] AS [q_territory].Item(0).Item(0).Name
+MEMBER [Measures].[q_fiscal_month] AS [q_peak_month].Item(0).Item(0).Name
+SELECT {[Measures].[q_grain], [Measures].[q_sales_territory], [Measures].[q_fiscal_month],
+        [Measures].[q_revenue]} ON COLUMNS,
+  {NonEmpty(Exists([City].[State Province].[State Province].Members, [q_territory]) * {[City].[City].[All]},
+            {[Measures].[q_revenue]}),
+   NonEmpty(Exists([City].[State Province].[State Province].Members * [City].[City].[City].Members, [q_territory]),
+            {[Measures].[q_revenue]})} ON ROWS
+FROM [WWI]
+WHERE ([Date].[Fiscal Year].&[2015])

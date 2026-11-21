@@ -1,0 +1,20 @@
+// Q-N-S2-D3 Card tips per card trip (card tips / trip count for payment type 1) by calendar month, 2023 vs 2024.
+DEFINE
+    VAR card = TREATAS ( { 1 }, 'Payment Type'[Payment Type] )
+    VAR base =
+        SUMMARIZECOLUMNS (
+            'Pickup Date'[Pickup Calendar Month],
+            card,
+            TREATAS ( { 2023, 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+            "trips", [Trip Count]
+        )
+EVALUATE
+SELECTCOLUMNS (
+    base,
+    "calendar_month", 'Pickup Date'[Pickup Calendar Month],
+    "card_tips_per_card_trip_2023",
+        CALCULATE ( DIVIDE ( [Card Tips], [Trip Count] ), card, 'Pickup Date'[Pickup Calendar Year] = 2023 ),
+    "card_tips_per_card_trip_2024",
+        CALCULATE ( DIVIDE ( [Card Tips], [Trip Count] ), card, 'Pickup Date'[Pickup Calendar Year] = 2024 )
+)
+ORDER BY [calendar_month]

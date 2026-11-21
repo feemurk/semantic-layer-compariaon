@@ -1,0 +1,57 @@
+{
+ "question": "Q-W-S1-D3",
+ "text": "Compare FY2015 and FY2014 revenue by Buying Group and Customer Category.",
+ "interpretation": "FY2015 vs FY2014 revenue by Buying Group and Customer Category (as-was customer attributes).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Buying Group",
+      "fieldAlias": "buying_group"
+     },
+     {
+      "fieldCaption": "Customer Category",
+      "fieldAlias": "customer_category"
+     },
+     {
+      "fieldCaption": "Fiscal Year",
+      "fieldAlias": "fiscal_year"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2014,
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "buying_group": "VARCHAR",
+    "customer_category": "VARCHAR",
+    "fiscal_year": "BIGINT",
+    "revenue": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT buying_group, customer_category, MAX(CASE WHEN fiscal_year = 2014 THEN revenue END) AS revenue_fy2014, MAX(CASE WHEN fiscal_year = 2015 THEN revenue END) AS revenue_fy2015, MAX(CASE WHEN fiscal_year = 2015 THEN revenue END) / NULLIF(MAX(CASE WHEN fiscal_year = 2014 THEN revenue END), 0) - 1 AS change_pct FROM q WHERE lines > 0 GROUP BY buying_group, customer_category ORDER BY buying_group, customer_category"
+}

@@ -1,0 +1,11 @@
+// Q-N-C1-P YTD gross trip revenue and YoY % vs STLY at each month end of 2024.
+// @column month_end_date = [Measures].[q_month_end_date]
+// @column ytd_revenue = [Measures].[Revenue YTD]
+// @column stly_ytd_revenue = [Measures].[Revenue STLY YTD]
+// @column yoy_pct = [Measures].[Revenue YoY %]
+WITH
+MEMBER [Measures].[q_month_end_date] AS [Pickup Date].[Month].CurrentMember.Properties("Month End Date")
+SELECT {[Measures].[q_month_end_date], [Measures].[Revenue YTD], [Measures].[Revenue STLY YTD],
+        [Measures].[Revenue YoY %]} ON COLUMNS,
+  Exists([Pickup Date].[Month].[Month].Members, {[Pickup Date].[Calendar Year].&[2024]}) ON ROWS
+FROM [NYC]

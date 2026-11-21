@@ -1,0 +1,24 @@
+// Q-N-S1-D3 Monthly gross trip revenue for pickups in the Airports service zone, 2024 vs 2023.
+DEFINE
+    VAR base =
+        SUMMARIZECOLUMNS (
+            'Pickup Date'[Pickup Calendar Month],
+            TREATAS ( { "Airports" }, 'Pickup Zone'[Pickup Service Zone] ),
+            TREATAS ( { 2023, 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+            "rev", [Gross Trip Revenue]
+        )
+EVALUATE
+SELECTCOLUMNS (
+    base,
+    "calendar_month", 'Pickup Date'[Pickup Calendar Month],
+    "revenue_2023", CALCULATE ( [Gross Trip Revenue], TREATAS ( { "Airports" }, 'Pickup Zone'[Pickup Service Zone] ), 'Pickup Date'[Pickup Calendar Year] = 2023 ),
+    "revenue_2024", CALCULATE ( [Gross Trip Revenue], TREATAS ( { "Airports" }, 'Pickup Zone'[Pickup Service Zone] ), 'Pickup Date'[Pickup Calendar Year] = 2024 ),
+    "change_pct",
+        VAR ratio =
+            DIVIDE (
+                CALCULATE ( [Gross Trip Revenue], TREATAS ( { "Airports" }, 'Pickup Zone'[Pickup Service Zone] ), 'Pickup Date'[Pickup Calendar Year] = 2024 ),
+                CALCULATE ( [Gross Trip Revenue], TREATAS ( { "Airports" }, 'Pickup Zone'[Pickup Service Zone] ), 'Pickup Date'[Pickup Calendar Year] = 2023 )
+            )
+        RETURN IF ( ISBLANK ( ratio ), BLANK (), ratio - 1 )
+)
+ORDER BY [calendar_month]

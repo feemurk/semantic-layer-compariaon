@@ -1,0 +1,5 @@
+# Pinned dependencies of the S2 deployment and reconciliation tools (deploy.py, reconcile.py).
+fabric-cicd==1.4.0
+azure-identity==1.27.0
+requests==2.34.2
+pyyaml==6.0.2

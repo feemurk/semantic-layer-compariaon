@@ -1,0 +1,1993 @@
+{
+ "SLC WWI Sales and Orders": {
+  "file": "datasources/slc_wwi_sales_orders.tds",
+  "extract_variant": "SLC WWI Sales and Orders (Extract)",
+  "incremental_key": null,
+  "fields": {
+   "Sale Key": {
+    "name": "sale_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Invoice Date": {
+    "name": "sale_invoice_date",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Date of the invoice (the sales fact's primary date)."
+   },
+   "Sale Delivery Date Key": {
+    "name": "sale_delivery_date",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Sale City Key": {
+    "name": "sale_city_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Sale Customer Key": {
+    "name": "sale_customer_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Sale Bill-To Customer Key": {
+    "name": "sale_bill_to_customer_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Sale Stock Item Key": {
+    "name": "sale_stock_item_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Sale Salesperson Key": {
+    "name": "sale_salesperson_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "WWI Invoice ID": {
+    "name": "sale_wwi_invoice_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Sale Quantity": {
+    "name": "sale_quantity",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Sale Total Excluding Tax": {
+    "name": "sale_total_excluding_tax",
+    "kind": "column",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Sale Profit": {
+    "name": "sale_profit",
+    "kind": "column",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Sale Total Including Tax": {
+    "name": "sale_total_including_tax",
+    "kind": "column",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Order Key": {
+    "name": "ord_order_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Order Date": {
+    "name": "ord_order_date",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Date the order was placed (the orders fact's primary date)."
+   },
+   "Order City Key": {
+    "name": "ord_city_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Order Customer Key": {
+    "name": "ord_customer_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Order Stock Item Key": {
+    "name": "ord_stock_item_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Order Salesperson Key": {
+    "name": "ord_salesperson_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Order Picker Key": {
+    "name": "ord_picker_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "WWI Order ID": {
+    "name": "ord_wwi_order_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "WWI Backorder ID": {
+    "name": "ord_wwi_backorder_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Order Quantity": {
+    "name": "ord_quantity",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Order Total Excluding Tax": {
+    "name": "ord_total_excluding_tax",
+    "kind": "column",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Date": {
+    "name": "d_date_key",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Calendar Year": {
+    "name": "d_calendar_year",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Calendar Quarter": {
+    "name": "d_calendar_quarter",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Calendar Month": {
+    "name": "d_calendar_month",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Month Name": {
+    "name": "d_month_name",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Month Start Date": {
+    "name": "d_month_start_date",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Date day_of_month": {
+    "name": "d_day_of_month",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Date day_of_year": {
+    "name": "d_day_of_year",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Day of Week": {
+    "name": "d_day_of_week",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Date day_name": {
+    "name": "d_day_name",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Fiscal Year": {
+    "name": "d_fiscal_year",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Fiscal Quarter": {
+    "name": "d_fiscal_quarter",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Fiscal Month": {
+    "name": "d_fiscal_month",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Delivery Date": {
+    "name": "dd_date_key",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Delivery Year": {
+    "name": "dd_calendar_year",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Delivery Date calendar_quarter": {
+    "name": "dd_calendar_quarter",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Delivery Date calendar_month": {
+    "name": "dd_calendar_month",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Delivery Date month_name": {
+    "name": "dd_month_name",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Delivery Month Start Date": {
+    "name": "dd_month_start_date",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Delivery Date day_of_month": {
+    "name": "dd_day_of_month",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Delivery Date day_of_year": {
+    "name": "dd_day_of_year",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Delivery Date day_of_week": {
+    "name": "dd_day_of_week",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Delivery Date day_name": {
+    "name": "dd_day_name",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Delivery Date fiscal_year": {
+    "name": "dd_fiscal_year",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Delivery Date fiscal_quarter": {
+    "name": "dd_fiscal_quarter",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Delivery Date fiscal_month": {
+    "name": "dd_fiscal_month",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Customer Key": {
+    "name": "c_customer_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "WWI Customer ID": {
+    "name": "c_wwi_customer_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Customer": {
+    "name": "c_customer",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Customer as recorded at the time of sale. Also called: client, account, store, buyer."
+   },
+   "Customer Category": {
+    "name": "c_category",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Buying Group": {
+    "name": "c_buying_group",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Bill-To Customer Key": {
+    "name": "bc_customer_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Bill-To Customer": {
+    "name": "bc_customer",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Customer responsible for payment (role of the Customer dimension). Also called: bill to, billing customer, payer, head office."
+   },
+   "City Key": {
+    "name": "ci_city_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "City": {
+    "name": "ci_city",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Delivery city as recorded at the time of sale; Sales Territory is an alternate hierarchy over State Province. Also called: location, territory, sales territory, state, region."
+   },
+   "State Province": {
+    "name": "ci_state_province",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Country": {
+    "name": "ci_country",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Continent": {
+    "name": "ci_continent",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Sales Territory": {
+    "name": "ci_sales_territory",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Sales territory of the city as recorded at the time of the fact; alternate hierarchy over State Province."
+   },
+   "Region": {
+    "name": "ci_region",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Subregion": {
+    "name": "ci_subregion",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Stock Item Key": {
+    "name": "si_stock_item_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "WWI Stock Item ID": {
+    "name": "si_wwi_stock_item_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Durable stock item id, stable across SCD2 versions."
+   },
+   "Stock Item": {
+    "name": "si_stock_item",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Product as recorded at the time of sale (SCD Type 2); current attributes via the durable item id. Also called: product, item, SKU, article."
+   },
+   "Brand": {
+    "name": "si_brand",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Color": {
+    "name": "si_color",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Stock item color as recorded at the time of the fact (as-was, SCD2)."
+   },
+   "Size": {
+    "name": "si_size",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Selling Package": {
+    "name": "si_selling_package",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Is Chiller Stock": {
+    "name": "si_is_chiller_stock",
+    "kind": "column",
+    "datatype": "boolean",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Current Stock Item ID": {
+    "name": "csi_wwi_stock_item_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Current Stock Item": {
+    "name": "csi_stock_item",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Stock item name in its current version (as-is)."
+   },
+   "Current Color": {
+    "name": "csi_color",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Stock item color in its current version (as-is, SCD2)."
+   },
+   "Stock Group Item ID": {
+    "name": "sg_wwi_stock_item_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Stock Group ID": {
+    "name": "sg_stock_group_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Stock Group": {
+    "name": "sg_stock_group_name",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Product group; an item can belong to several groups, so group totals overlap. Also called: category, product group, product category, department."
+   },
+   "Salesperson Key": {
+    "name": "sp_employee_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Salesperson": {
+    "name": "sp_employee",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Employee credited with the sale or order (role of the Employee dimension). Also called: sales rep, seller, account manager, rep."
+   },
+   "Picker Key": {
+    "name": "pk_employee_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Picker": {
+    "name": "pk_employee",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Employee who picked the order (role of the Employee dimension); applies to orders only. Also called: warehouse picker, picked by, fulfiller."
+   },
+   "Revenue (Excl. Tax)": {
+    "name": "m_revenue",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM([sale_total_excluding_tax])",
+    "metric_id": "W-S1",
+    "description": "Sum of invoice line totals excluding tax (fact_sale.total_excluding_tax), dated by invoice date. Also called: revenue, sales, net sales, sales revenue, turnover, revenue excluding tax."
+   },
+   "Revenue Including Tax": {
+    "name": "m_revenue_including_tax",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM([sale_total_including_tax])",
+    "metric_id": "B-W1",
+    "description": "Sum of invoice line totals including tax (fact_sale.total_including_tax). Also called: gross revenue incl tax, revenue with tax, total including tax, invoiced amount."
+   },
+   "Gross Profit": {
+    "name": "m_gross_profit",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM([sale_profit])",
+    "metric_id": "B-W2",
+    "description": "Sum of invoice line profit (fact_sale.profit). Also called: profit, margin dollars, gross margin amount."
+   },
+   "Units Sold": {
+    "name": "m_units_sold",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM([sale_quantity])",
+    "metric_id": "B-W3",
+    "description": "Sum of invoiced quantity (fact_sale.quantity). Also called: quantity sold, sold units, sales quantity, units invoiced."
+   },
+   "Invoice Count": {
+    "name": "m_invoice_count",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": false,
+    "formula": "COUNTD([sale_wwi_invoice_id])",
+    "metric_id": "B-W4",
+    "description": "Exact count of distinct invoices (fact_sale.wwi_invoice_id). Not additive across any dimension. Also called: number of invoices, invoices, distinct invoices."
+   },
+   "Gross Margin %": {
+    "name": "m_gross_margin_pct",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM([sale_profit]) / SUM([sale_total_excluding_tax])",
+    "metric_id": "W-M1",
+    "description": "Gross Profit divided by Revenue (Excl. Tax), computed from the aggregated numerator and denominator at every grain. Also called: margin, gross margin, GM%, margin percent, profit margin."
+   },
+   "Ordered Quantity": {
+    "name": "m_ordered_quantity",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM([ord_quantity])",
+    "metric_id": "W-S2",
+    "description": "Sum of ordered quantity (fact_order.quantity), dated by order date. Also called: units ordered, order quantity, quantity ordered, demand."
+   },
+   "Backordered Order Lines": {
+    "name": "m_backordered_order_lines",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": false,
+    "formula": "IF COUNT([ord_wwi_backorder_id]) > 0 THEN COUNT([ord_wwi_backorder_id]) END",
+    "metric_id": "B-W5",
+    "description": "Count of order lines with a backorder (fact_order.wwi_backorder_id is not null); blank when no line qualifies. Also called: backorders, backordered lines, lines on backorder."
+   },
+   "Stock Group Revenue Share": {
+    "name": "m_stock_group_revenue_share",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM([sale_total_excluding_tax]) / MIN({EXCLUDE [sg_stock_group_name] : SUM([sale_total_excluding_tax])})",
+    "metric_id": "W-C1",
+    "description": "Revenue of items in a stock group divided by revenue of the same context without the stock group filter. Items can belong to several groups, so shares do not add to 100%. Denominator: revenue of the same context with Stock Group removed, counting each line once. Also called: category share, group share, share of revenue, revenue mix."
+   },
+   "Sales Line Count": {
+    "name": "m_sales_line_count",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": false,
+    "formula": "COUNT([sale_key])",
+    "metric_id": null,
+    "description": "Number of invoice lines in context (row presence of the sales fact)."
+   },
+   "Order Line Count": {
+    "name": "m_order_line_count",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": false,
+    "formula": "COUNT([ord_order_key])",
+    "metric_id": null,
+    "description": "Number of order lines in context (row presence of the orders fact)."
+   },
+   "Revenue (All Stock Groups)": {
+    "name": "m_revenue_all_stock_groups",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "MIN({EXCLUDE [sg_stock_group_name] : SUM([sale_total_excluding_tax])})",
+    "metric_id": null,
+    "description": "Revenue of the current context with Stock Group removed; each invoice line counted once. The denominator of Stock Group Revenue Share."
+   },
+   "RLS Territory Filter": {
+    "name": "rls_wwi_territory",
+    "kind": "calculation",
+    "datatype": "boolean",
+    "role": "dimension",
+    "hidden": true,
+    "formula": "NOT ISMEMBEROF('slc_territory_southeast') OR [ci_sales_territory] = 'Southeast'",
+    "metric_id": null,
+    "description": "Row-level security: members of the Southeast territory group see Southeast sales and orders only."
+   }
+  }
+ },
+ "SLC WWI Stock": {
+  "file": "datasources/slc_wwi_stock.tds",
+  "extract_variant": "SLC WWI Stock (Extract)",
+  "incremental_key": null,
+  "fields": {
+   "Snapshot Date": {
+    "name": "stk_snapshot_date",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Date of the daily stock snapshot."
+   },
+   "Snapshot Stock Item ID": {
+    "name": "stk_wwi_stock_item_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Snapshot Stock Item Key": {
+    "name": "stk_stock_item_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Quantity On Hand": {
+    "name": "stk_quantity_on_hand",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Balance Basis": {
+    "name": "stk_balance_basis",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "How the daily balance was derived: holding_backcast or flow_min_opening (SPEC § 5.3 rule 6)."
+   },
+   "Item Units Sold 91 Days": {
+    "name": "stk_units_sold_91d",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Date": {
+    "name": "d_date_key",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Calendar Year": {
+    "name": "d_calendar_year",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Calendar Quarter": {
+    "name": "d_calendar_quarter",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Calendar Month": {
+    "name": "d_calendar_month",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Month Name": {
+    "name": "d_month_name",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Month Start Date": {
+    "name": "d_month_start_date",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Date day_of_month": {
+    "name": "d_day_of_month",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Date day_of_year": {
+    "name": "d_day_of_year",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Day of Week": {
+    "name": "d_day_of_week",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Date day_name": {
+    "name": "d_day_name",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Fiscal Year": {
+    "name": "d_fiscal_year",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Fiscal Quarter": {
+    "name": "d_fiscal_quarter",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Fiscal Month": {
+    "name": "d_fiscal_month",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Stock Item Key": {
+    "name": "si_stock_item_key",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "WWI Stock Item ID": {
+    "name": "si_wwi_stock_item_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Durable stock item id, stable across SCD2 versions."
+   },
+   "Stock Item": {
+    "name": "si_stock_item",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Product as recorded at the time of sale (SCD Type 2); current attributes via the durable item id. Also called: product, item, SKU, article."
+   },
+   "Brand": {
+    "name": "si_brand",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Color": {
+    "name": "si_color",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Stock item color as recorded at the time of the fact (as-was, SCD2)."
+   },
+   "Size": {
+    "name": "si_size",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Selling Package": {
+    "name": "si_selling_package",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Is Chiller Stock": {
+    "name": "si_is_chiller_stock",
+    "kind": "column",
+    "datatype": "boolean",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Current Stock Item ID": {
+    "name": "csi_wwi_stock_item_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Current Stock Item": {
+    "name": "csi_stock_item",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Stock item name in its current version (as-is)."
+   },
+   "Current Color": {
+    "name": "csi_color",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Stock item color in its current version (as-is, SCD2)."
+   },
+   "Stock Group Item ID": {
+    "name": "sg_wwi_stock_item_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Stock Group ID": {
+    "name": "sg_stock_group_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Stock Group": {
+    "name": "sg_stock_group_name",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Product group; an item can belong to several groups, so group totals overlap. Also called: category, product group, product category, department."
+   },
+   "Closing Stock Encoded": {
+    "name": "x_qoh_encoded",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": true,
+    "formula": "DATEDIFF('day', #2000-01-01#, [stk_snapshot_date]) * 10000000000 + {INCLUDE [stk_snapshot_date] : SUM([stk_quantity_on_hand])}",
+    "metric_id": null,
+    "description": "Day index times 1e10 plus the context's quantity on hand that day; MAX selects the last day."
+   },
+   "Units Sold 91 Days Encoded": {
+    "name": "x_u91_encoded",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": true,
+    "formula": "DATEDIFF('day', #2000-01-01#, [stk_snapshot_date]) * 10000000000 + ZN({INCLUDE [stk_snapshot_date] : SUM([stk_units_sold_91d])})",
+    "metric_id": null,
+    "description": "Day index times 1e10 plus the context's trailing 91-day units that day; MAX selects the last day."
+   },
+   "Closing Stock On Hand": {
+    "name": "m_closing_stock",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "MAX([x_qoh_encoded]) - MAX(DATEDIFF('day', #2000-01-01#, [stk_snapshot_date])) * 10000000000",
+    "metric_id": "W-M2",
+    "description": "Units on hand on the last day of the period (semi-additive); summed across stock items and stock groups. Value on the last snapshot date of the period in context. Also called: stock on hand, inventory, closing inventory, ending inventory, units in stock."
+   },
+   "Units Sold Trailing 91 Days": {
+    "name": "m_units_sold_91d",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "IIF(MAX([x_u91_encoded]) - MAX(DATEDIFF('day', #2000-01-01#, [stk_snapshot_date])) * 10000000000 = 0, NULL, MAX([x_u91_encoded]) - MAX(DATEDIFF('day', #2000-01-01#, [stk_snapshot_date])) * 10000000000)",
+    "metric_id": null,
+    "description": "Units sold in the 91 days ending on the last snapshot date of the period, for the items in context; blank when no unit sold."
+   },
+   "Days of Supply": {
+    "name": "m_days_of_supply",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "[m_closing_stock] / ([m_units_sold_91d] / 91)",
+    "metric_id": "W-C2",
+    "description": "Closing Stock On Hand divided by average daily Units Sold over the 91 days ending on the period end. Defined only by date and stock item attributes. Also called: DOS, days of inventory, inventory cover, stock cover, weeks of supply."
+   },
+   "Snapshot Row Count": {
+    "name": "m_snapshot_rows",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": false,
+    "formula": "COUNT([stk_snapshot_date])",
+    "metric_id": null,
+    "description": "Number of item-day snapshot rows in context (row presence of the stock fact)."
+   },
+   "Closing Snapshot Date": {
+    "name": "m_closing_date",
+    "kind": "calculation",
+    "datatype": "date",
+    "role": "measure",
+    "hidden": false,
+    "formula": "MAX([stk_snapshot_date])",
+    "metric_id": null,
+    "description": "Last snapshot date of the period in context (the date closing stock is taken on)."
+   },
+   "RLS Inventory Filter": {
+    "name": "rls_wwi_inventory",
+    "kind": "calculation",
+    "datatype": "boolean",
+    "role": "dimension",
+    "hidden": true,
+    "formula": "NOT ISMEMBEROF('slc_territory_southeast') AND NOT ISNULL([stk_snapshot_date])",
+    "metric_id": null,
+    "description": "Row-level security: the Southeast territory group has no inventory access."
+   }
+  }
+ },
+ "SLC NYC Trips": {
+  "file": "datasources/slc_nyc_trips.tds",
+  "extract_variant": "SLC NYC Trips (Extract)",
+  "incremental_key": "trip_pickup_ts",
+  "fields": {
+   "Trip ID": {
+    "name": "trip_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Vendor": {
+    "name": "trip_vendor_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "TLC technology provider id that recorded the trip. Also called: vendor id, provider, TPEP provider."
+   },
+   "Pickup Timestamp": {
+    "name": "trip_pickup_ts",
+    "kind": "column",
+    "datatype": "datetime",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Pickup date and time (incremental extract key)."
+   },
+   "Pickup Date": {
+    "name": "trip_pickup_date",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Date the trip started; the anchor for year-to-date and pace metrics. Also called: trip date, pickup day, date."
+   },
+   "Dropoff Date": {
+    "name": "trip_dropoff_date",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Date the trip ended (role of the Date dimension); differs from pickup date for trips crossing midnight. Also called: dropoff day, trip end date, arrival date."
+   },
+   "Pickup Hour": {
+    "name": "trip_pickup_hour",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Hour of day the trip started, 0-23. Also called: hour, time of day, hour of day."
+   },
+   "Trip Pickup Location ID": {
+    "name": "trip_pu_location_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Trip Dropoff Location ID": {
+    "name": "trip_do_location_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "OD Pair ID": {
+    "name": "trip_od_pair_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Trip Distance": {
+    "name": "trip_trip_distance",
+    "kind": "column",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Trip Payment Type Code": {
+    "name": "trip_payment_type",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Trip Fare Amount": {
+    "name": "trip_fare_amount",
+    "kind": "column",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Trip Tip Amount": {
+    "name": "trip_tip_amount",
+    "kind": "column",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Trip Tolls Amount": {
+    "name": "trip_tolls_amount",
+    "kind": "column",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Trip Total Amount": {
+    "name": "trip_total_amount",
+    "kind": "column",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "RLS Pickup Borough": {
+    "name": "trip_rls_pickup_borough",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Calendar Date": {
+    "name": "pc_date_key",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Year": {
+    "name": "pc_calendar_year",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Quarter": {
+    "name": "pc_calendar_quarter",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Calendar Month": {
+    "name": "pc_calendar_month",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Calendar month_name": {
+    "name": "pc_month_name",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Month Start Date": {
+    "name": "pc_month_start_date",
+    "kind": "column",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Calendar day_of_month": {
+    "name": "pc_day_of_month",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Calendar day_of_year": {
+    "name": "pc_day_of_year",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Day of Week": {
+    "name": "pc_day_of_week",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Day Name": {
+    "name": "pc_day_name",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Calendar fiscal_year": {
+    "name": "pc_fiscal_year",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Calendar fiscal_quarter": {
+    "name": "pc_fiscal_quarter",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Calendar fiscal_month": {
+    "name": "pc_fiscal_month",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": true,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Zone ID": {
+    "name": "pz_location_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Pickup Borough": {
+    "name": "pz_borough",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Borough of the pickup zone."
+   },
+   "Pickup Zone": {
+    "name": "pz_zone",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "TLC taxi zone where the trip started (role of the Zone dimension). Also called: origin, pickup location, pickup borough, from."
+   },
+   "Pickup Service Zone": {
+    "name": "pz_service_zone",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Dropoff Zone ID": {
+    "name": "dz_location_id",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Dropoff Borough": {
+    "name": "dz_borough",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Borough of the dropoff zone."
+   },
+   "Dropoff Zone": {
+    "name": "dz_zone",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "TLC taxi zone where the trip ended (role of the Zone dimension). Also called: destination, dropoff location, dropoff borough, to."
+   },
+   "Dropoff Service Zone": {
+    "name": "dz_service_zone",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Payment Type Code": {
+    "name": "pt_payment_type",
+    "kind": "column",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": null
+   },
+   "Payment Type": {
+    "name": "pt_payment_type_name",
+    "kind": "column",
+    "datatype": "string",
+    "role": "dimension",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "TLC payment type code and label (0 Flex Fare trip, 1 Credit card, 2 Cash, 3 No charge, 4 Dispute, 5 Unknown, 6 Voided trip). Also called: payment method, paid by, tender."
+   },
+   "Dropoff Year": {
+    "name": "dropoff_year",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": "YEAR([trip_dropoff_date])",
+    "metric_id": null,
+    "description": "Calendar year of the dropoff date."
+   },
+   "Dropoff Month Start Date": {
+    "name": "dropoff_month_start",
+    "kind": "calculation",
+    "datatype": "date",
+    "role": "dimension",
+    "hidden": false,
+    "formula": "DATE(DATETRUNC('month', [trip_dropoff_date]))",
+    "metric_id": null,
+    "description": "First day of the dropoff month."
+   },
+   "Trip Count": {
+    "name": "m_trip_count",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": false,
+    "formula": "COUNT([trip_id])",
+    "metric_id": "B-N1",
+    "description": "Count of valid Yellow Taxi trips (fact_trip rows). Also called: trips, number of trips, rides, ride count."
+   },
+   "Total Trip Distance": {
+    "name": "m_total_trip_distance",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM([trip_trip_distance])",
+    "metric_id": "B-N2",
+    "description": "Sum of trip distance in miles (fact_trip.trip_distance). Also called: miles, distance, total miles, trip miles."
+   },
+   "Fare Amount": {
+    "name": "m_fare_amount",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM([trip_fare_amount])",
+    "metric_id": "B-N3",
+    "description": "Sum of metered fares (fact_trip.fare_amount), excluding tips, tolls and surcharges. Also called: fares, metered fare, fare revenue."
+   },
+   "Tip Amount (All Payment Types)": {
+    "name": "m_tip_amount",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM([trip_tip_amount])",
+    "metric_id": "B-N4",
+    "description": "Sum of recorded tips across all payment types (fact_trip.tip_amount). TLC records tips only for card payments. Also called: tips, all tips, gratuity."
+   },
+   "Tolls Amount": {
+    "name": "m_tolls_amount",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM([trip_tolls_amount])",
+    "metric_id": "B-N5",
+    "description": "Sum of tolls (fact_trip.tolls_amount). Also called: tolls, toll charges, bridge and tunnel tolls."
+   },
+   "Gross Trip Revenue": {
+    "name": "m_gross_trip_revenue",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM([trip_total_amount])",
+    "metric_id": "N-S1",
+    "description": "Sum of total amount charged (fact_trip.total_amount). Also called: revenue, trip revenue, total amount, gross revenue, takings."
+   },
+   "Card Tips": {
+    "name": "m_card_tips",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM(IF [trip_payment_type] = 1 THEN [trip_tip_amount] END)",
+    "metric_id": "N-S2",
+    "description": "Sum of tips on credit card trips (payment type 1); blank for other payment types. Also called: credit card tips, card gratuity, tips on card."
+   },
+   "Distinct OD Pairs": {
+    "name": "m_distinct_od_pairs",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": false,
+    "formula": "COUNTD([trip_od_pair_id])",
+    "metric_id": "N-M1",
+    "description": "Exact count of distinct pickup zone to dropoff zone pairs. Additive across zone and borough of either role; not additive across time, payment type, vendor or hour. Also called: origin destination pairs, OD pairs, unique routes, distinct routes."
+   },
+   "Fare per Mile": {
+    "name": "m_fare_per_mile",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM([trip_fare_amount]) / SUM([trip_trip_distance])",
+    "metric_id": "N-M2",
+    "description": "Fare Amount divided by Total Trip Distance, computed from the aggregated sums at every grain. Also called: fare per mile, price per mile, rate per mile."
+   },
+   "Revenue YTD": {
+    "name": "m_revenue_ytd",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM(IF [trip_pickup_date] >= DATE(DATETRUNC('year', [p_as_of_date])) AND [trip_pickup_date] <= [p_as_of_date] THEN [trip_total_amount] END)",
+    "metric_id": "N-C1",
+    "description": "Gross Trip Revenue from 1 January to the period end by pickup date, compared with the same period last year (29 February maps to 28 February). Year-to-date through the As-of Date parameter. Also called: year to date revenue, YTD revenue, YoY growth, year over year, same time last year."
+   },
+   "Revenue YTD Same Time Last Year": {
+    "name": "m_revenue_stly_ytd",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM(IF [trip_pickup_date] >= DATE(DATEADD('year', -1, DATETRUNC('year', [p_as_of_date]))) AND [trip_pickup_date] <= DATE(DATEADD('year', -1, [p_as_of_date])) THEN [trip_total_amount] END)",
+    "metric_id": null,
+    "description": "Revenue YTD one year before the As-of Date (29 February maps to 28 February)."
+   },
+   "Revenue YoY % vs STLY": {
+    "name": "m_revenue_yoy_pct",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "([m_revenue_ytd] - [m_revenue_stly_ytd]) / [m_revenue_stly_ytd]",
+    "metric_id": null,
+    "description": "Year-over-year change of Revenue YTD against the same period last year."
+   },
+   "Trips MTD": {
+    "name": "m_trips_mtd",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM(IF [trip_pickup_date] >= DATE(DATETRUNC('month', [p_as_of_date])) AND [trip_pickup_date] <= [p_as_of_date] THEN 1 END)",
+    "metric_id": null,
+    "description": "Trips from the first day of the As-of Date's month through the As-of Date."
+   },
+   "Trips YTD": {
+    "name": "m_trips_ytd",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "measure",
+    "hidden": false,
+    "formula": "SUM(IF [trip_pickup_date] >= DATE(DATETRUNC('year', [p_as_of_date])) AND [trip_pickup_date] <= [p_as_of_date] THEN 1 END)",
+    "metric_id": null,
+    "description": "Trips from 1 January of the As-of Date's year through the As-of Date."
+   },
+   "As-of Day of Month": {
+    "name": "as_of_day_of_month",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": "DAY([p_as_of_date])",
+    "metric_id": null,
+    "description": "Calendar days elapsed in the As-of Date's month."
+   },
+   "As-of Day of Year": {
+    "name": "as_of_day_of_year",
+    "kind": "calculation",
+    "datatype": "integer",
+    "role": "dimension",
+    "hidden": false,
+    "formula": "DATEPART('dayofyear', [p_as_of_date])",
+    "metric_id": null,
+    "description": "Calendar days elapsed in the As-of Date's year."
+   },
+   "MTD-to-YTD Daily Pace Index": {
+    "name": "m_pace_index",
+    "kind": "calculation",
+    "datatype": "real",
+    "role": "measure",
+    "hidden": false,
+    "formula": "(ZN([m_trips_mtd]) / DAY([p_as_of_date])) / ([m_trips_ytd] / DATEPART('dayofyear', [p_as_of_date]))",
+    "metric_id": "N-C2",
+    "description": "Average daily trips month-to-date divided by average daily trips year-to-date, using calendar days elapsed. Above 1 means the month is running ahead of the year's pace. Anchored on the As-of Date parameter. Also called: pace index, run rate index, month pace, daily pace."
+   },
+   "RLS Pickup Borough Filter": {
+    "name": "rls_nyc_pickup",
+    "kind": "calculation",
+    "datatype": "boolean",
+    "role": "dimension",
+    "hidden": true,
+    "formula": "NOT ISMEMBEROF('slc_pickup_manhattan') OR [trip_rls_pickup_borough] = 'Manhattan'",
+    "metric_id": null,
+    "description": "Row-level security: the Manhattan pickup group sees trips picked up in Manhattan only."
+   },
+   "As-of Date": {
+    "name": "p_as_of_date",
+    "kind": "parameter",
+    "datatype": "date",
+    "role": "measure",
+    "hidden": false,
+    "formula": null,
+    "metric_id": null,
+    "description": "Anchor date for year-to-date, same-time-last-year and month-to-date measures."
+   }
+  }
+ }
+}

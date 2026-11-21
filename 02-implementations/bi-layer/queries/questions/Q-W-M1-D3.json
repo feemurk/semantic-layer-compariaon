@@ -1,0 +1,52 @@
+{
+ "question": "Q-W-M1-D3",
+ "text": "Gross margin % by selling package, FY2014 vs FY2015.",
+ "interpretation": "Gross margin % by selling package (as-was stock item attribute), FY2014 vs FY2015; change in percentage points. A package with sales in only one of the two years keeps its row, with NULL for the other year.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Selling Package",
+      "fieldAlias": "selling_package"
+     },
+     {
+      "fieldCaption": "Fiscal Year",
+      "fieldAlias": "fiscal_year"
+     },
+     {
+      "fieldCaption": "Gross Margin %",
+      "fieldAlias": "gross_margin_pct",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2014,
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "selling_package": "VARCHAR",
+    "fiscal_year": "BIGINT",
+    "gross_margin_pct": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH g AS (SELECT selling_package, MAX(CASE WHEN fiscal_year = 2014 THEN gross_margin_pct END) AS gm_2014, MAX(CASE WHEN fiscal_year = 2015 THEN gross_margin_pct END) AS gm_2015 FROM q WHERE lines > 0 GROUP BY selling_package) SELECT selling_package, gm_2014 AS gross_margin_pct_fy2014, gm_2015 AS gross_margin_pct_fy2015, (gm_2015 - gm_2014) * 100 AS change_points FROM g ORDER BY selling_package"
+}

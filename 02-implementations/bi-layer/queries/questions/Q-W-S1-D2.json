@@ -1,0 +1,93 @@
+{
+ "question": "Q-W-S1-D2",
+ "text": "For that Sales Territory, which 10 stock items contributed the most FY2015 revenue, and what share of the territory's revenue do they represent together?",
+ "interpretation": "For the territory with the highest FY2015 revenue: the 10 stock items with the most FY2015 revenue, each item's share of the territory's FY2015 revenue, and the combined share of the 10 (ties broken by item id).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "territories": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Sales Territory",
+      "fieldAlias": "sales_territory"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "sales_territory": "VARCHAR",
+    "revenue": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  },
+  "items": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Sales Territory",
+      "fieldAlias": "sales_territory"
+     },
+     {
+      "fieldCaption": "WWI Stock Item ID",
+      "fieldAlias": "wwi_stock_item_id"
+     },
+     {
+      "fieldCaption": "Stock Item",
+      "fieldAlias": "stock_item"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "sales_territory": "VARCHAR",
+    "wwi_stock_item_id": "BIGINT",
+    "stock_item": "VARCHAR",
+    "revenue": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH t AS (SELECT sales_territory, revenue AS territory_revenue FROM territories WHERE lines > 0 ORDER BY revenue DESC, sales_territory LIMIT 1), ranked AS (SELECT i.wwi_stock_item_id, i.stock_item, i.revenue, ROW_NUMBER() OVER (ORDER BY i.revenue DESC, i.wwi_stock_item_id) AS rank_no FROM items i JOIN t USING (sales_territory) WHERE i.lines > 0), top10 AS (SELECT * FROM ranked WHERE rank_no <= 10) SELECT t.sales_territory, x.rank_no, x.wwi_stock_item_id, x.stock_item, x.revenue, x.revenue / t.territory_revenue AS share_of_territory, (SELECT SUM(revenue) FROM top10) / t.territory_revenue AS top10_combined_share FROM top10 x CROSS JOIN t ORDER BY x.rank_no"
+}

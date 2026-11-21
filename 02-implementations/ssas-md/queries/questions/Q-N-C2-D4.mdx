@@ -1,0 +1,20 @@
+// Q-N-C2-D4 For the pickup zone with the highest pace index at 2024-11-30 among zones with at least 50,000 YTD trips, daily trip counts for November 2024.
+// @column pu_location_id = [Measures].[q_pu_location_id]
+// @column zone = [Measures].[q_zone]
+// @column pace_index = [Measures].[q_pace_index]
+// @column pickup_date = [Pickup Date].[Date]
+// @column trips = [Measures].[q_trips]
+WITH
+SET [q_zone_set] AS
+  Head(Order(Order(Filter([Pickup Zone].[Zone].[Zone].Members,
+                          ([Measures].[Trips YTD], [Pickup Date].[Date].&[20241130]) >= 50000),
+                   [Pickup Zone].[Zone].CurrentMember.MemberValue, BASC),
+             ([Measures].[Pace Index], [Pickup Date].[Date].&[20241130]), BDESC), 1)
+MEMBER [Measures].[q_pu_location_id] AS [q_zone_set].Item(0).Item(0).Properties("Location ID")
+MEMBER [Measures].[q_zone] AS [q_zone_set].Item(0).Item(0).Name
+MEMBER [Measures].[q_pace_index] AS
+  ([Measures].[Pace Index], [q_zone_set].Item(0).Item(0), [Pickup Date].[Date].&[20241130])
+MEMBER [Measures].[q_trips] AS ([Measures].[Trip Count], [q_zone_set].Item(0).Item(0))
+SELECT {[Measures].[q_pu_location_id], [Measures].[q_zone], [Measures].[q_pace_index], [Measures].[q_trips]} ON COLUMNS,
+  Exists([Pickup Date].[Date].[Date].Members, {[Pickup Date].[Month].&[202411]}) ON ROWS
+FROM [NYC]

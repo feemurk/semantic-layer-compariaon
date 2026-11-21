@@ -1,0 +1,13 @@
+// Q-N-C2-P MTD-to-YTD daily pace index at each month end of 2024.
+// @column month_end_date = [Measures].[q_month_end_date]
+// @column mtd_trips = [Measures].[Trips MTD]
+// @column day_of_month = [Measures].[Days Elapsed In Month]
+// @column ytd_trips = [Measures].[Trips YTD]
+// @column day_of_year = [Measures].[Days Elapsed In Year]
+// @column pace_index = [Measures].[Pace Index]
+WITH
+MEMBER [Measures].[q_month_end_date] AS [Pickup Date].[Month].CurrentMember.Properties("Month End Date")
+SELECT {[Measures].[q_month_end_date], [Measures].[Trips MTD], [Measures].[Days Elapsed In Month],
+        [Measures].[Trips YTD], [Measures].[Days Elapsed In Year], [Measures].[Pace Index]} ON COLUMNS,
+  Exists([Pickup Date].[Month].[Month].Members, {[Pickup Date].[Calendar Year].&[2024]}) ON ROWS
+FROM [NYC]

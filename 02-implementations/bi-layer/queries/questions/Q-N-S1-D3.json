@@ -1,0 +1,51 @@
+{
+ "question": "Q-N-S1-D3",
+ "text": "Compare monthly gross trip revenue for pickups in the Airports service zone, 2024 vs 2023.",
+ "interpretation": "Monthly gross trip revenue for pickups in the 'Airports' service zone, 2024 vs 2023.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Calendar Month",
+      "fieldAlias": "calendar_month"
+     },
+     {
+      "fieldCaption": "Pickup Year",
+      "fieldAlias": "pickup_year"
+     },
+     {
+      "fieldCaption": "Gross Trip Revenue",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Service Zone"
+      },
+      "filterType": "SET",
+      "values": [
+       "Airports"
+      ]
+     }
+    ]
+   },
+   "output": {
+    "calendar_month": "BIGINT",
+    "pickup_year": "BIGINT",
+    "revenue": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT calendar_month, MAX(CASE WHEN pickup_year = 2023 THEN revenue END) AS revenue_2023, MAX(CASE WHEN pickup_year = 2024 THEN revenue END) AS revenue_2024, MAX(CASE WHEN pickup_year = 2024 THEN revenue END) / NULLIF(MAX(CASE WHEN pickup_year = 2023 THEN revenue END), 0) - 1 AS change_pct FROM q WHERE trips > 0 GROUP BY calendar_month ORDER BY calendar_month"
+}

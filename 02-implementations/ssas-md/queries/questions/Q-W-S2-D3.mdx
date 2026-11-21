@@ -1,0 +1,16 @@
+// Q-W-S2-D3 Compare ordered quantity by selling package by calendar quarter, 2014 vs 2015.
+// @column selling_package = [Stock Item].[Selling Package]
+// @column calendar_quarter = [Date].[Quarter Of Year]
+// @column ordered_quantity_2014 = [Measures].[q_ordered_quantity_2014]
+// @column ordered_quantity_2015 = [Measures].[q_ordered_quantity_2015]
+// @column change_pct = [Measures].[q_change_pct]
+WITH
+MEMBER [Measures].[q_ordered_quantity_2014] AS ([Measures].[Ordered Quantity], [Date].[Calendar Year].&[2014])
+MEMBER [Measures].[q_ordered_quantity_2015] AS ([Measures].[Ordered Quantity], [Date].[Calendar Year].&[2015])
+MEMBER [Measures].[q_change_pct] AS
+  IIF(IsEmpty([Measures].[q_ordered_quantity_2014]) OR [Measures].[q_ordered_quantity_2014] = 0, NULL,
+      [Measures].[q_ordered_quantity_2015] / [Measures].[q_ordered_quantity_2014] - 1)
+SELECT {[Measures].[q_ordered_quantity_2014], [Measures].[q_ordered_quantity_2015], [Measures].[q_change_pct]} ON COLUMNS,
+  NonEmpty([Stock Item].[Selling Package].[Selling Package].Members * [Date].[Quarter Of Year].[Quarter Of Year].Members,
+           {[Measures].[q_ordered_quantity_2014], [Measures].[q_ordered_quantity_2015]}) ON ROWS
+FROM [WWI]

@@ -1,0 +1,18 @@
+// Q-N-M2-P Fare per mile by pickup borough x dropoff borough for 2024 (ratio of sums at every cell).
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Pickup Zone'[Pickup Borough],
+        'Dropoff Zone'[Dropoff Borough],
+        TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+        "fare", [Fare Amount],
+        "distance", [Total Trip Distance],
+        "fpm", [Fare per Mile]
+    ),
+    "pickup_borough", 'Pickup Zone'[Pickup Borough],
+    "dropoff_borough", 'Dropoff Zone'[Dropoff Borough],
+    "fare_amount", [fare],
+    "trip_distance", [distance],
+    "fare_per_mile", [fpm]
+)
+ORDER BY [pickup_borough], [dropoff_borough]

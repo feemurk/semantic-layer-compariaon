@@ -1,0 +1,20 @@
+// Q-N-C2-D1 Pace index at 2024-11-30 by pickup borough.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Pickup Zone'[Pickup Borough],
+        TREATAS ( { DATE ( 2024, 11, 30 ) }, 'Pickup Date'[Pickup Date] ),
+        "mtd", [Trips MTD],
+        "dom", [Days Elapsed in Month],
+        "ytd", [Trips YTD],
+        "doy", [Days Elapsed in Year],
+        "pace", [MTD-to-YTD Daily Pace Index]
+    ),
+    "pickup_borough", 'Pickup Zone'[Pickup Borough],
+    "mtd_trips", [mtd],
+    "day_of_month", [dom],
+    "ytd_trips", [ytd],
+    "day_of_year", [doy],
+    "pace_index", [pace]
+)
+ORDER BY [pickup_borough]

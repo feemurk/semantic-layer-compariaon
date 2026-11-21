@@ -1,0 +1,297 @@
+{
+ "metric": "W-M2",
+ "contract": [
+  "grain",
+  "measure",
+  "member_1",
+  "member_2",
+  "member_3",
+  "value"
+ ],
+ "generated_by": "build_tableau.py",
+ "branches": [
+  {
+   "grain": "total",
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [],
+   "values": {
+    "W-M2": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year",
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "W-M2": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "month",
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Month Start Date",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "DATE",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "W-M2": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "day",
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Snapshot Date",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "DATE",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "W-M2": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "fiscal_year",
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Fiscal Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "W-M2": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_stock_item",
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Stock Item",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "W-M2": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_color",
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Color",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "W-M2": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_stock_group",
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "W-M2": "v0"
+   },
+   "presence": "presence"
+  }
+ ]
+}

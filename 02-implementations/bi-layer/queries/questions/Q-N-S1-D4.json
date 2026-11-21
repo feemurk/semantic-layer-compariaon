@@ -1,0 +1,65 @@
+{
+ "question": "Q-N-S1-D4",
+ "text": "Which 10 dropoff zones received the most 2024 revenue from trips picked up at JFK Airport?",
+ "interpretation": "The 10 dropoff zones with the most 2024 gross trip revenue from trips picked up at JFK Airport (ties: location id).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Dropoff Zone ID",
+      "fieldAlias": "do_location_id"
+     },
+     {
+      "fieldCaption": "Dropoff Borough",
+      "fieldAlias": "dropoff_borough"
+     },
+     {
+      "fieldCaption": "Dropoff Zone",
+      "fieldAlias": "dropoff_zone"
+     },
+     {
+      "fieldCaption": "Gross Trip Revenue",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     },
+     {
+      "field": {
+       "fieldCaption": "Pickup Zone"
+      },
+      "filterType": "SET",
+      "values": [
+       "JFK Airport"
+      ]
+     }
+    ]
+   },
+   "output": {
+    "do_location_id": "BIGINT",
+    "dropoff_borough": "VARCHAR",
+    "dropoff_zone": "VARCHAR",
+    "revenue": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH ranked AS (SELECT q.*, ROW_NUMBER() OVER (ORDER BY revenue DESC, do_location_id) AS rank_no FROM q WHERE trips > 0) SELECT rank_no, do_location_id, dropoff_borough, dropoff_zone, revenue FROM ranked WHERE rank_no <= 10 ORDER BY rank_no"
+}

@@ -1,0 +1,9 @@
+// Q-W-C2-D1 Days of supply at 2015-12-31 by stock group.
+// @column stock_group_name = [Stock Group].[Stock Group]
+// @column closing_units = [Measures].[Closing Units]
+// @column units_sold_91d = [Measures].[Units Sold 91D]
+// @column days_of_supply = [Measures].[Days of Supply]
+SELECT {[Measures].[Closing Units], [Measures].[Units Sold 91D], [Measures].[Days of Supply]} ON COLUMNS,
+  NonEmpty([Stock Group].[Stock Group].[Stock Group].Members, {[Measures].[Closing Units]}) ON ROWS
+FROM [WWI]
+WHERE ([Date].[Date].&[20151231])

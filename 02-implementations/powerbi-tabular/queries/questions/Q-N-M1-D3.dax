@@ -1,0 +1,9 @@
+// Q-N-M1-D3 Distinct OD pairs served by each vendor, 2023 vs 2024 (0 when a vendor has no trips in a year).
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS ( Trips[Vendor ID], "trips", [Trip Count] ),
+    "vendor_id", Trips[Vendor ID],
+    "distinct_od_pairs_2023", CALCULATE ( [Distinct OD Pairs], 'Pickup Date'[Pickup Calendar Year] = 2023 ) + 0,
+    "distinct_od_pairs_2024", CALCULATE ( [Distinct OD Pairs], 'Pickup Date'[Pickup Calendar Year] = 2024 ) + 0
+)
+ORDER BY [vendor_id]

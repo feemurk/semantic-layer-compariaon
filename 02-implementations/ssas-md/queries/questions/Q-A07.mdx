@@ -1,0 +1,11 @@
+// Q-A07 Average trip distance (total distance / trip count) by pickup borough for 2024.
+// @column pickup_borough = [Pickup Zone].[Borough]
+// @column total_distance = [Measures].[Total Trip Distance]
+// @column trips = [Measures].[Trip Count]
+// @column average_trip_distance = [Measures].[q_average_trip_distance]
+WITH
+MEMBER [Measures].[q_average_trip_distance] AS [Measures].[Total Trip Distance] / [Measures].[Trip Count]
+SELECT {[Measures].[Total Trip Distance], [Measures].[Trip Count], [Measures].[q_average_trip_distance]} ON COLUMNS,
+  NonEmpty([Pickup Zone].[Borough].[Borough].Members, {[Measures].[Trip Count]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Calendar Year].&[2024])

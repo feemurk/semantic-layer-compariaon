@@ -1,0 +1,6 @@
+// Q-N-M1-P Distinct OD pairs by month for 2024.
+// @column month_start_date = [Pickup Date].[Month]
+// @column distinct_od_pairs = [Measures].[Distinct OD Pairs]
+SELECT {[Measures].[Distinct OD Pairs]} ON COLUMNS,
+  NonEmpty(Exists([Pickup Date].[Month].[Month].Members, {[Pickup Date].[Calendar Year].&[2024]}), {[Measures].[Distinct OD Pairs]}) ON ROWS
+FROM [NYC]

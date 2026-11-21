@@ -1,0 +1,13 @@
+// Q-W-C1-P Revenue share by stock group for FY2015, with a grand total equal to total revenue.
+// @column grain = [Measures].[q_grain]
+// @column stock_group_name = [Stock Group].[Stock Group]
+// @column revenue = [Measures].[Revenue]
+// @column share = [Measures].[Stock Group Revenue Share]
+WITH
+MEMBER [Measures].[q_grain] AS
+  IIF([Stock Group].[Stock Group].CurrentMember IS [Stock Group].[Stock Group].[All], "total", "group")
+SELECT {[Measures].[q_grain], [Measures].[Revenue], [Measures].[Stock Group Revenue Share]} ON COLUMNS,
+  {NonEmpty([Stock Group].[Stock Group].[Stock Group].Members, {[Measures].[Revenue]}),
+   [Stock Group].[Stock Group].[All]} ON ROWS
+FROM [WWI]
+WHERE ([Date].[Fiscal Year].&[2015])

@@ -1,0 +1,82 @@
+{
+ "question": "Q-W-M2-D4",
+ "text": "Which 10 stock items had the lowest closing stock at any calendar month end in 2015, and at which month end?",
+ "interpretation": "The 10 stock items with the lowest closing stock at any calendar month end of 2015: each item's minimum month-end closing units and the first month end at which it occurred (ties: units, then item id).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "month_ends": {
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "WWI Stock Item ID",
+      "fieldAlias": "wwi_stock_item_id"
+     },
+     {
+      "fieldCaption": "Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "Balance Basis",
+      "fieldAlias": "balance_basis"
+     },
+     {
+      "fieldCaption": "Closing Snapshot Date",
+      "fieldAlias": "closing_date",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "closing_units",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "snap_rows",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "wwi_stock_item_id": "BIGINT",
+    "month_start_date": "DATE",
+    "balance_basis": "VARCHAR",
+    "closing_date": "DATE",
+    "closing_units": "DOUBLE",
+    "snap_rows": "BIGINT"
+   }
+  },
+  "names": {
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "WWI Stock Item ID",
+      "fieldAlias": "wwi_stock_item_id"
+     },
+     {
+      "fieldCaption": "Current Stock Item",
+      "fieldAlias": "stock_item"
+     }
+    ]
+   },
+   "output": {
+    "wwi_stock_item_id": "BIGINT",
+    "stock_item": "VARCHAR"
+   }
+  }
+ },
+ "assemble": "WITH e AS (SELECT wwi_stock_item_id, closing_date AS d_star, closing_units, balance_basis FROM month_ends WHERE snap_rows > 0), item_min AS (SELECT wwi_stock_item_id, MIN(closing_units) AS min_closing_units FROM e GROUP BY wwi_stock_item_id), first_at_min AS (SELECT m.wwi_stock_item_id, m.min_closing_units, MIN(e.d_star) AS month_end_date, MAX(e.balance_basis) AS balance_basis FROM item_min m JOIN e ON e.wwi_stock_item_id = m.wwi_stock_item_id AND e.closing_units = m.min_closing_units GROUP BY m.wwi_stock_item_id, m.min_closing_units), ranked AS (SELECT f.*, ROW_NUMBER() OVER (ORDER BY f.min_closing_units, f.wwi_stock_item_id) AS rank_no FROM first_at_min f) SELECT r.rank_no, r.wwi_stock_item_id, n.stock_item, r.min_closing_units, r.month_end_date, r.balance_basis FROM ranked r JOIN names n ON n.wwi_stock_item_id = r.wwi_stock_item_id WHERE r.rank_no <= 10 ORDER BY r.rank_no",
+ "note": "Tableau returns each item's closing stock per month end (semi-additive measure); selecting each item's minimum month and ranking happens in assembly."
+}

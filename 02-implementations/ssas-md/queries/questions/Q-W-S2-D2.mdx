@@ -1,0 +1,15 @@
+// Q-W-S2-D2 For that month, ordered quantity by picker.
+// @column month_start_date = [Measures].[q_month_start_date]
+// @column picker = [Picker].[Employee]
+// @column ordered_quantity = [Measures].[q_ordered_quantity]
+WITH
+SET [q_gap_month] AS
+  Head(Order(Filter(Exists([Date].[Month].[Month].Members, {[Date].[Calendar Year].&[2015]}),
+                    NOT IsEmpty([Measures].[Ordered Quantity]) AND NOT IsEmpty([Measures].[Units Sold])),
+             Abs([Measures].[Ordered Quantity] - [Measures].[Units Sold]), BDESC), 1)
+MEMBER [Measures].[q_month_start_date] AS [q_gap_month].Item(0).Item(0).Name
+MEMBER [Measures].[q_ordered_quantity] AS ([Measures].[Ordered Quantity], [q_gap_month].Item(0).Item(0))
+SELECT {[Measures].[q_month_start_date], [Measures].[q_ordered_quantity]} ON COLUMNS,
+  NonEmpty(Union([Picker].[Employee].[Employee].Members, {[Picker].[Employee].UnknownMember}),
+           {[Measures].[q_ordered_quantity]}) ON ROWS
+FROM [WWI]

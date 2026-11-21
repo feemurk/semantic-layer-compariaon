@@ -1,0 +1,8 @@
+// Q-N-S1-P Gross trip revenue by pickup borough by month for 2024.
+// @column pickup_borough = [Pickup Zone].[Borough]
+// @column month_start_date = [Pickup Date].[Month]
+// @column revenue = [Measures].[Gross Trip Revenue]
+SELECT {[Measures].[Gross Trip Revenue]} ON COLUMNS,
+  NonEmpty([Pickup Zone].[Borough].[Borough].Members * Exists([Pickup Date].[Month].[Month].Members, {[Pickup Date].[Calendar Year].&[2024]}),
+           {[Measures].[Gross Trip Revenue]}) ON ROWS
+FROM [NYC]

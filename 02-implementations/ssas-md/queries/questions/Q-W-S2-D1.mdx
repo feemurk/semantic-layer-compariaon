@@ -1,0 +1,23 @@
+// Q-W-S2-D1 For the 2015 month with the largest gap between ordered quantity and units sold, break ordered quantity down by stock item.
+// @column month_start_date = [Measures].[q_month_start_date]
+// @column month_ordered_quantity = [Measures].[q_month_ordered_quantity]
+// @column month_units_sold = [Measures].[q_month_units_sold]
+// @column wwi_stock_item_id = [Stock Item].[WWI Stock Item ID]
+// @column stock_item = [Measures].[q_stock_item]
+// @column ordered_quantity = [Measures].[q_ordered_quantity]
+WITH
+SET [q_gap_month] AS
+  Head(Order(Filter(Exists([Date].[Month].[Month].Members, {[Date].[Calendar Year].&[2015]}),
+                    NOT IsEmpty([Measures].[Ordered Quantity]) AND NOT IsEmpty([Measures].[Units Sold])),
+             Abs([Measures].[Ordered Quantity] - [Measures].[Units Sold]), BDESC), 1)
+MEMBER [Measures].[q_month_start_date] AS [q_gap_month].Item(0).Item(0).Name
+MEMBER [Measures].[q_month_ordered_quantity] AS
+  ([Measures].[Ordered Quantity], [q_gap_month].Item(0).Item(0), [Stock Item].[WWI Stock Item ID].[All])
+MEMBER [Measures].[q_month_units_sold] AS
+  ([Measures].[Units Sold], [q_gap_month].Item(0).Item(0), [Stock Item].[WWI Stock Item ID].[All])
+MEMBER [Measures].[q_stock_item] AS [Stock Item].[WWI Stock Item ID].CurrentMember.Properties("Stock Item")
+MEMBER [Measures].[q_ordered_quantity] AS ([Measures].[Ordered Quantity], [q_gap_month].Item(0).Item(0))
+SELECT {[Measures].[q_month_start_date], [Measures].[q_month_ordered_quantity], [Measures].[q_month_units_sold],
+        [Measures].[q_stock_item], [Measures].[q_ordered_quantity]} ON COLUMNS,
+  NonEmpty([Stock Item].[WWI Stock Item ID].[WWI Stock Item ID].Members, {[Measures].[q_ordered_quantity]}) ON ROWS
+FROM [WWI]

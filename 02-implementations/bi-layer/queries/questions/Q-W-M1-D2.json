@@ -1,0 +1,169 @@
+{
+ "question": "Q-W-M1-D2",
+ "text": "For those 10 items, gross margin % by Sales Territory.",
+ "interpretation": "For the 10 items of Q-W-M1-D1 (FY2015, lowest-margin customer category): gross margin % by Sales Territory.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "cats": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Customer Category",
+      "fieldAlias": "customer_category"
+     },
+     {
+      "fieldCaption": "Gross Margin %",
+      "fieldAlias": "gross_margin_pct",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "customer_category": "VARCHAR",
+    "gross_margin_pct": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  },
+  "items": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Customer Category",
+      "fieldAlias": "customer_category"
+     },
+     {
+      "fieldCaption": "WWI Stock Item ID",
+      "fieldAlias": "wwi_stock_item_id"
+     },
+     {
+      "fieldCaption": "Stock Item",
+      "fieldAlias": "stock_item"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Gross Profit",
+      "fieldAlias": "profit",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Gross Margin %",
+      "fieldAlias": "gross_margin_pct",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "customer_category": "VARCHAR",
+    "wwi_stock_item_id": "BIGINT",
+    "stock_item": "VARCHAR",
+    "revenue": "DOUBLE",
+    "profit": "DOUBLE",
+    "gross_margin_pct": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  },
+  "territories": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Customer Category",
+      "fieldAlias": "customer_category"
+     },
+     {
+      "fieldCaption": "WWI Stock Item ID",
+      "fieldAlias": "wwi_stock_item_id"
+     },
+     {
+      "fieldCaption": "Stock Item",
+      "fieldAlias": "stock_item"
+     },
+     {
+      "fieldCaption": "Sales Territory",
+      "fieldAlias": "sales_territory"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Gross Profit",
+      "fieldAlias": "profit",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Gross Margin %",
+      "fieldAlias": "gross_margin_pct",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "customer_category": "VARCHAR",
+    "wwi_stock_item_id": "BIGINT",
+    "stock_item": "VARCHAR",
+    "sales_territory": "VARCHAR",
+    "revenue": "DOUBLE",
+    "profit": "DOUBLE",
+    "gross_margin_pct": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH low AS (SELECT customer_category FROM cats WHERE lines > 0 ORDER BY gross_margin_pct, customer_category LIMIT 1), ranked AS (SELECT i.*, ROW_NUMBER() OVER (ORDER BY i.gross_margin_pct, i.wwi_stock_item_id) AS rank_no FROM items i JOIN low USING (customer_category) WHERE i.lines > 0 AND i.revenue > 10000), top10 AS (SELECT wwi_stock_item_id FROM ranked WHERE rank_no <= 10) SELECT t.wwi_stock_item_id, t.stock_item, t.sales_territory, t.revenue, t.profit, t.gross_margin_pct FROM territories t JOIN low USING (customer_category) JOIN top10 USING (wwi_stock_item_id) WHERE t.lines > 0 ORDER BY t.wwi_stock_item_id, t.sales_territory"
+}

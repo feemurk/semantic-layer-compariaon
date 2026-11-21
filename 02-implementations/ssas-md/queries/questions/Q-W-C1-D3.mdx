@@ -1,0 +1,25 @@
+// Q-W-C1-D3 Compare stock group shares FY2014 vs FY2015; which group gained the most share points?
+// @column stock_group_name = [Stock Group].[Stock Group]
+// @column share_fy2014 = [Measures].[q_share_fy2014]
+// @column share_fy2015 = [Measures].[q_share_fy2015]
+// @column change_points = [Measures].[q_change_points]
+// @column is_top_gainer = [Measures].[q_is_top_gainer]
+WITH
+MEMBER [Measures].[q_share_fy2014] AS ([Measures].[Stock Group Revenue Share], [Date].[Fiscal Year].&[2014])
+MEMBER [Measures].[q_share_fy2015] AS ([Measures].[Stock Group Revenue Share], [Date].[Fiscal Year].&[2015])
+MEMBER [Measures].[q_change_points] AS
+  IIF(IsEmpty([Measures].[q_share_fy2014]) OR IsEmpty([Measures].[q_share_fy2015]), NULL,
+      ([Measures].[q_share_fy2015] - [Measures].[q_share_fy2014]) * 100)
+SET [q_groups] AS
+  NonEmpty([Stock Group].[Stock Group].[Stock Group].Members,
+           {[Measures].[q_share_fy2014], [Measures].[q_share_fy2015]})
+SET [q_top_gainer] AS
+  Head(Order(Order(Filter([q_groups], NOT IsEmpty([Measures].[q_change_points])),
+                   [Stock Group].[Stock Group].CurrentMember.Name, BASC),
+             [Measures].[q_change_points], BDESC), 1)
+MEMBER [Measures].[q_is_top_gainer] AS
+  IIF([Stock Group].[Stock Group].CurrentMember IS [q_top_gainer].Item(0).Item(0), "true", "false")
+SELECT {[Measures].[q_share_fy2014], [Measures].[q_share_fy2015], [Measures].[q_change_points],
+        [Measures].[q_is_top_gainer]} ON COLUMNS,
+  [q_groups] ON ROWS
+FROM [WWI]

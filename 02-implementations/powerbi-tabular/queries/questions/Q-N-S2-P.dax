@@ -1,0 +1,16 @@
+// Q-N-S2-P Card tips by vendor by month for 2024. Every vendor-month with trips is listed; card tips are blank where no card
+// trip qualifies (the helper count keeps those rows, as the oracle does).
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        Trips[Vendor ID],
+        'Pickup Date'[Pickup Month Start],
+        TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+        "__trips", [Trip Count],
+        "tips", [Card Tips]
+    ),
+    "vendor_id", Trips[Vendor ID],
+    "month_start_date", 'Pickup Date'[Pickup Month Start],
+    "card_tips", [tips]
+)
+ORDER BY [vendor_id], [month_start_date]

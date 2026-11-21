@@ -1,0 +1,38 @@
+// Q-W-M1-D4 Which salesperson's gross margin % fell the most from FY2014 to FY2015, and which stock groups drove the change?
+// @column salesperson = [Measures].[q_salesperson]
+// @column salesperson_gm_fy2014 = [Measures].[q_salesperson_gm_fy2014]
+// @column salesperson_gm_fy2015 = [Measures].[q_salesperson_gm_fy2015]
+// @column stock_group_name = [Stock Group].[Stock Group]
+// @column group_gm_fy2014 = [Measures].[q_group_gm_fy2014]
+// @column group_gm_fy2015 = [Measures].[q_group_gm_fy2015]
+// @column group_change_points = [Measures].[q_group_change_points]
+// @column revenue_fy2015 = [Measures].[q_revenue_fy2015]
+WITH
+SET [q_salespeople] AS
+  Filter([Salesperson].[Employee].[Employee].Members,
+         NOT IsEmpty(([Measures].[Gross Margin %], [Date].[Fiscal Year].&[2014]))
+         AND NOT IsEmpty(([Measures].[Gross Margin %], [Date].[Fiscal Year].&[2015])))
+SET [q_worst] AS
+  Head(Order(Order([q_salespeople], [Salesperson].[Employee].CurrentMember.Name, BASC),
+             ([Measures].[Gross Margin %], [Date].[Fiscal Year].&[2015])
+             - ([Measures].[Gross Margin %], [Date].[Fiscal Year].&[2014]), BASC), 1)
+MEMBER [Measures].[q_salesperson] AS [q_worst].Item(0).Item(0).Name
+MEMBER [Measures].[q_salesperson_gm_fy2014] AS
+  ([Measures].[Gross Margin %], [q_worst].Item(0).Item(0), [Date].[Fiscal Year].&[2014], [Stock Group].[Stock Group].[All])
+MEMBER [Measures].[q_salesperson_gm_fy2015] AS
+  ([Measures].[Gross Margin %], [q_worst].Item(0).Item(0), [Date].[Fiscal Year].&[2015], [Stock Group].[Stock Group].[All])
+MEMBER [Measures].[q_group_gm_fy2014] AS
+  ([Measures].[Gross Margin %], [q_worst].Item(0).Item(0), [Date].[Fiscal Year].&[2014])
+MEMBER [Measures].[q_group_gm_fy2015] AS
+  ([Measures].[Gross Margin %], [q_worst].Item(0).Item(0), [Date].[Fiscal Year].&[2015])
+MEMBER [Measures].[q_group_change_points] AS
+  IIF(IsEmpty([Measures].[q_group_gm_fy2014]) OR IsEmpty([Measures].[q_group_gm_fy2015]), NULL,
+      ([Measures].[q_group_gm_fy2015] - [Measures].[q_group_gm_fy2014]) * 100)
+MEMBER [Measures].[q_revenue_fy2015] AS
+  ([Measures].[Revenue], [q_worst].Item(0).Item(0), [Date].[Fiscal Year].&[2015])
+SELECT {[Measures].[q_salesperson], [Measures].[q_salesperson_gm_fy2014], [Measures].[q_salesperson_gm_fy2015],
+        [Measures].[q_group_gm_fy2014], [Measures].[q_group_gm_fy2015], [Measures].[q_group_change_points],
+        [Measures].[q_revenue_fy2015]} ON COLUMNS,
+  NonEmpty([Stock Group].[Stock Group].[Stock Group].Members,
+           {[Measures].[q_group_gm_fy2014], [Measures].[q_group_gm_fy2015]}) ON ROWS
+FROM [WWI]

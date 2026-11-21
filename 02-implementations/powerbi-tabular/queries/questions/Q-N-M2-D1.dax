@@ -1,0 +1,28 @@
+// Q-N-M2-D1 For Manhattan -> Manhattan trips in 2024, the 10 pickup zones with the highest fare per mile among zones with at
+// least 10,000 such trips (ties: zone id).
+DEFINE
+    VAR zones =
+        FILTER (
+            SUMMARIZECOLUMNS (
+                'Pickup Zone'[Pickup Location ID],
+                'Pickup Zone'[Pickup Zone],
+                TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+                TREATAS ( { "Manhattan" }, 'Pickup Zone'[Pickup Borough] ),
+            TREATAS ( { "Manhattan" }, 'Dropoff Zone'[Dropoff Borough] ),
+                "trips", [Trip Count],
+                "fpm", [Fare per Mile]
+            ),
+            [trips] >= 10000
+        )
+    VAR ranked =
+        ADDCOLUMNS ( zones, "rank_no", ROWNUMBER ( zones, ORDERBY ( [fpm], DESC, 'Pickup Zone'[Pickup Location ID], ASC ) ) )
+EVALUATE
+SELECTCOLUMNS (
+    FILTER ( ranked, [rank_no] <= 10 ),
+    "rank_no", [rank_no],
+    "pu_location_id", 'Pickup Zone'[Pickup Location ID],
+    "zone", 'Pickup Zone'[Pickup Zone],
+    "trips", [trips],
+    "fare_per_mile", [fpm]
+)
+ORDER BY [rank_no]

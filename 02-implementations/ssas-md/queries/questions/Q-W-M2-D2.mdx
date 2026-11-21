@@ -1,0 +1,25 @@
+// Q-W-M2-D2 For the stock group with the most units at FY2015 end, the 10 stock items with the highest closing stock.
+// @column stock_group_name = [Measures].[q_stock_group_name]
+// @column rank_no = [Measures].[q_rank_no]
+// @column wwi_stock_item_id = [Stock Item].[WWI Stock Item ID]
+// @column stock_item = [Measures].[q_stock_item]
+// @column closing_units = [Measures].[q_closing_units]
+WITH
+SET [q_group] AS
+  Head(Order(Order([Stock Group].[Stock Group].[Stock Group].Members,
+                   [Stock Group].[Stock Group].CurrentMember.Name, BASC),
+             [Measures].[Closing Units], BDESC), 1)
+SET [q_items] AS
+  Head(Order(Order(NonEmpty([Stock Item].[WWI Stock Item ID].[WWI Stock Item ID].Members,
+                            {([Measures].[Closing Units], [q_group].Item(0).Item(0))}),
+                   [Stock Item].[WWI Stock Item ID].CurrentMember.MemberValue, BASC),
+             ([Measures].[Closing Units], [q_group].Item(0).Item(0)), BDESC), 10)
+MEMBER [Measures].[q_stock_group_name] AS [q_group].Item(0).Item(0).Name
+MEMBER [Measures].[q_rank_no] AS Rank([Stock Item].[WWI Stock Item ID].CurrentMember, [q_items])
+MEMBER [Measures].[q_stock_item] AS [Stock Item].[WWI Stock Item ID].CurrentMember.Properties("Stock Item")
+MEMBER [Measures].[q_closing_units] AS ([Measures].[Closing Units], [q_group].Item(0).Item(0))
+SELECT {[Measures].[q_stock_group_name], [Measures].[q_rank_no], [Measures].[q_stock_item],
+        [Measures].[q_closing_units]} ON COLUMNS,
+  [q_items] ON ROWS
+FROM [WWI]
+WHERE ([Date].[Date].&[20151031])

@@ -1,0 +1,9 @@
+// Q-A01 The 5 bill-to customers with the highest revenue including tax in calendar 2015.
+// @column bill_to_customer = [Bill To Customer].[Customer]
+// @column revenue_including_tax = [Measures].[Revenue Including Tax]
+SELECT {[Measures].[Revenue Including Tax]} ON COLUMNS,
+  Head(Order(Order(NonEmpty([Bill To Customer].[Customer].[Customer].Members, {[Measures].[Revenue Including Tax]}),
+                   [Bill To Customer].[Customer].CurrentMember.Name, BASC),
+             [Measures].[Revenue Including Tax], BDESC), 5) ON ROWS
+FROM [WWI]
+WHERE ([Date].[Calendar Year].&[2015])

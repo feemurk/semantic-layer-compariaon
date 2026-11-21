@@ -1,0 +1,69 @@
+{
+ "question": "Q-N-M2-D1",
+ "text": "For Manhattan → Manhattan trips in 2024, the 10 pickup zones with the highest fare per mile among zones with at least 10,000 such trips.",
+ "interpretation": "Manhattan -> Manhattan trips in 2024: the 10 pickup zones with the highest fare per mile among zones with at least 10,000 such trips (ties: location id).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Zone ID",
+      "fieldAlias": "pu_location_id"
+     },
+     {
+      "fieldCaption": "Pickup Zone",
+      "fieldAlias": "zone"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Fare per Mile",
+      "fieldAlias": "fare_per_mile",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     },
+     {
+      "field": {
+       "fieldCaption": "Pickup Borough"
+      },
+      "filterType": "SET",
+      "values": [
+       "Manhattan"
+      ]
+     },
+     {
+      "field": {
+       "fieldCaption": "Dropoff Borough"
+      },
+      "filterType": "SET",
+      "values": [
+       "Manhattan"
+      ]
+     }
+    ]
+   },
+   "output": {
+    "pu_location_id": "BIGINT",
+    "zone": "VARCHAR",
+    "trips": "BIGINT",
+    "fare_per_mile": "DOUBLE"
+   }
+  }
+ },
+ "assemble": "WITH ranked AS (SELECT q.*, ROW_NUMBER() OVER (ORDER BY fare_per_mile DESC, pu_location_id) AS rank_no FROM q WHERE trips >= 10000) SELECT rank_no, pu_location_id, zone, trips, fare_per_mile FROM ranked WHERE rank_no <= 10 ORDER BY rank_no"
+}

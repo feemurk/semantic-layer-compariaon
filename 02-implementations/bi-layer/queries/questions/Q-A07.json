@@ -1,0 +1,46 @@
+{
+ "question": "Q-A07",
+ "text": "Average trip distance (total distance ÷ trip count) by pickup borough for 2024.",
+ "interpretation": "Average trip distance (total distance / trip count) by pickup borough, 2024.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Borough",
+      "fieldAlias": "pickup_borough"
+     },
+     {
+      "fieldCaption": "Total Trip Distance",
+      "fieldAlias": "total_distance",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     }
+    ]
+   },
+   "output": {
+    "pickup_borough": "VARCHAR",
+    "total_distance": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT pickup_borough, total_distance, trips, total_distance / trips AS average_trip_distance FROM q WHERE trips > 0 ORDER BY pickup_borough"
+}

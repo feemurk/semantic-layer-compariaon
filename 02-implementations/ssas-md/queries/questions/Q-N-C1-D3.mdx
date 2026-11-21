@@ -1,0 +1,10 @@
+// Q-N-C1-D3 YTD revenue and YoY % at 2024-12-31 by payment type.
+// @column payment_type_name = [Payment Type].[Payment Type]
+// @column ytd_revenue = [Measures].[Revenue YTD]
+// @column stly_ytd_revenue = [Measures].[Revenue STLY YTD]
+// @column yoy_pct = [Measures].[Revenue YoY %]
+SELECT {[Measures].[Revenue YTD], [Measures].[Revenue STLY YTD], [Measures].[Revenue YoY %]} ON COLUMNS,
+  NonEmpty([Payment Type].[Payment Type].[Payment Type].Members,
+           {[Measures].[Revenue YTD], [Measures].[Revenue STLY YTD]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Date].&[20241231])

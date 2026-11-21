@@ -1,0 +1,16 @@
+// Q-N-S1-D3 Compare monthly gross trip revenue for pickups in the Airports service zone, 2024 vs 2023.
+// @column calendar_month = [Pickup Date].[Month Of Year]
+// @column revenue_2023 = [Measures].[q_revenue_2023]
+// @column revenue_2024 = [Measures].[q_revenue_2024]
+// @column change_pct = [Measures].[q_change_pct]
+WITH
+MEMBER [Measures].[q_revenue_2023] AS ([Measures].[Gross Trip Revenue], [Pickup Date].[Calendar Year].&[2023])
+MEMBER [Measures].[q_revenue_2024] AS ([Measures].[Gross Trip Revenue], [Pickup Date].[Calendar Year].&[2024])
+MEMBER [Measures].[q_change_pct] AS
+  IIF(IsEmpty([Measures].[q_revenue_2023]) OR [Measures].[q_revenue_2023] = 0, NULL,
+      [Measures].[q_revenue_2024] / [Measures].[q_revenue_2023] - 1)
+SELECT {[Measures].[q_revenue_2023], [Measures].[q_revenue_2024], [Measures].[q_change_pct]} ON COLUMNS,
+  NonEmpty([Pickup Date].[Month Of Year].[Month Of Year].Members,
+           {[Measures].[q_revenue_2023], [Measures].[q_revenue_2024]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Zone].[Service Zone].&[Airports])

@@ -1,0 +1,16 @@
+// Q-N-C1-P YTD gross trip revenue and YoY % vs STLY at each month end of 2024 (anchor: last calendar day of the month).
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Pickup Date'[Pickup Month Start],
+        TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+        "ytd", [Revenue YTD],
+        "stly", [Revenue STLY YTD],
+        "yoy", [Revenue YoY % vs STLY]
+    ),
+    "month_end_date", EOMONTH ( 'Pickup Date'[Pickup Month Start], 0 ),
+    "ytd_revenue", [ytd],
+    "stly_ytd_revenue", [stly],
+    "yoy_pct", [yoy]
+)
+ORDER BY [month_end_date]

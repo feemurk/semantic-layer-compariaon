@@ -1,0 +1,525 @@
+{
+ "question": "Q-N-C2-P",
+ "text": "MTD-to-YTD daily pace index at each month end of 2024.",
+ "interpretation": "MTD-to-YTD daily pace index at each month end of 2024: (trips MTD / day_of_month) / (trips YTD / day_of_year).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "m01": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD",
+      "fieldAlias": "mtd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-01-31"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  },
+  "m02": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD",
+      "fieldAlias": "mtd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-02-29"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  },
+  "m03": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD",
+      "fieldAlias": "mtd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-03-31"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  },
+  "m04": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD",
+      "fieldAlias": "mtd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-04-30"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  },
+  "m05": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD",
+      "fieldAlias": "mtd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-05-31"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  },
+  "m06": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD",
+      "fieldAlias": "mtd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-06-30"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  },
+  "m07": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD",
+      "fieldAlias": "mtd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-07-31"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  },
+  "m08": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD",
+      "fieldAlias": "mtd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-08-31"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  },
+  "m09": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD",
+      "fieldAlias": "mtd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-09-30"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  },
+  "m10": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD",
+      "fieldAlias": "mtd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-10-31"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  },
+  "m11": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD",
+      "fieldAlias": "mtd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-11-30"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  },
+  "m12": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Trips MTD",
+      "fieldAlias": "mtd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-12-31"
+     }
+    ]
+   },
+   "output": {
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE"
+   }
+  }
+ },
+ "assemble": "SELECT DATE '2024-01-31' AS month_end_date, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM m01 UNION ALL SELECT DATE '2024-02-29' AS month_end_date, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM m02 UNION ALL SELECT DATE '2024-03-31' AS month_end_date, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM m03 UNION ALL SELECT DATE '2024-04-30' AS month_end_date, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM m04 UNION ALL SELECT DATE '2024-05-31' AS month_end_date, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM m05 UNION ALL SELECT DATE '2024-06-30' AS month_end_date, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM m06 UNION ALL SELECT DATE '2024-07-31' AS month_end_date, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM m07 UNION ALL SELECT DATE '2024-08-31' AS month_end_date, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM m08 UNION ALL SELECT DATE '2024-09-30' AS month_end_date, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM m09 UNION ALL SELECT DATE '2024-10-31' AS month_end_date, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM m10 UNION ALL SELECT DATE '2024-11-30' AS month_end_date, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM m11 UNION ALL SELECT DATE '2024-12-31' AS month_end_date, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM m12 ORDER BY month_end_date"
+}

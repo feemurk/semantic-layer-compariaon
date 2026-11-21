@@ -1,0 +1,74 @@
+{
+ "question": "Q-N-C2-D1",
+ "text": "Pace index at 2024-11-30 by pickup borough.",
+ "interpretation": "MTD-to-YTD daily pace index at 2024-11-30 by pickup borough (day_of_month = 30, day_of_year = 335).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Borough",
+      "fieldAlias": "pickup_borough"
+     },
+     {
+      "fieldCaption": "Trips MTD (zero filled)",
+      "calculation": "ZN([Trips MTD])",
+      "fieldAlias": "mtd_trips"
+     },
+     {
+      "fieldCaption": "As-of Day of Month",
+      "fieldAlias": "day_of_month"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "As-of Day of Year",
+      "fieldAlias": "day_of_year"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Date"
+      },
+      "filterType": "QUANTITATIVE_DATE",
+      "quantitativeFilterType": "RANGE",
+      "minDate": "2024-01-01",
+      "maxDate": "2024-11-30"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-11-30"
+     }
+    ]
+   },
+   "output": {
+    "pickup_borough": "VARCHAR",
+    "mtd_trips": "BIGINT",
+    "day_of_month": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "day_of_year": "BIGINT",
+    "pace_index": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT pickup_borough, mtd_trips, day_of_month, ytd_trips, day_of_year, pace_index FROM q WHERE trips > 0 ORDER BY pickup_borough"
+}

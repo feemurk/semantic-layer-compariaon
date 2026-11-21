@@ -1,0 +1,22 @@
+// Q-W-C1-D1 For the stock group with the highest FY2015 share, each stock item's share of that group's revenue.
+// @column stock_group_name = [Measures].[q_stock_group_name]
+// @column wwi_stock_item_id = [Stock Item].[WWI Stock Item ID]
+// @column stock_item = [Measures].[q_stock_item]
+// @column revenue = [Measures].[q_revenue]
+// @column share_of_group = [Measures].[q_share_of_group]
+WITH
+SET [q_group] AS
+  Head(Order(Order([Stock Group].[Stock Group].[Stock Group].Members,
+                   [Stock Group].[Stock Group].CurrentMember.Name, BASC),
+             [Measures].[Revenue], BDESC), 1)
+MEMBER [Measures].[q_stock_group_name] AS [q_group].Item(0).Item(0).Name
+MEMBER [Measures].[q_stock_item] AS [Stock Item].[WWI Stock Item ID].CurrentMember.Properties("Stock Item")
+MEMBER [Measures].[q_revenue] AS ([Measures].[Revenue], [q_group].Item(0).Item(0))
+MEMBER [Measures].[q_share_of_group] AS
+  [Measures].[q_revenue]
+  / ([Measures].[Revenue], [q_group].Item(0).Item(0), [Stock Item].[WWI Stock Item ID].[All])
+SELECT {[Measures].[q_stock_group_name], [Measures].[q_stock_item], [Measures].[q_revenue],
+        [Measures].[q_share_of_group]} ON COLUMNS,
+  NonEmpty([Stock Item].[WWI Stock Item ID].[WWI Stock Item ID].Members, {[Measures].[q_revenue]}) ON ROWS
+FROM [WWI]
+WHERE ([Date].[Fiscal Year].&[2015])

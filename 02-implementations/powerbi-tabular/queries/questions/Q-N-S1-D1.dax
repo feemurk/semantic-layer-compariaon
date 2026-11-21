@@ -1,0 +1,25 @@
+// Q-N-S1-D1 For the 2024 month with the highest revenue, the 15 Manhattan pickup zones with the most revenue (ties: zone id).
+DEFINE
+    VAR months = SUMMARIZECOLUMNS ( 'Pickup Date'[Pickup Month Start], TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ), "rev", [Gross Trip Revenue] )
+    VAR top_month =
+        MAXX ( TOPN ( 1, months, [rev], DESC, 'Pickup Date'[Pickup Month Start], ASC ), 'Pickup Date'[Pickup Month Start] )
+    VAR zones =
+        SUMMARIZECOLUMNS (
+            'Pickup Zone'[Pickup Location ID],
+            'Pickup Zone'[Pickup Zone],
+            TREATAS ( { top_month }, 'Pickup Date'[Pickup Month Start] ),
+            TREATAS ( { "Manhattan" }, 'Pickup Zone'[Pickup Borough] ),
+            "rev", [Gross Trip Revenue]
+        )
+    VAR ranked =
+        ADDCOLUMNS ( zones, "rank_no", ROWNUMBER ( zones, ORDERBY ( [rev], DESC, 'Pickup Zone'[Pickup Location ID], ASC ) ) )
+EVALUATE
+SELECTCOLUMNS (
+    FILTER ( ranked, [rank_no] <= 15 ),
+    "month_start_date", top_month,
+    "rank_no", [rank_no],
+    "pu_location_id", 'Pickup Zone'[Pickup Location ID],
+    "zone", 'Pickup Zone'[Pickup Zone],
+    "revenue", [rev]
+)
+ORDER BY [rank_no]

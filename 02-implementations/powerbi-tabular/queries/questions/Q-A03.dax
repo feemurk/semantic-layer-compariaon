@@ -4,7 +4,10 @@ SELECTCOLUMNS (
     SUMMARIZECOLUMNS (
         'Stock Group'[Stock Group],
         'Delivery Date'[Delivery Month Start],
-        DATESBETWEEN ( 'Delivery Date'[Delivery Date], DATE ( 2016, 1, 1 ), DATE ( 2016, 5, 31 ) ),
+        FILTER (
+            ALL ( 'Delivery Date'[Delivery Date] ),
+            'Delivery Date'[Delivery Date] >= DATE ( 2016, 1, 1 ) && 'Delivery Date'[Delivery Date] <= DATE ( 2016, 5, 31 )
+        ),
         "units", [Units Sold]
     ),
     "stock_group_name", 'Stock Group'[Stock Group],

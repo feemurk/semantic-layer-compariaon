@@ -1,0 +1,7 @@
+// Q-N-C1-D4 Gross trip revenue for dropoff dates in 2024 vs pickup dates in 2024 (Dropoff Date vs Pickup Date roles) and the
+// difference.
+DEFINE
+    VAR by_pickup = CALCULATE ( [Gross Trip Revenue], 'Pickup Date'[Pickup Calendar Year] = 2024 )
+    VAR by_dropoff = CALCULATE ( [Gross Trip Revenue], 'Dropoff Date'[Dropoff Calendar Year] = 2024 )
+EVALUATE
+ROW ( "revenue_pickup_2024", by_pickup, "revenue_dropoff_2024", by_dropoff, "difference", by_dropoff - by_pickup )

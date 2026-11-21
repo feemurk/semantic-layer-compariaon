@@ -1,0 +1,16 @@
+// Q-A09 Tip amount (all payment types) vs card tips by payment type for 2024.
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Payment Type'[Payment Type],
+        'Payment Type'[Payment Type Name],
+        TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+        "tips", [Tip Amount (All Payment Types)],
+        "card", [Card Tips]
+    ),
+    "payment_type", 'Payment Type'[Payment Type],
+    "payment_type_name", 'Payment Type'[Payment Type Name],
+    "tip_amount", [tips],
+    "card_tips", [card]
+)
+ORDER BY [payment_type]

@@ -1,0 +1,78 @@
+{
+ "question": "Q-W-M2-D1",
+ "text": "Closing stock on hand at the end of FY2015 by stock group, with a deduplicated total.",
+ "interpretation": "Closing stock on hand at the end of FY2015 (2015-10-31) by stock group, plus the deduplicated all-groups total.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "groups": {
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "closing_units",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "snap_rows",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "stock_group_name": "VARCHAR",
+    "closing_units": "DOUBLE",
+    "snap_rows": "BIGINT"
+   }
+  },
+  "total": {
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "closing_units",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "snap_rows",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "closing_units": "DOUBLE",
+    "snap_rows": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT grain, stock_group_name, closing_units FROM ( SELECT 'group' AS grain, stock_group_name, closing_units FROM groups WHERE snap_rows > 0 UNION ALL SELECT 'total', CAST(NULL AS VARCHAR), closing_units FROM total WHERE snap_rows > 0 ) r ORDER BY grain, stock_group_name NULLS FIRST"
+}

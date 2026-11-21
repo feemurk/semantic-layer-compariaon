@@ -1,0 +1,63 @@
+{
+ "question": "Q-N-M2-P",
+ "text": "Fare per mile by pickup borough × dropoff borough for 2024.",
+ "interpretation": "Fare per mile (sum(fare_amount) / sum(trip_distance)) by pickup borough x dropoff borough, 2024.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Borough",
+      "fieldAlias": "pickup_borough"
+     },
+     {
+      "fieldCaption": "Dropoff Borough",
+      "fieldAlias": "dropoff_borough"
+     },
+     {
+      "fieldCaption": "Fare Amount",
+      "fieldAlias": "fare_amount",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Total Trip Distance",
+      "fieldAlias": "trip_distance",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Fare per Mile",
+      "fieldAlias": "fare_per_mile",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     }
+    ]
+   },
+   "output": {
+    "pickup_borough": "VARCHAR",
+    "dropoff_borough": "VARCHAR",
+    "fare_amount": "DOUBLE",
+    "trip_distance": "DOUBLE",
+    "fare_per_mile": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT pickup_borough, dropoff_borough, fare_amount, trip_distance, fare_per_mile FROM q WHERE trips > 0 ORDER BY pickup_borough, dropoff_borough"
+}

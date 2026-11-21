@@ -1,0 +1,102 @@
+{
+ "question": "Q-N-S1-D1",
+ "text": "For the 2024 month with the highest revenue, the 15 Manhattan pickup zones with the most revenue.",
+ "interpretation": "The 2024 month with the highest gross trip revenue; the 15 Manhattan pickup zones with the most revenue that month (ties: location id).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "months": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "Gross Trip Revenue",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     }
+    ]
+   },
+   "output": {
+    "month_start_date": "DATE",
+    "revenue": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  },
+  "zones": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Month Start Date",
+      "fieldAlias": "month_start_date"
+     },
+     {
+      "fieldCaption": "Pickup Zone ID",
+      "fieldAlias": "pu_location_id"
+     },
+     {
+      "fieldCaption": "Pickup Zone",
+      "fieldAlias": "zone"
+     },
+     {
+      "fieldCaption": "Gross Trip Revenue",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2024
+      ]
+     },
+     {
+      "field": {
+       "fieldCaption": "Pickup Borough"
+      },
+      "filterType": "SET",
+      "values": [
+       "Manhattan"
+      ]
+     }
+    ]
+   },
+   "output": {
+    "month_start_date": "DATE",
+    "pu_location_id": "BIGINT",
+    "zone": "VARCHAR",
+    "revenue": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH m AS (SELECT month_start_date FROM months WHERE trips > 0 ORDER BY revenue DESC, month_start_date LIMIT 1), ranked AS (SELECT z.month_start_date, z.pu_location_id, z.zone, z.revenue, ROW_NUMBER() OVER (ORDER BY z.revenue DESC, z.pu_location_id) AS rank_no FROM zones z JOIN m USING (month_start_date) WHERE z.trips > 0) SELECT month_start_date, rank_no, pu_location_id, zone, revenue FROM ranked WHERE rank_no <= 15 ORDER BY rank_no"
+}

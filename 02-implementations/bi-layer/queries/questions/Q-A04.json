@@ -1,0 +1,51 @@
+{
+ "question": "Q-A04",
+ "text": "The 20 State Province × Customer Category combinations with the highest gross profit in calendar 2015.",
+ "interpretation": "The 20 State Province x Customer Category combinations with the highest gross profit in calendar 2015 (ties: names).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "State Province",
+      "fieldAlias": "state_province"
+     },
+     {
+      "fieldCaption": "Customer Category",
+      "fieldAlias": "customer_category"
+     },
+     {
+      "fieldCaption": "Gross Profit",
+      "fieldAlias": "gross_profit",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Calendar Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "state_province": "VARCHAR",
+    "customer_category": "VARCHAR",
+    "gross_profit": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT state_province, customer_category, gross_profit FROM q WHERE lines > 0 ORDER BY gross_profit DESC, state_province, customer_category LIMIT 20"
+}

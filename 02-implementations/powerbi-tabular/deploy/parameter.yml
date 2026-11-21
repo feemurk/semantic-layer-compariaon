@@ -1,0 +1,36 @@
+# fabric-cicd parameterization (SPEC E5). The semantic models are committed with environment tokens
+# (build_model.TOKENS); deploy.py enables environment-variable replacement, so each token resolves from the
+# GitHub environment of the stage being deployed (test or prod).
+find_replace:
+  - find_value: "SLC_DATABRICKS_HOST"
+    replace_value:
+      test: "$ENV:SLC_DATABRICKS_HOST"
+      prod: "$ENV:SLC_DATABRICKS_HOST"
+    item_type: "SemanticModel"
+  - find_value: "SLC_DATABRICKS_HTTP_PATH"
+    replace_value:
+      test: "$ENV:SLC_DATABRICKS_HTTP_PATH"
+      prod: "$ENV:SLC_DATABRICKS_HTTP_PATH"
+    item_type: "SemanticModel"
+  - find_value: "SLC_ONELAKE_SOURCE_URL"
+    replace_value:
+      test: "$ENV:SLC_ONELAKE_SOURCE_URL"
+      prod: "$ENV:SLC_ONELAKE_SOURCE_URL"
+    item_type: "SemanticModel"
+# Data source connections (Fabric connections created once per environment). Import and DirectQuery models bind the
+# Azure Databricks connection; Direct Lake models bind the OneLake connection and, for the composite
+# 'Stock Item (Current)' table of SLC_WWI_DirectLake, the Azure Databricks connection as well.
+semantic_model_binding:
+  default:
+    connection_id:
+      test: "$ENV:SLC_DATABRICKS_CONNECTION_ID"
+      prod: "$ENV:SLC_DATABRICKS_CONNECTION_ID"
+  models:
+    - semantic_model_name: ["SLC_WWI_DirectLake"]
+      connection_id:
+        test: ["$ENV:SLC_ONELAKE_CONNECTION_ID", "$ENV:SLC_DATABRICKS_CONNECTION_ID"]
+        prod: ["$ENV:SLC_ONELAKE_CONNECTION_ID", "$ENV:SLC_DATABRICKS_CONNECTION_ID"]
+    - semantic_model_name: ["SLC_NYC_DirectLake"]
+      connection_id:
+        test: "$ENV:SLC_ONELAKE_CONNECTION_ID"
+        prod: "$ENV:SLC_ONELAKE_CONNECTION_ID"

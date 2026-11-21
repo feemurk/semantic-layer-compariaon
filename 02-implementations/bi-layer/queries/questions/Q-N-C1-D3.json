@@ -1,0 +1,53 @@
+{
+ "question": "Q-N-C1-D3",
+ "text": "YTD revenue and YoY % at 2024-12-31 by payment type.",
+ "interpretation": "YTD gross trip revenue and YoY % at 2024-12-31 by payment type (YTD = calendar 2024 vs STLY = calendar 2023).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Payment Type",
+      "fieldAlias": "payment_type_name"
+     },
+     {
+      "fieldCaption": "Revenue YTD",
+      "fieldAlias": "ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YTD Same Time Last Year",
+      "fieldAlias": "stly_ytd_revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Revenue YoY % vs STLY",
+      "fieldAlias": "yoy_pct",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-12-31"
+     }
+    ]
+   },
+   "output": {
+    "payment_type_name": "VARCHAR",
+    "ytd_revenue": "DOUBLE",
+    "stly_ytd_revenue": "DOUBLE",
+    "yoy_pct": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT payment_type_name, ytd_revenue, stly_ytd_revenue, yoy_pct FROM q WHERE trips > 0 ORDER BY payment_type_name"
+}

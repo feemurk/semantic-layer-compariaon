@@ -1,0 +1,136 @@
+{
+ "question": "Q-W-C1-D4",
+ "text": "For FY2015, report the sum of stock group revenues, total revenue, and the overlap amount from items in more than one group.",
+ "interpretation": "FY2015: sum of stock group revenues, deduplicated total revenue, overlap (sum - total), and the overlap computed directly from items in k >= 2 groups as sum((k - 1) * revenue); the two overlap columns must agree.",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "items": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "WWI Stock Item ID",
+      "fieldAlias": "wwi_stock_item_id"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "wwi_stock_item_id": "BIGINT",
+    "revenue": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  },
+  "memberships": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "WWI Stock Item ID",
+      "fieldAlias": "wwi_stock_item_id"
+     },
+     {
+      "fieldCaption": "Group Memberships",
+      "calculation": "COUNTD([Stock Group])",
+      "fieldAlias": "groups"
+     }
+    ]
+   },
+   "output": {
+    "wwi_stock_item_id": "BIGINT",
+    "groups": "BIGINT"
+   }
+  },
+  "groups": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "stock_group_name": "VARCHAR",
+    "revenue": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  },
+  "total": {
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Revenue (Excl. Tax)",
+      "fieldAlias": "revenue",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "lines",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Fiscal Year"
+      },
+      "filterType": "SET",
+      "values": [
+       2015
+      ]
+     }
+    ]
+   },
+   "output": {
+    "revenue": "DOUBLE",
+    "lines": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH ir AS (SELECT wwi_stock_item_id, revenue FROM items WHERE lines > 0), k AS (SELECT wwi_stock_item_id, groups FROM memberships WHERE groups > 0) SELECT (SELECT SUM(revenue) FROM groups WHERE lines > 0 AND stock_group_name IS NOT NULL) AS sum_of_group_revenue, (SELECT revenue FROM total) AS total_revenue, (SELECT SUM(revenue) FROM groups WHERE lines > 0 AND stock_group_name IS NOT NULL) - (SELECT revenue FROM total) AS overlap_revenue, SUM(CASE WHEN k.groups >= 2 THEN ir.revenue * (k.groups - 1) ELSE 0 END) AS overlap_from_multi_group_items, SUM(CASE WHEN k.groups IS NULL THEN ir.revenue ELSE 0 END) AS revenue_without_group FROM ir LEFT JOIN k ON k.wwi_stock_item_id = ir.wwi_stock_item_id",
+ "note": "The overlap check needs each item's group count; COUNTD([Stock Group]) per item is a dimension-table count issued as an ad hoc VDS calculation."
+}

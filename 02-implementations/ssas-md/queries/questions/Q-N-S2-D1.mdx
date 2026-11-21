@@ -1,0 +1,7 @@
+// Q-N-S2-D1 Card tips by pickup hour for December 2024.
+// @column pickup_hour = [Pickup Hour].[Pickup Hour]
+// @column card_tips = [Measures].[Card Tips]
+SELECT {[Measures].[Card Tips]} ON COLUMNS,
+  NonEmpty([Pickup Hour].[Pickup Hour].[Pickup Hour].Members, {[Measures].[Card Tips]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Month].&[202412])

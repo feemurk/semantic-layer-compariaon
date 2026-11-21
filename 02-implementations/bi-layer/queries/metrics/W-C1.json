@@ -1,0 +1,281 @@
+{
+ "metric": "W-C1",
+ "contract": [
+  "grain",
+  "measure",
+  "member_1",
+  "member_2",
+  "member_3",
+  "value"
+ ],
+ "generated_by": "build_tableau.py",
+ "branches": [
+  {
+   "grain": "total_stock_group",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Stock Group Revenue Share",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "VARCHAR",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "W-C1": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "total_all_groups",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Stock Group Revenue Share",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [],
+   "values": {
+    "W-C1": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_stock_group",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Stock Group Revenue Share",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "W-C1": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_all_groups",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Stock Group Revenue Share",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1"
+   ],
+   "values": {
+    "W-C1": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "fiscal_year_stock_group",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Fiscal Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Stock Group Revenue Share",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2"
+   ],
+   "values": {
+    "W-C1": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_sales_territory_stock_group",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Sales Territory",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "m3"
+     },
+     {
+      "fieldCaption": "Stock Group Revenue Share",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "m3": "VARCHAR",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2",
+    "m3"
+   ],
+   "values": {
+    "W-C1": "v0"
+   },
+   "presence": "presence"
+  },
+  {
+   "grain": "year_customer_category_stock_group",
+   "datasource": "SLC WWI Sales and Orders",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Calendar Year",
+      "fieldAlias": "m1"
+     },
+     {
+      "fieldCaption": "Customer Category",
+      "fieldAlias": "m2"
+     },
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "m3"
+     },
+     {
+      "fieldCaption": "Stock Group Revenue Share",
+      "fieldAlias": "v0",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Sales Line Count",
+      "fieldAlias": "presence",
+      "function": "AGG"
+     }
+    ]
+   },
+   "output": {
+    "m1": "BIGINT",
+    "m2": "VARCHAR",
+    "m3": "VARCHAR",
+    "v0": "DOUBLE",
+    "presence": "BIGINT"
+   },
+   "members": [
+    "m1",
+    "m2",
+    "m3"
+   ],
+   "values": {
+    "W-C1": "v0"
+   },
+   "presence": "presence"
+  }
+ ]
+}

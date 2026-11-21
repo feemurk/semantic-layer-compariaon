@@ -1,0 +1,15 @@
+// Q-N-S2-D2 Card tips by pickup borough x dropoff borough for 2024 (two roles of the zone dimension).
+EVALUATE
+SELECTCOLUMNS (
+    SUMMARIZECOLUMNS (
+        'Pickup Zone'[Pickup Borough],
+        'Dropoff Zone'[Dropoff Borough],
+        TREATAS ( { 2024 }, 'Pickup Date'[Pickup Calendar Year] ),
+        "__trips", [Trip Count],
+        "tips", [Card Tips]
+    ),
+    "pickup_borough", 'Pickup Zone'[Pickup Borough],
+    "dropoff_borough", 'Dropoff Zone'[Dropoff Borough],
+    "card_tips", [tips]
+)
+ORDER BY [pickup_borough], [dropoff_borough]

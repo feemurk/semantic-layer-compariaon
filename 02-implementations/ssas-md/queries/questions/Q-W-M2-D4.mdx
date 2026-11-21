@@ -1,0 +1,26 @@
+// Q-W-M2-D4 Which 10 stock items had the lowest closing stock at any calendar month end in 2015, and at which month end?
+// @column rank_no = [Measures].[q_rank_no]
+// @column wwi_stock_item_id = [Stock Item].[WWI Stock Item ID]
+// @column stock_item = [Measures].[q_stock_item]
+// @column min_closing_units = [Measures].[q_min_closing_units]
+// @column month_end_date = [Measures].[q_month_end_date]
+// @column balance_basis = [Measures].[q_balance_basis]
+WITH
+SET [q_months] AS Exists([Date].[Month].[Month].Members, {[Date].[Calendar Year].&[2015]})
+MEMBER [Measures].[q_min_closing_units] AS Min([q_months], [Measures].[Closing Units])
+SET [q_items] AS
+  Head(Order(Order(Filter([Stock Item].[WWI Stock Item ID].[WWI Stock Item ID].Members,
+                          NOT IsEmpty([Measures].[q_min_closing_units])),
+                   [Stock Item].[WWI Stock Item ID].CurrentMember.MemberValue, BASC),
+             [Measures].[q_min_closing_units], BASC), 10)
+MEMBER [Measures].[q_rank_no] AS Rank([Stock Item].[WWI Stock Item ID].CurrentMember, [q_items])
+MEMBER [Measures].[q_stock_item] AS [Stock Item].[WWI Stock Item ID].CurrentMember.Properties("Stock Item")
+MEMBER [Measures].[q_month_end_date] AS
+  Head(Filter([q_months], [Measures].[Closing Units] = [Measures].[q_min_closing_units]), 1)
+    .Item(0).Item(0).Properties("Month End Date")
+MEMBER [Measures].[q_balance_basis] AS
+  [Stock Item].[WWI Stock Item ID].CurrentMember.Properties("Balance Basis")
+SELECT {[Measures].[q_rank_no], [Measures].[q_stock_item], [Measures].[q_min_closing_units],
+        [Measures].[q_month_end_date], [Measures].[q_balance_basis]} ON COLUMNS,
+  [q_items] ON ROWS
+FROM [WWI]

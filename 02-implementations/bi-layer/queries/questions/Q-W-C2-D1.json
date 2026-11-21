@@ -1,0 +1,58 @@
+{
+ "question": "Q-W-C2-D1",
+ "text": "Days of supply at 2015-12-31 by stock group.",
+ "interpretation": "Days of supply at 2015-12-31 by stock group (items of each group via the bridge).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Stock Group",
+      "fieldAlias": "stock_group_name"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "closing_units",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Units Sold Trailing 91 Days",
+      "fieldAlias": "units_sold_91d",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Days of Supply",
+      "fieldAlias": "days_of_supply",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "snap_rows",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Snapshot Date"
+      },
+      "filterType": "QUANTITATIVE_DATE",
+      "quantitativeFilterType": "RANGE",
+      "minDate": "2015-12-31",
+      "maxDate": "2015-12-31"
+     }
+    ]
+   },
+   "output": {
+    "stock_group_name": "VARCHAR",
+    "closing_units": "DOUBLE",
+    "units_sold_91d": "DOUBLE",
+    "days_of_supply": "DOUBLE",
+    "snap_rows": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT stock_group_name, closing_units, units_sold_91d, days_of_supply FROM q WHERE snap_rows > 0 AND stock_group_name IS NOT NULL ORDER BY stock_group_name"
+}

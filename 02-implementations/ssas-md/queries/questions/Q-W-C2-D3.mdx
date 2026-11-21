@@ -1,0 +1,16 @@
+// Q-W-C2-D3 Days of supply for chiller vs non-chiller items at each calendar quarter end of 2015.
+// @column calendar_quarter = [Measures].[q_calendar_quarter]
+// @column quarter_end_date = [Measures].[q_quarter_end_date]
+// @column is_chiller_stock = [Stock Item].[Is Chiller Stock]
+// @column closing_units = [Measures].[Closing Units]
+// @column units_sold_91d = [Measures].[Units Sold 91D]
+// @column days_of_supply = [Measures].[Days of Supply]
+WITH
+MEMBER [Measures].[q_calendar_quarter] AS [Date].[Calendar Quarter].CurrentMember.Properties("Quarter Of Year")
+MEMBER [Measures].[q_quarter_end_date] AS [Date].[Calendar Quarter].CurrentMember.Properties("Quarter End Date")
+SELECT {[Measures].[q_calendar_quarter], [Measures].[q_quarter_end_date], [Measures].[Closing Units],
+        [Measures].[Units Sold 91D], [Measures].[Days of Supply]} ON COLUMNS,
+  NonEmpty(Exists([Date].[Calendar Quarter].[Calendar Quarter].Members, {[Date].[Calendar Year].&[2015]})
+           * [Stock Item].[Is Chiller Stock].[Is Chiller Stock].Members,
+           {[Measures].[Closing Units]}) ON ROWS
+FROM [WWI]

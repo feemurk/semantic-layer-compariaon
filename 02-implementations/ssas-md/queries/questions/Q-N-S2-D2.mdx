@@ -1,0 +1,9 @@
+// Q-N-S2-D2 Card tips by pickup borough x dropoff borough for 2024.
+// @column pickup_borough = [Pickup Zone].[Borough]
+// @column dropoff_borough = [Dropoff Zone].[Borough]
+// @column card_tips = [Measures].[Card Tips]
+SELECT {[Measures].[Card Tips]} ON COLUMNS,
+  NonEmpty([Pickup Zone].[Borough].[Borough].Members * [Dropoff Zone].[Borough].[Borough].Members,
+           {[Measures].[Card Tips]}) ON ROWS
+FROM [NYC]
+WHERE ([Pickup Date].[Calendar Year].&[2024])

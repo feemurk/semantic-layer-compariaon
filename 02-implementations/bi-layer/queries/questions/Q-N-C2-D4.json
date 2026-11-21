@@ -1,0 +1,125 @@
+{
+ "question": "Q-N-C2-D4",
+ "text": "For the pickup zone with the highest pace index at 2024-11-30 among zones with at least 50,000 YTD trips, daily trip counts for November 2024.",
+ "interpretation": "Pickup zone with the highest pace index at 2024-11-30 among zones with >= 50,000 YTD trips (ties: location id); its daily trip counts for November 2024 (every calendar day listed; NULL where no trips).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "zones": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Zone ID",
+      "fieldAlias": "pu_location_id"
+     },
+     {
+      "fieldCaption": "Trips YTD",
+      "fieldAlias": "ytd_trips",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "MTD-to-YTD Daily Pace Index",
+      "fieldAlias": "pace_index",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Date"
+      },
+      "filterType": "QUANTITATIVE_DATE",
+      "quantitativeFilterType": "RANGE",
+      "minDate": "2024-01-01",
+      "maxDate": "2024-11-30"
+     }
+    ],
+    "parameters": [
+     {
+      "parameterCaption": "As-of Date",
+      "value": "2024-11-30"
+     }
+    ]
+   },
+   "output": {
+    "pu_location_id": "BIGINT",
+    "ytd_trips": "BIGINT",
+    "pace_index": "DOUBLE",
+    "trips": "BIGINT"
+   }
+  },
+  "days": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Calendar Date",
+      "fieldAlias": "pickup_date"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Calendar Date"
+      },
+      "filterType": "QUANTITATIVE_DATE",
+      "quantitativeFilterType": "RANGE",
+      "minDate": "2024-11-01",
+      "maxDate": "2024-11-30"
+     }
+    ]
+   },
+   "output": {
+    "pickup_date": "DATE"
+   }
+  },
+  "daily": {
+   "datasource": "SLC NYC Trips",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Pickup Zone ID",
+      "fieldAlias": "pu_location_id"
+     },
+     {
+      "fieldCaption": "Pickup Zone",
+      "fieldAlias": "zone"
+     },
+     {
+      "fieldCaption": "Pickup Date",
+      "fieldAlias": "pickup_date"
+     },
+     {
+      "fieldCaption": "Trip Count",
+      "fieldAlias": "trips",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Pickup Date"
+      },
+      "filterType": "QUANTITATIVE_DATE",
+      "quantitativeFilterType": "RANGE",
+      "minDate": "2024-11-01",
+      "maxDate": "2024-11-30"
+     }
+    ]
+   },
+   "output": {
+    "pu_location_id": "BIGINT",
+    "zone": "VARCHAR",
+    "pickup_date": "DATE",
+    "trips": "BIGINT"
+   }
+  }
+ },
+ "assemble": "WITH top_zone AS (SELECT pu_location_id, pace_index FROM zones WHERE trips > 0 AND ytd_trips >= 50000 ORDER BY pace_index DESC, pu_location_id LIMIT 1), names AS (SELECT DISTINCT pu_location_id, zone FROM daily) SELECT t.pu_location_id, n.zone, t.pace_index, d.pickup_date, c.trips FROM days d CROSS JOIN top_zone t JOIN names n ON n.pu_location_id = t.pu_location_id LEFT JOIN daily c ON c.pickup_date = d.pickup_date AND c.pu_location_id = t.pu_location_id AND c.trips > 0 ORDER BY d.pickup_date",
+ "note": "The day list is the Pickup Calendar domain (dimension-only query), so days without trips keep a blank count."
+}

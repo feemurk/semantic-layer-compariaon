@@ -1,0 +1,10 @@
+// Q-N-C2-D3 Pace index at 2024-03-15 vs 2023-03-15 (leap-year day counts differ).
+// @column anchor_date = [Pickup Date].[Date]
+// @column mtd_trips = [Measures].[Trips MTD]
+// @column day_of_month = [Measures].[Days Elapsed In Month]
+// @column ytd_trips = [Measures].[Trips YTD]
+// @column day_of_year = [Measures].[Days Elapsed In Year]
+// @column pace_index = [Measures].[Pace Index]
+SELECT {[Measures].[Trips MTD], [Measures].[Days Elapsed In Month], [Measures].[Trips YTD], [Measures].[Days Elapsed In Year], [Measures].[Pace Index]} ON COLUMNS,
+  {[Pickup Date].[Date].&[20230315], [Pickup Date].[Date].&[20240315]} ON ROWS
+FROM [NYC]

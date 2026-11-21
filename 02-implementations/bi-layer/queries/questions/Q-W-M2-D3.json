@@ -1,0 +1,57 @@
+{
+ "question": "Q-W-M2-D3",
+ "text": "Compare closing stock on hand at 2015-12-31 and 2014-12-31 by selling package and chiller flag.",
+ "interpretation": "Closing stock on hand at 2015-12-31 vs 2014-12-31 by selling package and chiller flag (as-was item attributes).",
+ "generated_by": "build_tableau.py (question_specs.py)",
+ "queries": {
+  "q": {
+   "datasource": "SLC WWI Stock",
+   "query": {
+    "fields": [
+     {
+      "fieldCaption": "Selling Package",
+      "fieldAlias": "selling_package"
+     },
+     {
+      "fieldCaption": "Is Chiller Stock",
+      "fieldAlias": "is_chiller_stock"
+     },
+     {
+      "fieldCaption": "Snapshot Date",
+      "fieldAlias": "snapshot_date"
+     },
+     {
+      "fieldCaption": "Closing Stock On Hand",
+      "fieldAlias": "closing_units",
+      "function": "AGG"
+     },
+     {
+      "fieldCaption": "Snapshot Row Count",
+      "fieldAlias": "snap_rows",
+      "function": "AGG"
+     }
+    ],
+    "filters": [
+     {
+      "field": {
+       "fieldCaption": "Snapshot Date"
+      },
+      "filterType": "SET",
+      "values": [
+       "2014-12-31",
+       "2015-12-31"
+      ]
+     }
+    ]
+   },
+   "output": {
+    "selling_package": "VARCHAR",
+    "is_chiller_stock": "BOOLEAN",
+    "snapshot_date": "DATE",
+    "closing_units": "DOUBLE",
+    "snap_rows": "BIGINT"
+   }
+  }
+ },
+ "assemble": "SELECT selling_package, is_chiller_stock, MAX(CASE WHEN snapshot_date = DATE '2014-12-31' THEN closing_units END) AS closing_units_2014, MAX(CASE WHEN snapshot_date = DATE '2015-12-31' THEN closing_units END) AS closing_units_2015, MAX(CASE WHEN snapshot_date = DATE '2015-12-31' THEN closing_units END) - MAX(CASE WHEN snapshot_date = DATE '2014-12-31' THEN closing_units END) AS change_units FROM q WHERE snap_rows > 0 GROUP BY selling_package, is_chiller_stock ORDER BY selling_package, is_chiller_stock"
+}

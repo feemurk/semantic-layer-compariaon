@@ -1,0 +1,10 @@
+// Q-N-C1-D4 Gross trip revenue for dropoff dates in 2024 vs pickup dates in 2024; report both and the difference.
+// @column revenue_pickup_2024 = [Measures].[q_revenue_pickup_2024]
+// @column revenue_dropoff_2024 = [Measures].[q_revenue_dropoff_2024]
+// @column difference = [Measures].[q_difference]
+WITH
+MEMBER [Measures].[q_revenue_pickup_2024] AS ([Measures].[Gross Trip Revenue], [Pickup Date].[Calendar Year].&[2024])
+MEMBER [Measures].[q_revenue_dropoff_2024] AS ([Measures].[Gross Trip Revenue], [Dropoff Date].[Calendar Year].&[2024])
+MEMBER [Measures].[q_difference] AS [Measures].[q_revenue_dropoff_2024] - [Measures].[q_revenue_pickup_2024]
+SELECT {[Measures].[q_revenue_pickup_2024], [Measures].[q_revenue_dropoff_2024], [Measures].[q_difference]} ON COLUMNS
+FROM [NYC]
