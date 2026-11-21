@@ -2,9 +2,9 @@
 
 | Field | Value |
 |---|---|
-| Version | 1.3 |
+| Version | 1.4 |
 | State | LOCKED |
-| Locked on | 2026-11-19 (v1.0); amended 2026-11-19 (v1.1, v1.2) and 2026-11-20 (v1.3), § 16 |
+| Locked on | 2026-11-19 (v1.0); amended 2026-11-19 (v1.1, v1.2) 2026-11-20 (v1.3) and 2026-11-21 (v1.4), § 16 |
 | Governs | Phases 1–3 and `04-deliverables/` |
 | Change control | § 16. No scope change without a version bump and a changelog entry. |
 
@@ -79,7 +79,7 @@ All stacks use the latest documented release and capabilities as of the lock dat
 
 | Capability | S1 SSAS MD | S2 Power BI / Tabular | S3 Tableau | S4 Databricks Metric Views |
 |---|---|---|---|---|
-| Source connectivity to the shared platform (§ 4) | Databricks SQL serverless via ODBC data source | Azure Databricks connector, ADBC driver (Import, DirectQuery); Direct Lake on OneLake over the mirrored Unity Catalog | Databricks connector to serverless SQL (live); Tableau extract (extract variant) | Native |
+| Source connectivity to the shared platform (§ 4) | Databricks SQL serverless through a SQL Server 2025 PolyBase adapter (ODBC external tables); multidimensional models do not support ODBC data sources (V-11, B-09) | Azure Databricks connector, ADBC driver (Import, DirectQuery); Direct Lake on OneLake over the mirrored Unity Catalog | Databricks connector to serverless SQL (live); Tableau extract (extract variant) | Native |
 | Model-as-code format in Git | MD project XML (`.ds`, `.dsv`, `.dim`, `.cube`) and MDX script (`.mdx`) | TMDL (`.tmdl`) and DAX (`.dax`) | Data source XML (`.tds`) | YAML in `CREATE VIEW ... WITH METRICS LANGUAGE YAML` DDL (`.sql`, `.yaml`) |
 | CI/CD | GitHub Actions on a self-hosted Windows runner: build, XMLA deploy, process, MDX reconciliation, promote | GitHub Actions: Fabric Git integration and `fabric-cicd`, Best Practice Analyzer rules, DAX reconciliation via `executeQueries`, promote | GitHub Actions: Tableau REST API (`tableauserverclient`) publish, VizQL Data Service reconciliation, promote | GitHub Actions: Databricks Asset Bundles deploy, SQL reconciliation, promote |
 | Partition and refresh automation | Scripted (AMO/XMLA) monthly MOLAP partition create, process, merge, retire; daily ROLAP hot partition | Incremental refresh policy (monthly partitions, 24-month window) with real-time DirectQuery partition; Direct Lake framing | Incremental extract refresh on `pickup_ts`; live variant needs none | Liquid clustering on the source; metric view materialization with `refresh_policy` and `schedule` |
@@ -430,6 +430,17 @@ Confirmed or rejected in Phase 3.
 | B-06 | SSAS Multidimensional distinct counts (B-W4, N-M1) require a dedicated measure group per distinct count measure. | Hypothesis |
 | B-07 | Metric view window measures anchor a coarser group on the last order value with data in that group, not the calendar end of the period; period-to-date and same-period-last-year values differ from calendar-anchored definitions for members without activity on the period's last day (N-C1, N-C2). | Hypothesis (V-30) |
 | B-08 | Metric views reach dimension members only through fact rows (the source is the fact, joins are left outer lookups); members without facts in scope are absent from results. | Documented (V-03) |
+| B-09 | SSAS Multidimensional has no supported direct connection to Databricks (no ODBC data sources; ROLAP needs SQL Server), so S1 reads through a SQL Server 2025 PolyBase adapter: one more server in the path. | Documented (V-11, V-34) |
+| B-10 | Real-time ROLAP depends on relational change notifications, which PolyBase external tables do not raise; S1 freshness needs an explicit cache clear or reprocess after each load. | Documented (V-37) |
+| B-11 | Direct Lake one-side columns must be unique and views are unsupported, so the WWI current-item table is Import and the Direct Lake variant becomes a composite model. | Documented (V-12) |
+| B-12 | Copilot verified answers cannot be deployed through Git, REST or pipelines: one manual step per workspace under E5. | Documented (V-43) |
+| B-13 | CI reconciliation of Power BI models with RLS must use XMLA with a service principal secret, because `executeQueries` refuses service principals on RLS models. | Documented (V-41, V-42) |
+| B-14 | Calendar-based time intelligence cannot serve the Direct Lake composite, hybrid or RLS variants; explicit DAX time intelligence measures replace it. | Documented (V-13) |
+| B-15 | Power BI measures repeat the total over an unrelated dimension instead of returning blank, so S2 measures carry `ISCROSSFILTERED` guards for the § 6.5 `N` cells. | Hypothesis |
+| B-16 | VizQL Data Service has no query composition; drill-down questions query each level separately and select client-side. | Documented (V-47) |
+| B-17 | Tableau period-to-date metrics need an explicit as-of parameter, one VizQL Data Service query per anchor (731 for a day-level reconciliation); in exchange they are calendar-anchored, avoiding B-07. | Documented (V-47) |
+| B-18 | Tableau has no synonym property; synonyms are appended to descriptions, and only the first 150 characters are indexed by Tableau Agent. | Documented (V-14) |
+| B-19 | Tableau multi-fact data sources repeat measures over unrelated dimensions, so stock holdings (W-M2, W-C2) are a separate Published Data Source. | Documented (V-14) |
 
 ---
 
@@ -562,13 +573,13 @@ Vendor capability claims this spec relies on. `Pending` entries are verified aga
 | V-08 | Genie Agents and AI/BI dashboards consume metric views; dashboards apply `MEASURE()` automatically and surface agent metadata | Verified | https://docs.databricks.com/aws/en/uc-semantics/metric-views/query |
 | V-09 | SQL Server 2025 Analysis Services ships Multidimensional mode; Data Mining discontinued (2022); msmdpump HTTP disabled by default in 2025 (HTTPS required) | Verified | https://learn.microsoft.com/en-us/analysis-services/what-s-new-in-sql-server-analysis-services?view=sql-analysis-services-2025 |
 | V-10 | Power BI Azure Databricks connector uses the ADBC driver by default for new connections since February 2026 | Verified | https://learn.microsoft.com/en-us/power-query/connectors/databricks-azure |
-| V-11 | SSAS Multidimensional data source over the Databricks ODBC driver for processing and ROLAP | Pending | — |
-| V-12 | Direct Lake on OneLake over a mirrored Azure Databricks Unity Catalog | Pending | — |
-| V-13 | Power BI calendar-based time intelligence, hybrid tables with real-time DirectQuery partition, Copilot AI instructions and verified answers | Pending | — |
-| V-14 | Tableau multi-fact relationships, VizQL Data Service, Tableau Agent over Published Data Sources | Pending | — |
+| V-11 | SSAS Multidimensional does not support ODBC data sources, and ROLAP storage requires a SQL Server relational source; Databricks is therefore reached through SQL Server 2025 PolyBase (V-34) | Verified | https://learn.microsoft.com/en-us/analysis-services/multidimensional-models/supported-data-sources-ssas-multidimensional |
+| V-12 | Direct Lake on OneLake over a mirrored Azure Databricks Unity Catalog; composite models with Import tables; no DirectQuery fallback; one-side relationship columns must be unique and views are not supported | Verified | https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-overview |
+| V-13 | Calendar-based time intelligence is preview and not supported with composite models or reliably under RLS; hybrid tables via refresh policy `mode: hybrid` (compatibility 1565+); Copilot AI instructions stored in the linguistic schema | Verified | https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-time-intelligence |
+| V-14 | Tableau multi-fact relationships (shared, related, unrelated and stitched dimensions); VizQL Data Service queries Published Data Sources; Tableau Agent indexes captions and the first 150 characters of descriptions | Verified | https://help.tableau.com/current/online/en-us/datasource_mfr_multiple_base_tables.htm |
 | V-15 | GitHub Copilot agent mode MCP server support | Pending | — |
 | V-16 | Unity Catalog ABAC policies as applied to the § 10 scenario: schema-level `CREATE POLICY ... ROW FILTER ... TO principals FOR TABLES WHEN has_tag_value(...) MATCH COLUMNS ... USING COLUMNS (...)`; governed tags applied to target objects are a prerequisite; `DROP POLICY name ON SCHEMA` has no `IF EXISTS`; row filters cannot reference tables with their own active row filters | Verified | https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac/policies |
-| V-17 | Fabric Git integration with TMDL and `fabric-cicd` deployment | Pending | — |
+| V-17 | Fabric Git items use `.platform`, `definition.pbism` 4.0+ and a TMDL `definition/` folder; `fabric-cicd` 1.4.0 publishes items with `parameter.yml` substitution and semantic model binding | Verified | https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-dataset |
 | V-18 | Lakeflow pipelines Python API is `pyspark.pipelines` (`dp`); `@dp.materialized_view` and `@dp.table` accept `schema` DDL with primary and foreign keys, `cluster_by`, and `private` | Verified | https://docs.databricks.com/aws/en/ldp/developer/python-ref |
 | V-19 | Auto Loader on Parquet picks the widest type across files; schema hints make the reader read as the hinted type and rescue mismatches into `_rescued_data`; case-mismatched names are rescued unless `readerCaseSensitive` is false. Spark 4.3 fails reading INT64 as DOUBLE (reproduced on TLC 2023-01/2023-02) | Verified | https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema |
 | V-20 | Lakeflow Connect SQL Server: continuous gateway on classic compute, serverless ingestion pipeline, table-level `objects` with `destination_table`, change tracking for tables with primary keys | Verified | https://docs.databricks.com/aws/en/ingestion/lakeflow-connect/sql-server-pipeline |
@@ -585,6 +596,26 @@ Vendor capability claims this spec relies on. `Pending` entries are verified aga
 | V-31 | Query `WHERE` filters on a metric view apply before window measures are evaluated, so a filter on the order field truncates the window | Pending | — |
 | V-32 | Bundle `sync.paths` may include paths outside the bundle root; the sync root moves to the common ancestor and keeps the folder structure | Verified | https://docs.databricks.com/aws/en/dev-tools/bundles/sharing |
 | V-33 | GitHub Actions deploy bundles with `databricks/setup-cli` and workload identity federation (`DATABRICKS_AUTH_TYPE: github-oidc`, `id-token: write`) | Verified | https://docs.databricks.com/aws/en/dev-tools/ci-cd/github |
+| V-34 | SQL Server 2025 PolyBase reads generic ODBC sources through `CREATE EXTERNAL DATA SOURCE ... LOCATION 'odbc://...'` with `CONNECTION_OPTIONS`, `PUSHDOWN` and external tables | Verified | https://learn.microsoft.com/en-us/sql/relational-databases/polybase/polybase-configure-odbc-generic |
+| V-35 | Semi-additive measures other than LastChild, and more than three partitions per measure group, require SSAS Enterprise edition | Verified | https://learn.microsoft.com/en-us/analysis-services/analysis-services-features-by-edition |
+| V-36 | `ParallelPeriod` returns the member at the same relative position, which misplaces leap-day same-period-last-year anchors | Verified | https://learn.microsoft.com/en-us/sql/mdx/parallelperiod-mdx |
+| V-37 | Real-time ROLAP partitions rely on change notifications from the relational source | Verified | https://learn.microsoft.com/en-us/analysis-services/multidimensional-models/set-partition-storage-analysis-services-multidimensional |
+| V-38 | An empty allowed set on a role-restricted dimension with visual totals returns NULL for the related measure group and leaves unrelated measure groups unaffected | Pending | — |
+| V-39 | PolyBase external tables over the Databricks ODBC driver with three-part names (`slc.wwi.fact_sale`) | Pending | — |
+| V-40 | The SSAS 2025 engine accepts the generated ASSL (element order, `CubeDimensionPermission`, non-hierarchy attributes used as member properties) | Pending | — |
+| V-41 | Power BI `executeQueries` runs one query per call (at most 100,000 rows or 1,000,000 values, 15 MB, 120 calls per minute) and refuses service principals on models with RLS | Verified | https://learn.microsoft.com/en-us/rest/api/power-bi/datasets/execute-queries-in-group |
+| V-42 | Service principals connect over XMLA as `app:<appId>@<tenantId>` and cannot be members of RLS roles | Verified | https://learn.microsoft.com/en-us/power-bi/enterprise/service-premium-service-principal |
+| V-43 | Copilot verified answers are not supported by Git integration, REST APIs or deployment pipelines | Verified | https://learn.microsoft.com/en-us/power-bi/create-reports/copilot-prepare-data-ai-verified-answers |
+| V-44 | The Azure Databricks connector selects ADBC with `Databricks.Catalogs(..., [Implementation = "2.0"])`; `Databricks.Query` is not supported in DirectQuery | Verified | https://learn.microsoft.com/en-us/power-query/connectors/databricks-azure |
+| V-45 | JSON layout of the linguistic schema used for synonyms in TMDL | Pending | — |
+| V-46 | Unity Catalog ABAC row filters apply to Direct Lake reads of mirrored Azure Databricks tables | Pending | — |
+| V-47 | VizQL Data Service queries accept calculated fields, table calculations, set, quantitative and top filters, and `parameters` overriding a Published Data Source parameter | Verified | https://raw.githubusercontent.com/tableau/VizQL-Data-Service/main/VizQLDataServiceOpenAPISchema.json |
+| V-48 | The official Tableau 2026.3 document schema validates `.tds` files and accepts `logical-table-scoped` data source filters | Verified | https://raw.githubusercontent.com/tableau/tableau-document-schemas/main/schemas/2026_3/twb_2026.3.0.xsd |
+| V-49 | Tableau data source filters are pervasive or scoped to one logical table; a filter on another table's field cannot be scoped and limits join culling | Verified | https://help.tableau.com/current/pro/desktop/en-us/filtering_datasource.htm |
+| V-50 | Tableau incremental extract refresh on a date, datetime or increasing integer column, triggerable through the REST API | Verified | https://help.tableau.com/current/pro/desktop/en-us/extracting_refresh.htm |
+| V-51 | VizQL Data Service requires the API Access capability plus View and Connect on the Published Data Source | Verified | https://help.tableau.com/current/api/vizql-data-service/en-us/docs/vds_configuration.html |
+| V-52 | `.tds`-defined parameters, Databricks connection attributes, `<refresh increment-key>` and `AGG` queries of aggregate calculations behave as generated | Pending | — |
+| V-53 | Join behavior for dimension members without facts in VizQL Data Service results | Pending | — |
 
 ---
 
@@ -619,3 +650,4 @@ Amendments require: a version bump in the header, a changelog row, an updated `s
 | 1.1 | 2026-11-19 | Phase 2 platform build corrections from profiling the real sources (restored WideWorldImporters on SQL Server 2025; 24 TLC months). § 4: clustered columnstore index removal before change tracking, landing normalization for TLC type drift, dimensions-before-facts pipelines, bundle rename. § 5.1 and § 5.3 rule 6: back-cast snapshot with flow fallback and `balance_basis`, because 9 items' movement history cannot be reconciled with current holdings. § 5.3 rule 4 and `Q-W-S1-D4`: SCD2 probe moved from customer category (no history in source) to stock item color; single current row per durable key despite 4,612 duplicated open-ended city rows. § 5.4: NYC calendar extended to 2025 for dropoff dates. § 5.2: `passenger_count` marked NULL (5,400,588 source rows, all payment type 0). § 14: V-18 to V-26. |
 | 1.2 | 2026-11-19 | Question bank corrections found by running the correctness oracle on the real-data B0. Q-N-M1-D1: distinct OD pairs are exactly additive across pickup borough, because the pair determines its pickup zone and borough, so the non-additivity probe moves to payment type. Q-W-M1-D3 and Q-W-S2-D3: chiller items sell only from 2016-01-02, so the FY2014/FY2015 and 2014/2015 comparisons move from the chiller flag to selling package. Q-W-M2-D4: no stock item is at zero on any 2015 month end (minimum 7,196 units), so the question asks for the 10 lowest month-end balances. |
 | 1.3 | 2026-11-20 | Phase 2 S4 (metric views) findings. § 8.1: B-07 (window anchor on the last date with data, not the calendar period end) and B-08 (members reachable only through facts). § 14: V-16 verified; V-27 to V-33 added (metric view permissions, ABAC through metric views, window offset and refresh policy, anchor and filter-before-window semantics, bundle sync outside the root, GitHub Actions federation). |
+| 1.4 | 2026-11-21 | Phase 2 S1, S2, S3 findings. V-11 failed verification: multidimensional models do not support ODBC data sources and ROLAP needs SQL Server, so § 3.1 S1 connectivity becomes a SQL Server 2025 PolyBase adapter. § 14: V-11, V-12, V-13, V-14, V-17 verified; V-34 to V-53 added. § 8.1: B-09 to B-19 added. |

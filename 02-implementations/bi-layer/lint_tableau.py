@@ -251,6 +251,10 @@ def lint_metric(spec: dict) -> list[str]:
     for i, b in enumerate(spec["branches"]):
         where = f"{spec['metric']} branch {i} ({b['grain']})"
         problems += validate_query(b, where)
+        if b.get("anchors"):  # anchors vary only the parameter value; validate the parameterized form once
+            anchored = {**b, "query": {**b["query"], "parameters": [
+                {"parameterCaption": b.get("anchor_parameter"), "value": b["anchors"][0][0]}]}}
+            problems += validate_query(anchored, where + " anchored")
         out = set(b.get("output", {}))
         for m in b["members"]:
             if m != "@anchor" and m not in out:

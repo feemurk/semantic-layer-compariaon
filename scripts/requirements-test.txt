@@ -1,5 +1,8 @@
-# Pinned dependencies for scripts/test_platform.py (Java 17+ required for PySpark).
+# Pinned dependencies for the scripts/test_*.py suites (Java 17+ required for PySpark).
 pyspark[pipelines]==4.3.0
 pyarrow==21.0.0
 pyyaml==6.0.2
 duckdb==1.4.1
+# Schema validation for scripts/test_tableau.py (official Tableau XSD and VizQL Data Service OpenAPI).
+xmlschema==4.3.2
+jsonschema==4.26.0
